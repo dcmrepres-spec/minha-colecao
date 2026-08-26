@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Coleção F1 1:43</title>
+
     <style>
         :root {
             --bg-color: #121212;
@@ -14,33 +15,43 @@
             --text-secondary: #aaaaaa;
             --success-color: #00b050;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 15px;
             padding-bottom: 60px;
         }
+
         .header {
             text-align: center;
             padding: 20px 0;
         }
+
         .header h1 {
             margin: 0;
             color: var(--accent-color);
             font-size: 1.8em;
             letter-spacing: 1px;
         }
+
         .header p {
             margin: 5px 0 0 0;
             color: var(--text-secondary);
             font-size: 0.9em;
         }
+
         .search-container {
             max-width: 600px;
             margin: 0 auto 20px auto;
         }
+
         .search-box {
             width: 100%;
             padding: 12px;
@@ -50,7 +61,13 @@
             color: white;
             box-sizing: border-box;
             font-size: 1em;
+            outline: none;
         }
+
+        .search-box:focus {
+            border-color: var(--accent-color);
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -58,23 +75,28 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .card {
             background-color: var(--card-bg);
             padding: 12px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.15s, border-color 0.15s;
+            transition: transform 0.15s, border-color 0.15s, background-color 0.15s;
             border: 2px solid transparent;
             position: relative;
+            min-height: 75px;
         }
+
         .card:hover {
             transform: translateY(-3px);
             background-color: var(--card-hover);
         }
+
         .card.owned {
             border-color: var(--success-color);
         }
+
         .card.owned::after {
             content: "✓";
             position: absolute;
@@ -84,6 +106,7 @@
             font-weight: bold;
             font-size: 0.9em;
         }
+
         .badge-year {
             background-color: var(--accent-color);
             padding: 2px 6px;
@@ -91,6 +114,7 @@
             font-weight: bold;
             font-size: 0.85em;
         }
+
         .card-pilot {
             margin: 8px 0 0 0;
             font-size: 0.85em;
@@ -99,15 +123,36 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* Modal */
+
+        .empty-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px 10px;
+        }
+
+        /* =========================
+           MODAL
+           ========================= */
+
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            justify-content: center; align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
             z-index: 1000;
+            padding: 15px;
         }
+
+        .modal.show {
+            display: flex;
+        }
+
         .modal-content {
             background-color: var(--card-bg);
             padding: 20px;
@@ -117,23 +162,41 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
+
         .close {
-            position: absolute; top: 10px; right: 15px;
-            font-size: 28px; cursor: pointer; color: #888;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            line-height: 1;
+            user-select: none;
         }
+
+        .close:hover {
+            color: #ffffff;
+        }
+
         .info-row {
             margin: 10px 0;
             font-size: 0.95em;
             border-bottom: 1px solid #333;
             padding-bottom: 6px;
         }
-        .info-row strong { color: var(--text-secondary); }
+
+        .info-row strong {
+            color: var(--text-secondary);
+        }
+
         .img-box {
             display: flex;
             gap: 10px;
             margin-top: 15px;
         }
+
         .img-box div {
             flex: 1;
             background: #252525;
@@ -141,17 +204,21 @@
             border-radius: 6px;
             text-align: center;
         }
+
         .img-box span {
             display: block;
             font-size: 0.75em;
             color: var(--text-secondary);
             margin-bottom: 4px;
         }
+
         .modal img {
             width: 100%;
             height: 100px;
             object-fit: contain;
+            border-radius: 4px;
         }
+
         .history-text {
             font-size: 0.88em;
             line-height: 1.4;
@@ -161,18 +228,80 @@
             padding: 10px;
             border-radius: 6px;
         }
+
         .btn-toggle {
-            background-color: #333; color: white; border: none;
-            padding: 12px; width: 100%; border-radius: 6px;
-            font-weight: bold; cursor: pointer; margin-top: 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
             font-size: 1em;
             transition: background 0.2s;
         }
+
+        .btn-toggle:hover {
+            background-color: #444;
+        }
+
         .btn-toggle.owned {
             background-color: var(--success-color);
         }
+
+        /* =========================
+           RESPONSIVIDADE
+           ========================= */
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 15px 0;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .card {
+                padding: 10px 6px;
+            }
+
+            .card-pilot {
+                font-size: 0.75em;
+            }
+
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                width: 92%;
+                max-height: 90vh;
+            }
+
+            .img-box {
+                flex-direction: column;
+            }
+
+            .img-box div {
+                width: 100%;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="header">
@@ -181,100 +310,986 @@
     </div>
 
     <div class="search-container">
-        <input type="text" id="search-input" class="search-box" placeholder="Pesquisar por ano, piloto, carro ou pista..." oninput="filtrarCards()">
+        <input
+            type="text"
+            id="search-input"
+            class="search-box"
+            placeholder="Pesquisar por ano, piloto, carro ou pista..."
+            autocomplete="off"
+        >
     </div>
 
     <div class="grid" id="app-grid"></div>
 
     <div class="modal" id="detail-modal">
+
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title" style="margin-top:0; color:var(--accent-color);">Ano</h2>
-            <div class="info-row"><strong>Piloto:</strong> <span id="modal-pilot"></span></div>
-            <div class="info-row"><strong>Carro:</strong> <span id="modal-car"></span></div>
-            <div class="info-row"><strong>Número do Miniatura:</strong> <span id="modal-number"></span></div>
-            <div class="info-row"><strong>Pista do Título:</strong> <span id="modal-track"></span></div>
-            
+
+            <span
+                class="close"
+                id="close-modal"
+                aria-label="Fechar"
+                title="Fechar"
+            >
+                &times;
+            </span>
+
+            <h2
+                id="modal-title"
+                style="margin-top:0; color:var(--accent-color);"
+            >
+                Ano
+            </h2>
+
+            <div class="info-row">
+                <strong>Piloto:</strong>
+                <span id="modal-pilot"></span>
+            </div>
+
+            <div class="info-row">
+                <strong>Carro:</strong>
+                <span id="modal-car"></span>
+            </div>
+
+            <div class="info-row">
+                <strong>Número da Miniatura:</strong>
+                <span id="modal-number"></span>
+            </div>
+
+            <div class="info-row">
+                <strong>Pista do Título:</strong>
+                <span id="modal-track"></span>
+            </div>
+
             <div class="img-box">
+
                 <div>
                     <span>Carro do Campeão</span>
-                    <img id="img-car" src="" alt="Foto do Carro">
+
+                    <img
+                        id="img-car"
+                        src=""
+                        alt="Carro do campeão"
+                    >
                 </div>
+
                 <div>
                     <span>Traçado do Circuito</span>
-                    <img id="img-track" src="" alt="Circuito">
+
+                    <img
+                        id="img-track"
+                        src=""
+                        alt="Circuito"
+                    >
                 </div>
+
             </div>
-            
-            <div class="history-text" id="modal-history"></div>
-            <button class="btn-toggle" id="btn-own" onclick="toggleOwnership()">Marcar como Adquirido</button>
+
+            <div
+                class="history-text"
+                id="modal-history"
+            ></div>
+
+            <button
+                class="btn-toggle"
+                id="btn-own"
+                type="button"
+            >
+                Marcar como Adquirido
+            </button>
+
         </div>
     </div>
 
-    <!-- Vínculo com o banco de dados que criaremos a seguir -->
+    <!-- Banco de dados -->
     <script src="dados.js"></script>
     <script>
-        let itemSelecionado = null;
+    "use strict";
 
-        function renderGrid(dados = dadosColecao) {
-            const grid = document.getElementById('app-grid');
-            grid.innerHTML = '';
-            dados.forEach(item => {
-                const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
-                const card = document.createElement('div');
-                card.className = `card ${isOwned ? 'owned' : ''}`;
-                card.onclick = () => openModal(item);
-                card.innerHTML = `
-                    <span class="badge-year">${item.ano}</span>
-                    <p class="card-pilot">${item.piloto}</p>
-                `;
-                grid.appendChild(card);
-            });
+    /*
+     * ============================================
+     * CONFIGURAÇÃO
+     * ============================================
+     */
+
+    const STORAGE_PREFIX = "f1_143_owned_";
+
+    let itemSelecionado = null;
+
+
+    /*
+     * ============================================
+     * ELEMENTOS DA PÁGINA
+     * ============================================
+     */
+
+    const grid = document.getElementById("app-grid");
+    const searchInput = document.getElementById("search-input");
+    const modal = document.getElementById("detail-modal");
+    const closeModalButton = document.getElementById("close-modal");
+    const ownershipButton = document.getElementById("btn-own");
+
+    const modalTitle = document.getElementById("modal-title");
+    const modalPilot = document.getElementById("modal-pilot");
+    const modalCar = document.getElementById("modal-car");
+    const modalNumber = document.getElementById("modal-number");
+    const modalTrack = document.getElementById("modal-track");
+    const modalHistory = document.getElementById("modal-history");
+
+    const imgCar = document.getElementById("img-car");
+    const imgTrack = document.getElementById("img-track");
+
+
+    /*
+     * ============================================
+     * VERIFICAÇÃO DO BANCO DE DADOS
+     * ============================================
+     */
+
+    function bancoDeDadosValido() {
+
+        return (
+            typeof dadosColecao !== "undefined" &&
+            Array.isArray(dadosColecao)
+        );
+    }
+
+
+    /*
+     * ============================================
+     * NORMALIZAÇÃO DE TEXTO
+     *
+     * Permite pesquisar:
+     *
+     * "Nürburgring"
+     *
+     * digitando:
+     *
+     * "nurburgring"
+     * ============================================
+     */
+
+    function normalizarTexto(valor) {
+
+        if (valor === null || valor === undefined) {
+            return "";
         }
 
-        function filtrarCards() {
-            const termo = document.getElementById('search-input').value.toLowerCase();
-            const filtrados = dadosColecao.filter(item => 
-                item.ano.toString().includes(termo) ||
-                item.piloto.toLowerCase().includes(termo) ||
-                item.carro.toLowerCase().includes(termo) ||
-                item.circuito.toLowerCase().includes(termo)
+        return String(valor)
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+    }
+
+
+    /*
+     * ============================================
+     * CHAVE DO LOCALSTORAGE
+     * ============================================
+     */
+
+    function obterChave(item) {
+
+        return STORAGE_PREFIX + String(item.ano);
+    }
+
+
+    /*
+     * ============================================
+     * VERIFICA SE A MINIATURA FOI ADQUIRIDA
+     * ============================================
+     */
+
+    function estaAdquirido(item) {
+
+        if (!item) {
+            return false;
+        }
+
+        try {
+
+            return (
+                localStorage.getItem(
+                    obterChave(item)
+                ) === "true"
             );
-            renderGrid(filtrados);
+
+        } catch (erro) {
+
+            console.warn(
+                "Não foi possível acessar o armazenamento local.",
+                erro
+            );
+
+            return false;
+        }
+    }
+
+
+    /*
+     * ============================================
+     * SALVA O STATUS DA MINIATURA
+     * ============================================
+     */
+
+    function salvarStatusAdquirido(item, status) {
+
+        if (!item) {
+            return;
         }
 
-        function openModal(item) {
-            itemSelecionado = item;
-            document.getElementById('modal-title').innerText = `Temporada ${item.ano}`;
-            document.getElementById('modal-pilot').innerText = item.piloto;
-            document.getElementById('modal-car').innerText = item.carro;
-            document.getElementById('modal-number').innerText = `#${item.numero}`;
-            document.getElementById('modal-track').innerText = item.circuito;
-            document.getElementById('modal-history').innerText = item.historia;
-            
-            // Geradores de imagem temporários caso queira substituir por URLs reais depois
-            document.getElementById('img-car').src = `https://placeholders.dev{encodeURIComponent(item.carro)}&bgColor=%23252525&textColor=%23ffffff`;
-            document.getElementById('img-track').src = `https://placeholders.dev{encodeURIComponent(item.pistaNome)}&bgColor=%23252525&textColor=%23ffffff`;
+        try {
 
-            const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
-            const btn = document.getElementById('btn-own');
-            if(isOwned) {
-                btn.innerText = "✓ Na Minha Estante";
-                btn.classList.add('owned');
+            if (status) {
+
+                localStorage.setItem(
+                    obterChave(item),
+                    "true"
+                );
+
             } else {
-                btn.innerText = "Marcar como Adquirido";
-                btn.classList.remove('owned');
+
+                localStorage.removeItem(
+                    obterChave(item)
+                );
             }
-            document.getElementById('detail-modal').style.display = 'flex';
+
+        } catch (erro) {
+
+            console.warn(
+                "Não foi possível salvar o status da miniatura.",
+                erro
+            );
+        }
+    }
+
+
+    /*
+     * ============================================
+     * CRIA UM CARD
+     * ============================================
+     */
+
+    function criarCard(item) {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        /*
+         * Se já estiver na coleção,
+         * adiciona a classe "owned".
+         */
+
+        if (estaAdquirido(item)) {
+            card.classList.add("owned");
         }
 
-        function closeModal() {
-            document.getElementById('detail-modal').style.display = 'none';
+
+        /*
+         * Ano
+         */
+
+        const ano = document.createElement("span");
+
+        ano.className = "badge-year";
+
+        ano.textContent = item.ano;
+
+
+        /*
+         * Nome do piloto
+         */
+
+        const piloto = document.createElement("p");
+
+        piloto.className = "card-pilot";
+
+        piloto.textContent = item.piloto;
+
+
+        /*
+         * Monta o card
+         */
+
+        card.appendChild(ano);
+        card.appendChild(piloto);
+
+
+        /*
+         * Acessibilidade
+         */
+
+        card.setAttribute(
+            "role",
+            "button"
+        );
+
+        card.setAttribute(
+            "tabindex",
+            "0"
+        );
+
+        card.setAttribute(
+            "aria-label",
+            "Abrir informações da temporada " +
+            item.ano +
+            ", campeão " +
+            item.piloto
+        );
+
+
+        /*
+         * Clique do mouse
+         */
+
+        card.addEventListener(
+            "click",
+            function() {
+
+                abrirModal(item);
+
+            }
+        );
+
+
+        /*
+         * Permite abrir com ENTER ou ESPAÇO
+         */
+
+        card.addEventListener(
+            "keydown",
+            function(evento) {
+
+                if (
+                    evento.key === "Enter" ||
+                    evento.key === " "
+                ) {
+
+                    evento.preventDefault();
+
+                    abrirModal(item);
+                }
+            }
+        );
+
+
+        return card;
+    }
+
+
+    /*
+     * ============================================
+     * MOSTRA OS CARDS
+     * ============================================
+     */
+
+    function renderizarColecao(lista) {
+
+        grid.innerHTML = "";
+
+
+        /*
+         * Segurança:
+         * se dadosColecao não existir.
+         */
+
+        if (!bancoDeDadosValido()) {
+
+            const erro = document.createElement("div");
+
+            erro.className = "empty-message";
+
+            erro.textContent =
+                "Não foi possível carregar o arquivo dados.js.";
+
+            grid.appendChild(erro);
+
+            return;
         }
 
-        function toggleOwnership() {
-            if(!itemSelecionado) return;
-            const key = 'f1_143_' + itemSelecionado.ano;
-            const current = localStorage.getItem(key) === 'true';
-            localStorage.setItem(key, !current);
-            openModal(itemSelecionado);
+
+        /*
+         * Se a lista não for um array,
+         * usa a coleção completa.
+         */
+
+        const dadosParaExibir =
+            Array.isArray(lista)
+                ? lista
+                : dadosColecao;
+
+
+        /*
+         * Nenhum resultado.
+         */
+
+        if (dadosParaExibir.length === 0) {
+
+            const vazio = document.createElement("div");
+
+            vazio.className = "empty-message";
+
+            vazio.textContent =
+                "Nenhuma temporada encontrada.";
+
+            grid.appendChild(vazio);
+
+            return;
+        }
+
+
+        /*
+         * Cria os cards.
+         */
+
+        dadosParaExibir.forEach(
+            function(item) {
+
+                if (!item) {
+                    return;
+                }
+
+                grid.appendChild(
+                    criarCard(item)
+                );
+            }
+        );
+    }
+
+
+    /*
+     * ============================================
+     * PESQUISA
+     * ============================================
+     */
+
+    function pesquisarColecao() {
+
+        if (!bancoDeDadosValido()) {
+            return;
+        }
+
+
+        const termo =
+            normalizarTexto(
+                searchInput.value
+            );
+
+
+        /*
+         * Campo vazio:
+         * mostra tudo.
+         */
+
+        if (!termo) {
+
+            renderizarColecao(
+                dadosColecao
+            );
+
+            return;
+        }
+
+
+        /*
+         * Procura em todos estes campos:
+         *
+         * ano
+         * piloto
+         * carro
+         * número
+         * circuito
+         * pista
+         * história
+         */
+
+        const resultados =
+            dadosColecao.filter(
+                function(item) {
+
+                    const campos = [
+
+                        item.ano,
+                        item.piloto,
+                        item.carro,
+                        item.numero,
+                        item.circuito,
+                        item.pistaNome,
+                        item.historia
+
+                    ];
+
+                    return campos.some(
+                        function(campo) {
+
+                            return normalizarTexto(
+                                campo
+                            ).includes(termo);
+
+                        }
+                    );
+                }
+            );
+
+
+        renderizarColecao(
+            resultados
+        );
+    }
+
+
+    /*
+     * ============================================
+     * CRIA IMAGEM SVG LOCAL
+     *
+     * Isto evita depender de sites externos
+     * de imagens/placeholder.
+     * ============================================
+     */
+
+    function criarImagemSVG(texto, tipo) {
+
+        const simbolo =
+            tipo === "carro"
+                ? "🏎️"
+                : "🏁";
+
+
+        const textoSeguro =
+            String(texto || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&apos;");
+
+
+        const svg = `
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="600"
+                height="300"
+                viewBox="0 0 600 300"
+            >
+
+                <rect
+                    width="600"
+                    height="300"
+                    rx="20"
+                    fill="#252525"
+                />
+
+                <text
+                    x="300"
+                    y="105"
+                    text-anchor="middle"
+                    font-size="70"
+                    fill="#e10600"
+                >
+                    ${simbolo}
+                </text>
+
+                <text
+                    x="300"
+                    y="165"
+                    text-anchor="middle"
+                    font-family="Arial, sans-serif"
+                    font-size="25"
+                    fill="white"
+                >
+                    ${textoSeguro}
+                </text>
+
+                <text
+                    x="300"
+                    y="210"
+                    text-anchor="middle"
+                    font-family="Arial, sans-serif"
+                    font-size="16"
+                    fill="#999999"
+                >
+                    MINIATURA F1 1:43
+                </text>
+
+            </svg>
+        `;
+
+
+        return (
+            "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(svg)
+        );
+    }
+
+
+    /*
+     * ============================================
+     * ABRE O MODAL
+     * ============================================
+     */
+
+    function abrirModal(item) {
+
+        if (!item) {
+            return;
+        }
+
+
+        itemSelecionado = item;
+
+
+        /*
+         * Preenche as informações.
+         */
+
+        modalTitle.textContent =
+            "Temporada " + item.ano;
+
+        modalPilot.textContent =
+            item.piloto || "Não informado";
+
+        modalCar.textContent =
+            item.carro || "Não informado";
+
+        modalNumber.textContent =
+            item.numero
+                ? "#" + item.numero
+                : "Não informado";
+
+        modalTrack.textContent =
+            item.circuito ||
+            item.pistaNome ||
+            "Não informado";
+
+        modalHistory.textContent =
+            item.historia ||
+            "Nenhuma história cadastrada.";
+
+
+        /*
+         * Imagens.
+         */
+
+        imgCar.src =
+            criarImagemSVG(
+                item.carro || "Carro F1",
+                "carro"
+            );
+
+        imgTrack.src =
+            criarImagemSVG(
+                item.pistaNome ||
+                item.circuito ||
+                "Circuito",
+                "circuito"
+            );
+
+
+        /*
+         * Atualiza o botão.
+         */
+
+        atualizarBotaoAdquirido();
+
+
+        /*
+         * Abre o modal.
+         */
+
+        modal.classList.add("show");
+
+
+        /*
+         * Impede o fundo de rolar
+         * enquanto o modal estiver aberto.
+         */
+
+        document.body.style.overflow = "hidden";
+    }
+    /*
+     * ============================================
+     * ATUALIZA O BOTÃO "ADQUIRIDO"
+     * ============================================
+     */
+
+    function atualizarBotaoAdquirido() {
+
+        if (!itemSelecionado) {
+            return;
+        }
+
+        const adquirido =
+            estaAdquirido(itemSelecionado);
+
+
+        if (adquirido) {
+
+            ownershipButton.textContent =
+                "✓ Na Minha Coleção";
+
+            ownershipButton.classList.add(
+                "owned"
+            );
+
+        } else {
+
+            ownershipButton.textContent =
+                "Marcar como Adquirido";
+
+            ownershipButton.classList.remove(
+                "owned"
+            );
+        }
+    }
+
+
+    /*
+     * ============================================
+     * ALTERNA O STATUS DA MINIATURA
+     * ============================================
+     */
+
+    function toggleOwnership() {
+
+        if (!itemSelecionado) {
+            return;
+        }
+
+
+        const statusAtual =
+            estaAdquirido(itemSelecionado);
+
+
+        /*
+         * Inverte o status:
+         *
+         * false → true
+         * true  → false
+         */
+
+        salvarStatusAdquirido(
+            itemSelecionado,
+            !statusAtual
+        );
+
+
+        /*
+         * Atualiza o botão dentro do modal.
+         */
+
+        atualizarBotaoAdquirido();
+
+
+        /*
+         * Atualiza os cards atrás do modal.
+         */
+
+        pesquisarColecao();
+    }
+
+
+    /*
+     * ============================================
+     * FECHA O MODAL
+     * ============================================
+     */
+
+    function fecharModal() {
+
+        modal.classList.remove(
+            "show"
+        );
+
+
+        /*
+         * Libera novamente a rolagem
+         * da página.
+         */
+
+        document.body.style.overflow = "";
+
+
+        /*
+         * Limpa o item selecionado.
+         */
+
+        itemSelecionado = null;
+    }
+
+
+    /*
+     * ============================================
+     * EVENTO DE PESQUISA
+     * ============================================
+     */
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+            pesquisarColecao();
+
+        }
+    );
+
+
+    /*
+     * ============================================
+     * BOTÃO X DO MODAL
+     * ============================================
+     */
+
+    closeModalButton.addEventListener(
+        "click",
+        function() {
+
+            fecharModal();
+
+        }
+    );
+
+
+    /*
+     * ============================================
+     * BOTÃO "ADQUIRIDO"
+     * ============================================
+     */
+
+    ownershipButton.addEventListener(
+        "click",
+        function() {
+
+            toggleOwnership();
+
+        }
+    );
+
+
+    /*
+     * ============================================
+     * FECHAR CLICANDO FORA DO MODAL
+     * ============================================
+     */
+
+    modal.addEventListener(
+        "click",
+        function(evento) {
+
+            /*
+             * Só fecha se o usuário clicar
+             * na área escura fora do conteúdo.
+             */
+
+            if (
+                evento.target === modal
+            ) {
+
+                fecharModal();
+
+            }
+        }
+    );
+
+
+    /*
+     * ============================================
+     * FECHAR COM A TECLA ESC
+     * ============================================
+     */
+
+    document.addEventListener(
+        "keydown",
+        function(evento) {
+
+            if (
+                evento.key === "Escape" &&
+                modal.classList.contains("show")
+            ) {
+
+                fecharModal();
+
+            }
+        }
+    );
+
+
+    /*
+     * ============================================
+     * PROTEÇÃO CONTRA IMAGEM QUEBRADA
+     * ============================================
+     *
+     * Caso alguma imagem externa ainda seja
+     * utilizada futuramente, mostramos uma
+     * imagem SVG interna no lugar.
+     */
+
+    imgCar.addEventListener(
+        "error",
+        function() {
+
+            if (itemSelecionado) {
+
+                imgCar.src =
+                    criarImagemSVG(
+                        itemSelecionado.carro ||
+                        "Carro F1",
+                        "carro"
+                    );
+            }
+        }
+    );
+
+
+    imgTrack.addEventListener(
+        "error",
+        function() {
+
+            if (itemSelecionado) {
+
+                imgTrack.src =
+                    criarImagemSVG(
+                        itemSelecionado.pistaNome ||
+                        itemSelecionado.circuito ||
+                        "Circuito",
+                        "circuito"
+                    );
+            }
+        }
+    );
+
+
+    /*
+     * ============================================
+     * INICIALIZAÇÃO DO APLICATIVO
+     * ============================================
+     */
+
+    function iniciarAplicativo() {
+
+        /*
+         * Verifica se dados.js foi carregado.
+         */
+
+        if (!bancoDeDadosValido()) {
+
+            grid.innerHTML = "";
+
+            const mensagemErro =
+                document.createElement("div");
+
+            mensagemErro.className =
+                "empty-message";
+
+            mensagemErro.textContent =
+                "Erro: o arquivo dados.js não foi carregado.";
+
+            grid.appendChild(
+                mensagemErro
+            );
+
+            console.error(
+                "ERRO: dadosColecao não
+                </body>
+</html>
