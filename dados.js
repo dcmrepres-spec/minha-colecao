@@ -74,5 +74,5 @@ const dadosColecao = [
     { ano: 2022, piloto: "Max Verstappen", carro: "Red Bull-RB18", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Dominou o novo regulamento de efeito solo, faturando o bi sob chuva no Japão." },
     { ano: 2023, piloto: "Max Verstappen", carro: "Red Bull-RB19", numero: "1", circuito: "Lusail", pistaNome: "Lusail", historia: "O ano mais dominante de todos. Tri garantido em um sábado na corrida Sprint." },
     { ano: 2024, piloto: "Max Verstappen", carro: "Red Bull-RB20", numero: "1", circuito: "Las Vegas", pistaNome: "Las Vegas", historia: "Tetracampeonato com raça, garantindo a taça com um 5º lugar nas luzes de Vegas." },
-    { ano: 2025, piloto: "Lando Norris", carro: "McLaren-Mercedes MCL38", numero: "4", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Primeiro título do britânico, coroando a espetacular ressurreição técnica da equipe McLaren." }
+    { ano: 2025, piloto: "Lando Norris", carro: "McLaren-Mercedes MCL39", numero: "4", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Primeiro título do britânico, coroando a espetacular ressurreição técnica da equipe McLaren." }
 ];
