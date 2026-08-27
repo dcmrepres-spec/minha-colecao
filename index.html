@@ -148,8 +148,10 @@
         }
         .modal img {
             width: 100%;
-            height: 100px;
+            height: 110px;
             object-fit: contain;
+            border-radius: 4px;
+            background-color: #1a1a1a;
         }
         .history-text {
             font-size: 0.88em;
@@ -212,100 +214,85 @@
 
     <script>
         const dadosColecao = [
-            { ano: 1950, piloto: "Giuseppe Farina", carro: "Alfa Romeo 158", numero: "2", circuito: "Monza", pistaNome: "Monza", historia: "Farina venceu em casa para superar Fangio e ser o primeiro campeão da história." },
-            imgCarro: "https://wikimedia.org",
-        imgPiloto: "https://wikimedia.org",
-        imgCircuito: "https://wikimedia.org"
-    },
-            { ano: 1951, piloto: "Juan Manuel Fangio", carro: "Alfa Romeo 159", numero: "22", circuito: "Pedralbes", pistaNome: "Pedralbes", historia: "Fangio faturou o título após a Ferrari errar a estratégia de pneus de Ascari." },
-      imgCarro: "https://wikimedia.org",
-        imgPiloto: "https://wikimedia.org",
-        imgCircuito: "https://wikimedia.org"
-    },      { ano: 1952, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "10", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Dominou a temporada vencendo seis corridas consecutivas com o modelo de F2." },
-      imgCarro: "https://wikimedia.org",
-        imgPiloto: "https://wikimedia.org",
-        imgCircuito: "https://wikimedia.org"
-    },      { ano: 1953, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "4", circuito: "Bremgarten", pistaNome: "Bremgarten", historia: "Bicampeão consecutivo selando o título nas florestas da Suíça." },
-      imgCarro: "https://wikimedia.org",
-        imgPiloto: "https://wikimedia.org",
-        imgCircuito: "https://wikimedia.org"
-    },      { ano: 1954, piloto: "Juan Manuel Fangio", carro: "Mercedes W196 / Maserati 250F", numero: "18", circuito: "Bremgarten", pistaNome: "Bremgarten", historia: "Iniciou o ano de Maserati e mudou para as Flechas de Prata da Mercedes." },
-      imgCarro: "https://wikimedia.org",
-        imgPiloto: "https://wikimedia.org",
-        imgCircuito: "https://wikimedia.org"
-    },      { ano: 1955, piloto: "Juan Manuel Fangio", carro: "Mercedes W196", numero: "10", circuito: "Monza", pistaNome: "Monza", historia: "Temporada de domínio absoluto de Fangio com o Mercedes aerodinâmico carenado." },
-            { ano: 1956, piloto: "Juan Manuel Fangio", carro: "Ferrari D50", numero: "22", circuito: "Monza", pistaNome: "Monza", historia: "Venceu o título dividindo o carro da corrida final com seu companheiro Collins." },
-            { ano: 1957, piloto: "Juan Manuel Fangio", carro: "Maserati 250F", numero: "2", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Sia maior corrida histórica, superando as Ferraris na Alemanha para ser pentacampeão." },
-            { ano: 1958, piloto: "Mike Hawthorn", carro: "Ferrari 246 F1", numero: "6", circuito: "Ain-Diab", pistaNome: "Ain-Diab", historia: "Primeiro britânico campeão, vencendo apenas uma corrida no ano, mas com muita regularidade." },
-            { ano: 1959, piloto: "Jack Brabham", carro: "Cooper-Climax T51", numero: "8", circuito: "Sebring", pistaNome: "Sebring", historia: "Ficou sem combustível e empurrou o carro até a linha de chegada para ser campeão." },
-            { ano: 1960, piloto: "Jack Brabham", carro: "Cooper-Climax T53", numero: "2", circuito: "Porto", pistaNome: "Boavista", historia: "Consolidou a revolução dos carros de Fórmula 1 com motor traseiro central." },
-            { ano: 1961, piloto: "Phil Hill", carro: "Ferrari 156 F1", numero: "2", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro americano campeão sob a sombra da morte de seu rival Von Trips." },
-            { ano: 1962, piloto: "Graham Hill", carro: "BRM P57", numero: "3", circuito: "East London", pistaNome: "Prince George", historia: "Bateu a Lotus de Jim Clark na África do Sul após quebra mecânica do rival." },
-            { ano: 1963, piloto: "Jim Clark", carro: "Lotus-Climax 25", numero: "8", circuito: "Monza", pistaNome: "Monza", historia: "Temporada esmagadora com o chassi monocoque revolucionário de Colin Chapman." },
-            { ano: 1964, piloto: "John Surtees", carro: "Ferrari 158", numero: "7", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Único campeão mundial sobre duas rodas (Motos) e quatro rodas na história." },
-            { ano: 1965, piloto: "Jim Clark", carro: "Lotus-Climax 33", numero: "5", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Venceu o título com folga e ainda ganhou as 500 Milhas de Indianápolis no mesmo ano." },
-            { ano: 1966, piloto: "Jack Brabham", carro: "Brabham-Repco BT19", numero: "3", circuito: "Monza", pistaNome: "Monza", historia: "Único piloto da história a ser campeão pilotando um carro de sua própria equipe." },
-            { ano: 1967, piloto: "Denny Hulme", carro: "Brabham-Repco BT24", numero: "2", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Bateu seu chefe Jack Brabham usando regularidade e inteligência tática." },
-            { ano: 1968, piloto: "Graham Hill", carro: "Lotus-Ford 49B", numero: "10", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Liderou e uniu a equipe Lotus após a trágica morte de Jim Clark." },
-            { ano: 1969, piloto: "Jackie Stewart", carro: "Matra-Ford MS80", numero: "3", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro título do escocês correndo com a equipe de Ken Tyrrell." },
-            { ano: 1970, piloto: "Jochen Rindt", carro: "Lotus-Ford 72C", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "O único campeão póstumo da F1. Faleceu nos treinos e ninguém superou seus pontos." },
-            { ano: 1971, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 003", numero: "11", circuito: "Osterreichring", pistaNome: "Zeltweg", historia: "Domínio absoluto vencendo 6 das 11 corridas com o icônico carro da Tyrrell." },
-            { ano: 1972, piloto: "Emerson Fittipaldi", carro: "Lotus-Ford 72D", numero: "8", circuito: "Monza", pistaNome: "Monza", historia: "O Brasil no topo. Emerson tornou-se o campeão mais jovem da história com a Lotus JPS." },
-            { ano: 1973, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 006", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "Garantiu o tricampeonato em Monza e se aposentou logo em seguida." },
-            { ano: 1974, piloto: "Emerson Fittipaldi", carro: "McLaren-Ford M23", numero: "5", circuito: "Watkins Glen", pistaNome: "Watkins Glen", historia: "Mudou para a McLaren e levou a equipe ao seu primeiro título mundial." },
-            { ano: 1975, piloto: "Niki Lauda", carro: "Ferrari 312T", numero: "12", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro título de Lauda, quebrando um jejum de 11 anos da Ferrari com o motor transversal." },
-            { ano: 1976, piloto: "James Hunt", carro: "McLaren-Ford M23", numero: "11", circuito: "Fuji", pistaNome: "Fuji", historia: "Bateu Lauda por um ponto no Japão sob chuva, após o austríaco abandonar por segurança." },
-            { ano: 1977, piloto: "Niki Lauda", carro: "Ferrari 312T2", numero: "11", circuito: "Watkins Glen", pistaNome: "Watkins Glen", historia: "A redenção técnica. Conquistou o campeonato com consistência e inteligência." },
-            { ano: 1978, piloto: "Mario Andretti", carro: "Lotus-Ford 79", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "Consagração do efeito solo (carro asa). Marcado pela morte de seu parceiro Peterson." },
-            { ano: 1979, piloto: "Jody Scheckter", carro: "Ferrari 312T4", numero: "11", circuito: "Monza", pistaNome: "Monza", historia: "Venceu o campeonato contando com a impressionante lealdade de Gilles Villeneuve." },
-            { ano: 1980, piloto: "Alan Jones", carro: "Williams-Ford FW07B", numero: "27", circuito: "Montreal", pistaNome: "Gilles Villeneuve", historia: "Primeiro título de pilotos da equipe de Frank Williams com um carro robusto." },
-            { ano: 1981, piloto: "Nelson Piquet", carro: "Brabham-Ford BT49C", numero: "5", circuito: "Las Vegas", pistaNome: "Caesars Palace", historia: "Piquet terminou exausto sob calor infernal no estacionamento de Vegas para garantir o título." },
-            { ano: 1982, piloto: "Keke Rosberg", carro: "Williams-Ford FW08", numero: "6", circuito: "Las Vegas", pistaNome: "Caesars Palace", historia: "O ano mais louco da F1. O finlandês levou o campeonato vencendo apenas uma corrida." },
-            { ano: 1983, piloto: "Nelson Piquet", carro: "Brabham-BMW BT52B", numero: "5", circuito: "Kyalami", pistaNome: "Kyalami", historia: "Primeiro título da história de um motor Turbo na F1, batendo Renault e Ferrari." },
-            { ano: 1984, piloto: "Niki Lauda", carro: "McLaren-TAG MP4/2", numero: "8", circuito: "Estoril", pistaNome: "Estoril", historia: "Menor diferença da história: Lauda bateu Alain Prost por apenas meio ponto." },
-            { ano: 1985, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2B", numero: "2", circuito: "Brands Hatch", pistaNome: "Brands Hatch", historia: "Após vários vice-campeonatos, o 'Professor' finalmente garantiu sua primeira coroa." },
-            { ano: 1986, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2C", numero: "1", circuito: "Adelaide", pistaNome: "Adelaide", historia: "O pneu estourado de Mansell em Adelaide abriu as portas para o bicampeonato de Prost." },
-            { ano: 1987, piloto: "Nelson Piquet", carro: "Williams-Honda FW11B", numero: "6", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Guerra psicológica interna contra Mansell. Levou o tri após o inglês bater nos treinos." },
-            { ano: 1988, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/4", numero: "12", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Senna largou mal, caiu para 16º, fez uma recuperação incrível na chuva e venceu Prost." },
-            { ano: 1989, piloto: "Alain Prost", carro: "McLaren-Honda MP4/5", numero: "2", circuito: "Suzuka", pistaNome: "Suzuka", historia: "A polêmica colisão na chicane de Suzuka. Senna foi desclassificado e Prost levou o título." },
-            { ano: 1990, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/5B", numero: "27", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O troco de 1989. Senna tirou Prost da pista na primeira curva e garantiu o bicampeonato." },
-            { ano: 1991, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/6", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O tricampeonato incontestável. Senna dominou o ano com o motor Honda V12." },
-            { ano: 1992, piloto: "Nigel Mansell", carro: "Williams-Renault FW14B", numero: "5", circuito: "Hungaroring", pistaNome: "Hungaroring", historia: "Com suspensão ativa eletronica, Mansell destruiu a concorrencia e foi campeao em agosto." },
-            { ano: 1993, piloto: "Alain Prost", carro: "Williams-Renault FW15C", numero: "2", circuito: "Spa-Francorchamps", pistaNome: "Spa", historia: "Quarto e ultimo titulo do frances com o carro mais tecnologico da historia." },
-            { ano: 1994, piloto: "Michael Schumacher", carro: "Benetton-Ford B194", numero: "5", circuito: "Adelaide", pistaNome: "Adelaide", historia: "Apos bater, Schumacher jogou o carro em cima de Damon Hill para garantir a taca." },
-            { ano: 1995, piloto: "Michael Schumacher", carro: "Benetton-Renault B195", numero: "1", circuito: "Aida", pistaNome: "Aida", historia: "Schumacher dominou a temporada com motor Renault e garantiu o bicampeonato no Pacifico." },
-            { ano: 1996, piloto: "Damon Hill", carro: "Williams-Renault FW18", numero: "5", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Filho de Graham Hill, Damon superou a pressao e o companheiro Villeneuve para vencer." },
-            { ano: 1997, piloto: "Jacques Villeneuve", carro: "Williams-Renault FW19", numero: "3", circuito: "Jerez", pistaNome: "Jerez", historia: "Schumacher tentou bater em Villeneuve para tira-lo da prova, mas acabou desclassificado." },
-            { ano: 1998, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/13", numero: "8", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O Finlandes Voador superou Schumacher na decisao com carro projetado por Newey." },
-            { ano: 1999, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/14", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Bicampeao mundial apos travar uma batalha intensa contra Eddie Irvine da Ferrari." },
-            { ano: 2000, piloto: "Michael Schumacher", carro: "Ferrari F1-2000", numero: "3", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Encerrou o doloroso jejum de 21 anos sem titulos de pilotos da Ferrari." },
-            { ano: 2001, piloto: "Michael Schumacher", carro: "Ferrari F2001", numero: "1", circuito: "Hungaroring", pistaNome: "Hungaroring", historia: "Igualou o recorde de 4 titulos de Alain Prost vencendo na Hungria com antecedencia." },
-            { ano: 2002, piloto: "Michael Schumacher", carro: "Ferrari F2002", numero: "1", circuito: "Magny-Cours", pistaNome: "Magny Cours", historia: "O campeonato mais rapido da historia. Garantiu a taca em julho com 6 etapas de folga." },
-            { ano: 2003, piloto: "Michael Schumacher", carro: "Ferrari F2003-GA", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Superou o recorde de Fangio ao conquistar o sexto titulo mundial no Japao." },
-            { ano: 2004, piloto: "Michael Schumacher", carro: "Ferrari F2004", numero: "1", circuito: "Spa-Francorchamps", pistaNome: "Spa", historia: "O auge da era Schumacher. Faturou o heptacampeonato com um carro avassalador." },
-            { ano: 2005, piloto: "Fernando Alonso", carro: "Renault R25", numero: "5", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Alonso quebrou a hegemonia da Ferrari e tornou-se o campeao mais jovem no Brasil." },
-            { ano: 2006, piloto: "Fernando Alonso", carro: "Renault R26", numero: "1", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Bicampeonato em uma batalha espetacular contra a Ferrari no ano da despedida de Schumi." },
-            { ano: 2007, piloto: "Kimi Raikkonen", carro: "Ferrari F2007", numero: "6", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Kimi correu por fora contra Hamilton e Alonso, venceu no Brasil e levou por 1 ponto." },
-            { ano: 2008, piloto: "Lewis Hamilton", carro: "McLaren-Mercedes MP4-23", numero: "20", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Hamilton ultrapassou Glock na ultima curva da ultima volta e tirou o titulo de Massa." },
-            { ano: 2009, piloto: "Jenson Button", carro: "Brawn-Mercedes BGP 001", numero: "22", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Uma equipe comprada por 1 libra usou o difusor duplo e Button foi campeao no Brasil." },
-            { ano: 2010, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB6", numero: "5", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Vettel so liderou o campeonato na ultima corrida, desbancando Alonso e Webber." },
-            { ano: 2011, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB7", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Bicampeonato avassalador conquistando 15 pole positions na temporada." },
-            { ano: 2012, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB8", numero: "1", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Rodou na largada, mas escalou o pelotão na chuva para ser tricampeao contra Alonso." },
-            { ano: 2013, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB9", numero: "1", circuito: "Buddh", pistaNome: "Buddh", historia: "Tetracampeonato historico selado na India com uma sequencia recorde de 9 vitorias." },
-            { ano: 2014, piloto: "Lewis Hamilton", carro: "Mercedes F1 W05 Hybrid", numero: "44", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Inicio da Era Hibrida V6. Hamilton bateu seu companheiro Nico Rosberg em Abu Dhabi." },
-            { ano: 2015, piloto: "Lewis Hamilton", carro: "Mercedes F1 W06 Hybrid", numero: "44", circuito: "Austin", pistaNome: "Austin", historia: "Conquistou o tricampeonato nos EUA apos erro de Rosberg sob pressao nas voltas finais." },
-            { ano: 2016, piloto: "Nico Rosberg", carro: "Mercedes F1 W07 Hybrid", numero: "6", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Rosberg resistiu a pressao de Hamilton para ser campeao e se aposentou 5 dias depois." },
-            { ano: 2017, piloto: "Lewis Hamilton", carro: "Mercedes F1 W08 EQ Power+", numero: "44", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Tetracampeonato conquistado apos intensa batalha contra a Ferrari de Sebastian Vettel." },
-            { ano: 2018, piloto: "Lewis Hamilton", carro: "Mercedes F1 W09 EQ Power+", numero: "44", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Igualou os 5 titulos de Fangio com uma das melhores temporadas de sua carreira." },
-            { ano: 2019, piloto: "Lewis Hamilton", carro: "Mercedes F1 W10 EQ Power+", numero: "44", circuito: "Austin", pistaNome: "Austin", historia: "Hexacampeonato brasileiro garantido com um segundo lugar nos EUA." },
-            { ano: 2020, piloto: "Lewis Hamilton", carro: "Mercedes F1 W11 EQ Performance", numero: "44", circuito: "Istambul", pistaNome: "Istanbul Park", historia: "Heptacampeonato. Venceu na Turquia na chuva, igualando o recorde de Schumacher." },
-            { ano: 2021, piloto: "Max Verstappen", carro: "Red Bull-Honda RB16B", numero: "33", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Ultrapassou Hamilton na ultima volta em Abu Dhabi apos relargada controversa." },
-            { ano: 2022, piloto: "Max Verstappen", carro: "Red Bull-RB18", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Dominou o novo regulamento de efeito solo, faturando o bi sob chuva no Japao." },
-            { ano: 2023, piloto: "Max Verstappen", carro: "Red Bull-RB19", numero: "1", circuito: "Lusail", pistaNome: "Lusail", historia: "O ano mais dominante de todos. Tri garantido em um sabado na corrida Sprint." },
-            { ano: 2024, piloto: "Max Verstappen", carro: "Red Bull-RB20", numero: "1", circuito: "Las Vegas", pistaNome: "Las Vegas", historia: "Tetracampeonato com raca, garantindo a taca com um 5º lugar nas luzes de Vegas." },
-            { ano: 2025, piloto: "Lando Norris", carro: "McLaren-Mercedes MCL38", numero: "4", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Primeiro titulo do britanico, coroando a espetacular ressurreicao tecnica da equipe McLaren." }
+            { ano: 1950, piloto: "Giuseppe Farina", carro: "Alfa Romeo 158", numero: "2", circuito: "Monza", historia: "Farina venceu em casa para superar Fangio e ser o primeiro campeao da historia.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1951, piloto: "Juan Manuel Fangio", carro: "Alfa Romeo 159", numero: "22", circuito: "Pedralbes", historia: "Fangio faturou o titulo apos a Ferrari errar a estrategia de pneus de Ascari.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1952, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "10", circuito: "Nurburgring", historia: "Dominou a temporada vencendo seis corridas consecutivas com o modelo de F2.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1953, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "4", circuito: "Bremgarten", historia: "Bicampeao consecutivo selando o titulo nas florestas da Suica.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1954, piloto: "Juan Manuel Fangio", carro: "Mercedes W196 / Maserati 250F", numero: "18", circuito: "Bremgarten", historia: "Iniciou o ano de Maserati e mudou para as Flechas de Prata da Mercedes.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1955, piloto: "Juan Manuel Fangio", carro: "Mercedes W196", numero: "10", circuito: "Monza", historia: "Temporada de dominio absoluto de Fangio com o Mercedes aerodinamico carenado.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1956, piloto: "Juan Manuel Fangio", carro: "Ferrari D50", numero: "22", circuito: "Monza", historia: "Venceu o titulo dividindo o carro da corrida final com seu companheiro Collins.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1957, piloto: "Juan Manuel Fangio", carro: "Maserati 250F", numero: "2", circuito: "Nurburgring", historia: "Sua maior corrida historica, superando as Ferraris na Alemanha para ser pentacampeao.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1958, piloto: "Mike Hawthorn", carro: "Ferrari 246 F1", numero: "6", circuito: "Ain-Diab", historia: "Primeiro britanico campeao, vencendo apenas uma corrida no ano, mas com muita regularidade.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1959, piloto: "Jack Brabham", carro: "Cooper-Climax T51", numero: "8", circuito: "Sebring", historia: "Ficou sem combustivel e empurrou o carro ate a linha de chegada para ser campeao.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1960, piloto: "Jack Brabham", carro: "Cooper-Climax T53", numero: "2", circuito: "Porto", historia: "Consolidou a revolucao dos carros de Formula 1 com motor traseiro central.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1961, piloto: "Phil Hill", carro: "Ferrari 156 F1", numero: "2", circuito: "Monza", historia: "Primeiro americano campeao sob a sombra da morte de seu rival Von Trips.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1962, piloto: "Graham Hill", carro: "BRM P57", numero: "3", circuito: "East London", historia: "Bateu a Lotus de Jim Clark na Africa do Sul apos quebra mecanica do rival.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1963, piloto: "Jim Clark", carro: "Lotus-Climax 25", numero: "8", circuito: "Monza", historia: "Temporada esmagadora com o chassi monocoque revolucionario de Colin Chapman.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1964, piloto: "John Surtees", carro: "Ferrari 158", numero: "7", circuito: "Cidade do Mexico", historia: "Unico campeao mundial sobre duas rodas (Motos) e quatro rodas na historia.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1965, piloto: "Jim Clark", carro: "Lotus-Climax 33", numero: "5", circuito: "Nurburgring", historia: "Venceu o titulo com folga e ainda ganhou as 500 Milhas de Indianapolis no mesmo ano.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1966, piloto: "Jack Brabham", carro: "Brabham-Repco BT19", numero: "3", circuito: "Monza", historia: "Unico piloto da historia a ser campeao pilotando um carro de sua propria equipe.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1967, piloto: "Denny Hulme", carro: "Brabham-Repco BT24", numero: "2", circuito: "Cidade do Mexico", historia: "Bateu seu chefe Jack Brabham usando regularidade e inteligencia tatica.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1968, piloto: "Graham Hill", carro: "Lotus-Ford 49B", numero: "10", circuito: "Cidade do Mexico", historia: "Liderou e uniu a equipe Lotus apos a tragica morte de Jim Clark.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1969, piloto: "Jackie Stewart", carro: "Matra-Ford MS80", numero: "3", circuito: "Monza", historia: "Primeiro titulo do escoces correndo com a equipe de Ken Tyrrell.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1970, piloto: "Jochen Rindt", carro: "Lotus-Ford 72C", numero: "5", circuito: "Monza", historia: "O unico campeao postumo da F1. Faleceu nos treinos e ninguem superou seus pontos.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1971, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 003", numero: "11", circuito: "Osterreichring", historia: "Dominio absoluto vencendo 6 das 11 corridas com o iconico carro da Tyrrell.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1972, piloto: "Emerson Fittipaldi", carro: "Lotus-Ford 72D", numero: "8", circuito: "Monza", historia: "O Brasil no topo. Emerson tornou-se o campeao mais jovem da historia com a Lotus JPS.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1973, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 006", numero: "5", circuito: "Monza", historia: "Garantiu o tricampeonato em Monza e se aposentou logo em seguida.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1974, piloto: "Emerson Fittipaldi", carro: "McLaren-Ford M23", numero: "5", circuito: "Watkins Glen", historia: "Mudou para a McLaren e levou a equipe ao seu primeiro titulo mundial.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1975, piloto: "Niki Lauda", carro: "Ferrari 312T", numero: "12", circuito: "Monza", historia: "Primeiro titulo de Lauda, quebrando um jejum de 11 anos da Ferrari com o motor transversal.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 1976, piloto: "James Hunt", carro: "McLaren-Ford M23", numero: "11", circuito: "Fuji", historia: "Bateu Lauda por um ponto no Japao sob chuva, apos o austriaco abandonar por segurança.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1977, piloto: "Niki Lauda", carro: "Ferrari 312T2", numero: "11", circuito: "Watkins Glen", historia: "A redencao tecnica. Conquistou o campeonato com consistencia e inteligencia.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1978, piloto: "Mario Andretti", carro: "Lotus-Ford 79", numero: "5", circuito: "Monza", historia: "Consagracao do efeito solo (carro asa). Marcado pela morte de seu parceiro Peterson.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1979, piloto: "Jody Scheckter", carro: "Ferrari 312T4", numero: "11", circuito: "Monza", historia: "Venceu o campeonato contando com a impressionante lealdade de Gilles Villeneuve.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1980, piloto: "Alan Jones", carro: "Williams-Ford FW07B", numero: "27", circuito: "Montreal", historia: "Primeiro titulo de pilotos da equipe de Frank Williams com um carro robusto.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1981, piloto: "Nelson Piquet", carro: "Brabham-Ford BT49C", numero: "5", circuito: "Las Vegas", historia: "Piquet terminou exausto sob calor infernal no estacionamento de Vegas para garantir o titulo.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1982, piloto: "Keke Rosberg", carro: "Williams-Ford FW08", numero: "6", circuito: "Las Vegas", historia: "O ano mais louco da F1. O finlandes levou o campeonato vencendo apenas uma corrida.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1983, piloto: "Nelson Piquet", carro: "Brabham-BMW BT52B", numero: "5", circuito: "Kyalami", historia: "Primeiro titulo da historia de um motor Turbo na F1, batendo Renault e Ferrari.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1984, piloto: "Niki Lauda", carro: "McLaren-TAG MP4/2", numero: "8", circuito: "Estoril", historia: "Menor diferenca da historia: Lauda bateu Alain Prost por apenas meio ponto.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1985, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2B", numero: "2", circuito: "Brands Hatch", historia: "Apos varios vice-campeonatos, o 'Professor' finalmente garantiu sua primeira coroa.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1986, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2C", numero: "1", circuito: "Adelaide", historia: "O pneu estourado de Mansell em Adelaide abriu as portas para o bicampeonato de Prost.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1987, piloto: "Nelson Piquet", carro: "Williams-Honda FW11B", numero: "6", circuito: "Suzuka", historia: "Guerra psicologica interna contra Mansell. Levou o tri apos o ingles bater nos treinos.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1988, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/4", numero: "12", circuito: "Suzuka", historia: "Senna largou mal, caiu para 16º, fez uma recuperacao incrivel na chuva e venceu Prost.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1989, piloto: "Alain Prost", carro: "McLaren-Honda MP4/5", numero: "2", circuito: "Suzuka", historia: "A polemica colisao na chicane de Suzuka. Senna foi desclassificado e Prost levou o titulo.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1990, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/5B", numero: "27", circuito: "Suzuka", historia: "O troco de 1989. Senna tirou Prost da pista na primeira curva e garantiu o bicampeonato.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1991, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/6", numero: "1", circuito: "Suzuka", historia: "O tricampeonato incontestavel. Senna dominou o ano com o motor Honda V12.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1992, piloto: "Nigel Mansell", carro: "Williams-Renault FW14B", numero: "5", circuito: "Hungaroring", historia: "Com suspensao ativa eletronica, Mansell destruiu a concorrencia e foi campeao em agosto.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1993, piloto: "Alain Prost", carro: "Williams-Renault FW15C", numero: "2", circuito: "Spa-Francorchamps", historia: "Quarto e ultimo titulo do frances com o carro mais tecnologico da historia.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1994, piloto: "Michael Schumacher", carro: "Benetton-Ford B194", numero: "5", circuito: "Adelaide", historia: "Apos bater, Schumacher jogou o carro em cima de Damon Hill para garantir a taca.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1995, piloto: "Michael Schumacher", carro: "Benetton-Renault B195", numero: "1", circuito: "Aida", historia: "Schumacher dominou a temporada com motor Renault e garantiu o bicampeonato no Pacifico.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1996, piloto: "Damon Hill", carro: "Williams-Renault FW18", numero: "5", circuito: "Suzuka", historia: "Filho de Graham Hill, Damon superou a pressao e o companheiro Villeneuve para vencer.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1997, piloto: "Jacques Villeneuve", carro: "Williams-Renault FW19", numero: "3", circuito: "Jerez", historia: "Schumacher tentou bater em Villeneuve para tira-lo da prova, mas acabou desclassificado.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1998, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/13", numero: "8", circuito: "Suzuka", historia: "O Finlandes Voador superou Schumacher na decisao com carro projetado por Newey.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 1999, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/14", numero: "1", circuito: "Suzuka", historia: "Bicampeao mundial apos travar uma batalha intensa contra Eddie Irvine da Ferrari.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2000, piloto: "Michael Schumacher", carro: "Ferrari F1-2000", numero: "3", circuito: "Suzuka", historia: "Encerrou o doloroso jejum de 21 anos sem titulos de pilotos da Ferrari.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2001, piloto: "Michael Schumacher", carro: "Ferrari F2001", numero: "1", circuito: "Hungaroring", historia: "Igualou o recorde de 4 titulos de Alain Prost vencendo na Hungria com antecedencia.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2002, piloto: "Michael Schumacher", carro: "Ferrari F2002", numero: "1", circuito: "Magny-Cours", historia: "O campeonato mais rapido da historia. Garantiu a taca em julho com 6 etapas de folga.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2003, piloto: "Michael Schumacher", carro: "Ferrari F2003-GA", numero: "1", circuito: "Suzuka", historia: "Superou o recorde de Fangio ao conquistar o sexto titulo mundial no Japao.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2004, piloto: "Michael Schumacher", carro: "Ferrari F2004", numero: "1", circuito: "Spa-Francorchamps", historia: "O auge da era Schumacher. Faturou o heptacampeonato com um carro avassalador.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2005, piloto: "Fernando Alonso", carro: "Renault R25", numero: "5", circuito: "Interlagos", historia: "Alonso quebrou a hegemonia da Ferrari e tornou-se o campeao mais jovem no Brasil.", imgCarro: "wikimedia.org", imgCircuito: "wikimedia.org" },
+            { ano: 2006, piloto: "Fernando Alonso", carro: "Renault R26", numero: "1", circuito: "Interlagos", historia: "Bicampeonato em uma batalha espetacular contra a Ferrari no ano da despedida de Schumi.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2007, piloto: "Kimi Raikkonen", carro: "Ferrari F2007", numero: "6", circuito: "Interlagos", historia: "Kimi correu por fora contra Hamilton e Alonso, venceu no Brasil e levou por 1 ponto.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2008, piloto: "Lewis Hamilton", carro: "McLaren-Mercedes MP4-23", numero: "20", circuito: "Interlagos", historia: "Hamilton ultrapassou Glock na última curva da última volta e tirou o título de Massa.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2009, piloto: "Jenson Button", carro: "Brawn-Mercedes BGP 001", numero: "22", circuito: "Interlagos", historia: "Uma equipe comprada por 1 libra usou o difusor duplo e Button foi campeão no Brasil.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2010, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB6", numero: "5", circuito: "Yas Marina", historia: "Vettel só liderou o campeonato na última corrida, desbancando Alonso e Webber.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2011, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB7", numero: "1", circuito: "Suzuka", historia: "Bicampeonato avassalador conquistando 15 pole positions na temporada.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2012, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB8", numero: "1", circuito: "Interlagos", historia: "Rodou na largada, mas escalou o pelotão na chuva para ser tricampeão contra Alonso.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2013, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB9", numero: "1", circuito: "Buddh", historia: "Tetracampeonato histórico selado na Índia com uma sequência recorde de 9 vitórias.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2014, piloto: "Lewis Hamilton", carro: "Mercedes F1 W05 Hybrid", numero: "44", circuito: "Yas Marina", historia: "Início da Era Híbrida V6. Hamilton bateu seu companheiro Nico Rosberg em Abu Dhabi.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2015, piloto: "Lewis Hamilton", carro: "Mercedes F1 W06 Hybrid", numero: "44", circuito: "Austin", historia: "Conquistou o tricampeonato nos EUA após erro de Rosberg sob pressão nas voltas finais.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2016, piloto: "Nico Rosberg", carro: "Mercedes F1 W07 Hybrid", numero: "6", circuito: "Yas Marina", historia: "Rosberg resistiu à pressão de Hamilton para ser campeão e se aposentou 5 dias depois.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2017, piloto: "Lewis Hamilton", carro: "Mercedes F1 W08 EQ Power+", numero: "44", circuito: "Cidade do Mexico", historia: "Tetracampeonato conquistado após intensa batalha contra a Ferrari de Sebastian Vettel.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2018, piloto: "Lewis Hamilton", carro: "Mercedes F1 W09 EQ Power+", numero: "44", circuito: "Cidade do Mexico", historia: "Igualou os 5 títulos de Fangio com uma das melhores temporadas de sua carreira.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2019, piloto: "Lewis Hamilton", carro: "Mercedes F1 W10 EQ Power+", numero: "44", circuito: "Austin", historia: "Hexacampeonato garantido com um segundo lugar nos EUA, isolando-se na história.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2020, piloto: "Lewis Hamilton", carro: "Mercedes F1 W11 EQ Performance", numero: "44", circuito: "Istambul", historia: "Heptacampeonato. Venceu na Turquia na chuva, igualando o recorde de Schumacher.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2021, piloto: "Max Verstappen", carro: "Red Bull-Honda RB16B", numero: "33", circuito: "Yas Marina", historia: "Ultrapassou Hamilton na última volta em Abu Dhabi após relargada controversa.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2022, piloto: "Max Verstappen", carro: "Red Bull-RB18", numero: "1", circuito: "Suzuka", historia: "Dominou o novo regulamento de efeito solo, faturando o bi sob chuva no Japão.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2023, piloto: "Max Verstappen", carro: "Red Bull-RB19", numero: "1", circuito: "Lusail", historia: "O ano mais dominante de todos. Tri garantido em um sábado na corrida Sprint.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2024, piloto: "Max Verstappen", carro: "Red Bull-RB20", numero: "1", circuito: "Las Vegas", historia: "Tetracampeonato com raça, garantindo a taça com um 5º lugar nas luzes de Vegas.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" },
+            { ano: 2025, piloto: "Lando Norris", carro: "McLaren-Mercedes MCL38", numero: "4", circuito: "Yas Marina", historia: "Primeiro título do britânico, coroando a espetacular ressurreição técnica da equipe McLaren.", imgCarro: "https://wikimedia.org", imgCircuito: "https://wikimedia.org" }
         ];
-                 
+
+        // LÓGICA DE ATIVAÇÃO DO APLICATIVO
         function renderGrid(dados = dadosColecao) {
             const grid = document.getElementById('app-grid');
             grid.innerHTML = '';
@@ -342,7 +329,7 @@
             document.getElementById('modal-car').innerText = item.carro;
             document.getElementById('modal-number').innerText = "#" + item.numero;
             document.getElementById('modal-track').innerText = item.circuito;
-            document.getElementById('modal-history').innerText = item.historia;
+            document.getElementById('modal-history').innerText = item.history ? item.history : item.historia;
             
             document.getElementById('img-car').src = item.imgCarro ? item.imgCarro : "https://placeholders.dev";
             document.getElementById('img-track').src = item.imgCircuito ? item.imgCircuito : "https://placeholders.dev";
@@ -378,35 +365,3 @@
     </script>
 </body>
 </html>
-
-        // LOGICA DE FUNCIONAMENTO DO APP
-        function renderGrid(dados = dadosColecao) {
-            const grid = document.getElementById('app-grid');
-            grid.innerHTML = '';
-            dados.forEach(item => {
-                const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
-                const card = document.createElement('div');
-                card.className = `card ${isOwned ? 'owned' : ''}`;
-                card.onclick = () => openModal(item);
-                card.innerHTML = `
-                    <span class="badge-year">${item.ano}</span>
-                    <p class="card-pilot">${item.piloto}</p>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filtrarCards() {
-            const termo = document.getElementById('search-input').value.toLowerCase();
-            const filtrados = dadosColecao.filter(item => 
-                item.ano.toString().includes(termo) ||
-                item.piloto.toLowerCase().includes(termo) ||
-                item.carro.toLowerCase().includes(termo) ||
-                item.circuito.toLowerCase().includes(termo)
-            );
-            renderGrid(filtrados);
-        }
-
-        let itemSelecionado = null;
-
-        
