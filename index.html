@@ -344,8 +344,8 @@
             document.getElementById('modal-track').innerText = item.circuito;
             document.getElementById('modal-history').innerText = item.historia;
             
-            document.getElementById('img-car').src = "https://placeholders.dev" + encodeURIComponent(item.carro) + "&bgColor=%23252525&textColor=%23ffffff";
-            document.getElementById('img-track').src = "https://placeholders.dev" + encodeURIComponent(item.pistaNome) + "&bgColor=%23252525&textColor=%23ffffff";
+            document.getElementById('img-car').src = item.imgCarro ? item.imgCarro : "https://placeholders.dev";
+            document.getElementById('img-track').src = item.imgCircuito ? item.imgCircuito : "https://placeholders.dev";
 
             const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
             const btn = document.getElementById('btn-own');
