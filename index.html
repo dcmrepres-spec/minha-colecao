@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Coleção F1 1:43</title>
-
     <style>
         :root {
             --bg-color: #121212;
@@ -15,43 +14,33 @@
             --text-secondary: #aaaaaa;
             --success-color: #00b050;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 15px;
             padding-bottom: 60px;
         }
-
         .header {
             text-align: center;
             padding: 20px 0;
         }
-
         .header h1 {
             margin: 0;
             color: var(--accent-color);
             font-size: 1.8em;
             letter-spacing: 1px;
         }
-
         .header p {
             margin: 5px 0 0 0;
             color: var(--text-secondary);
             font-size: 0.9em;
         }
-
         .search-container {
             max-width: 600px;
             margin: 0 auto 20px auto;
         }
-
         .search-box {
             width: 100%;
             padding: 12px;
@@ -61,13 +50,7 @@
             color: white;
             box-sizing: border-box;
             font-size: 1em;
-            outline: none;
         }
-
-        .search-box:focus {
-            border-color: var(--accent-color);
-        }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -75,28 +58,23 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .card {
             background-color: var(--card-bg);
             padding: 12px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.15s, border-color 0.15s, background-color 0.15s;
+            transition: transform 0.15s, border-color 0.15s;
             border: 2px solid transparent;
             position: relative;
-            min-height: 75px;
         }
-
         .card:hover {
             transform: translateY(-3px);
             background-color: var(--card-hover);
         }
-
         .card.owned {
             border-color: var(--success-color);
         }
-
         .card.owned::after {
             content: "✓";
             position: absolute;
@@ -106,7 +84,6 @@
             font-weight: bold;
             font-size: 0.9em;
         }
-
         .badge-year {
             background-color: var(--accent-color);
             padding: 2px 6px;
@@ -114,7 +91,6 @@
             font-weight: bold;
             font-size: 0.85em;
         }
-
         .card-pilot {
             margin: 8px 0 0 0;
             font-size: 0.85em;
@@ -123,36 +99,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .empty-message {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 40px 10px;
-        }
-
-        /* =========================
-           MODAL
-           ========================= */
-
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center;
             z-index: 1000;
-            padding: 15px;
         }
-
-        .modal.show {
-            display: flex;
-        }
-
         .modal-content {
             background-color: var(--card-bg);
             padding: 20px;
@@ -162,41 +116,23 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
-
         .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #888;
-            line-height: 1;
-            user-select: none;
+            position: absolute; top: 10px; right: 15px;
+            font-size: 28px; cursor: pointer; color: #888;
         }
-
-        .close:hover {
-            color: #ffffff;
-        }
-
         .info-row {
             margin: 10px 0;
             font-size: 0.95em;
             border-bottom: 1px solid #333;
             padding-bottom: 6px;
         }
-
-        .info-row strong {
-            color: var(--text-secondary);
-        }
-
+        .info-row strong { color: var(--text-secondary); }
         .img-box {
             display: flex;
             gap: 10px;
             margin-top: 15px;
         }
-
         .img-box div {
             flex: 1;
             background: #252525;
@@ -204,21 +140,17 @@
             border-radius: 6px;
             text-align: center;
         }
-
         .img-box span {
             display: block;
             font-size: 0.75em;
             color: var(--text-secondary);
             margin-bottom: 4px;
         }
-
         .modal img {
             width: 100%;
             height: 100px;
             object-fit: contain;
-            border-radius: 4px;
         }
-
         .history-text {
             font-size: 0.88em;
             line-height: 1.4;
@@ -228,80 +160,18 @@
             padding: 10px;
             border-radius: 6px;
         }
-
         .btn-toggle {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
+            background-color: #333; color: white; border: none;
+            padding: 12px; width: 100%; border-radius: 6px;
+            font-weight: bold; cursor: pointer; margin-top: 15px;
             font-size: 1em;
             transition: background 0.2s;
         }
-
-        .btn-toggle:hover {
-            background-color: #444;
-        }
-
         .btn-toggle.owned {
             background-color: var(--success-color);
         }
-
-        /* =========================
-           RESPONSIVIDADE
-           ========================= */
-
-        @media (max-width: 500px) {
-
-            body {
-                padding: 10px;
-            }
-
-            .header {
-                padding: 15px 0;
-            }
-
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            .grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-
-            .card {
-                padding: 10px 6px;
-            }
-
-            .card-pilot {
-                font-size: 0.75em;
-            }
-
-            .modal {
-                padding: 10px;
-            }
-
-            .modal-content {
-                width: 92%;
-                max-height: 90vh;
-            }
-
-            .img-box {
-                flex-direction: column;
-            }
-
-            .img-box div {
-                width: 100%;
-            }
-        }
     </style>
 </head>
-
 <body>
 
     <div class="header">
@@ -310,986 +180,217 @@
     </div>
 
     <div class="search-container">
-        <input
-            type="text"
-            id="search-input"
-            class="search-box"
-            placeholder="Pesquisar por ano, piloto, carro ou pista..."
-            autocomplete="off"
-        >
+        <input type="text" id="search-input" class="search-box" placeholder="Pesquisar por ano, piloto, carro ou pista..." oninput="filtrarCards()">
     </div>
 
     <div class="grid" id="app-grid"></div>
 
     <div class="modal" id="detail-modal">
-
         <div class="modal-content">
-
-            <span
-                class="close"
-                id="close-modal"
-                aria-label="Fechar"
-                title="Fechar"
-            >
-                &times;
-            </span>
-
-            <h2
-                id="modal-title"
-                style="margin-top:0; color:var(--accent-color);"
-            >
-                Ano
-            </h2>
-
-            <div class="info-row">
-                <strong>Piloto:</strong>
-                <span id="modal-pilot"></span>
-            </div>
-
-            <div class="info-row">
-                <strong>Carro:</strong>
-                <span id="modal-car"></span>
-            </div>
-
-            <div class="info-row">
-                <strong>Número da Miniatura:</strong>
-                <span id="modal-number"></span>
-            </div>
-
-            <div class="info-row">
-                <strong>Pista do Título:</strong>
-                <span id="modal-track"></span>
-            </div>
-
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="margin-top:0; color:var(--accent-color);">Ano</h2>
+            <div class="info-row"><strong>Piloto:</strong> <span id="modal-pilot"></span></div>
+            <div class="info-row"><strong>Carro:</strong> <span id="modal-car"></span></div>
+            <div class="info-row"><strong>Número da Miniatura:</strong> <span id="modal-number"></span></div>
+            <div class="info-row"><strong>Pista do Título:</strong> <span id="modal-track"></span></div>
+            
             <div class="img-box">
-
                 <div>
                     <span>Carro do Campeão</span>
-
-                    <img
-                        id="img-car"
-                        src=""
-                        alt="Carro do campeão"
-                    >
+                    <img id="img-car" src="" alt="Foto do Carro">
                 </div>
-
                 <div>
                     <span>Traçado do Circuito</span>
-
-                    <img
-                        id="img-track"
-                        src=""
-                        alt="Circuito"
-                    >
+                    <img id="img-track" src="" alt="Circuito">
                 </div>
-
             </div>
-
-            <div
-                class="history-text"
-                id="modal-history"
-            ></div>
-
-            <button
-                class="btn-toggle"
-                id="btn-own"
-                type="button"
-            >
-                Marcar como Adquirido
-            </button>
-
+            
+            <div class="history-text" id="modal-history"></div>
+            <button class="btn-toggle" id="btn-own" onclick="toggleOwnership()">Marcar como Adquirido</button>
         </div>
     </div>
 
-    <!-- Banco de dados -->
-    <script src="dados.js"></script>
     <script>
-    "use strict";
-
-    /*
-     * ============================================
-     * CONFIGURAÇÃO
-     * ============================================
-     */
-
-    const STORAGE_PREFIX = "f1_143_owned_";
-
-    let itemSelecionado = null;
-
-
-    /*
-     * ============================================
-     * ELEMENTOS DA PÁGINA
-     * ============================================
-     */
-
-    const grid = document.getElementById("app-grid");
-    const searchInput = document.getElementById("search-input");
-    const modal = document.getElementById("detail-modal");
-    const closeModalButton = document.getElementById("close-modal");
-    const ownershipButton = document.getElementById("btn-own");
-
-    const modalTitle = document.getElementById("modal-title");
-    const modalPilot = document.getElementById("modal-pilot");
-    const modalCar = document.getElementById("modal-car");
-    const modalNumber = document.getElementById("modal-number");
-    const modalTrack = document.getElementById("modal-track");
-    const modalHistory = document.getElementById("modal-history");
-
-    const imgCar = document.getElementById("img-car");
-    const imgTrack = document.getElementById("img-track");
-
-
-    /*
-     * ============================================
-     * VERIFICAÇÃO DO BANCO DE DADOS
-     * ============================================
-     */
-
-    function bancoDeDadosValido() {
-
-        return (
-            typeof dadosColecao !== "undefined" &&
-            Array.isArray(dadosColecao)
-        );
-    }
-
-
-    /*
-     * ============================================
-     * NORMALIZAÇÃO DE TEXTO
-     *
-     * Permite pesquisar:
-     *
-     * "Nürburgring"
-     *
-     * digitando:
-     *
-     * "nurburgring"
-     * ============================================
-     */
-
-    function normalizarTexto(valor) {
-
-        if (valor === null || valor === undefined) {
-            return "";
+        const dadosColecao = [
+            { ano: 1950, piloto: "Giuseppe Farina", carro: "Alfa Romeo 158", numero: "2", circuito: "Monza", pistaNome: "Monza", historia: "Farina venceu em casa para superar Fangio e ser o primeiro campeão da história." },
+            { ano: 1951, piloto: "Juan Manuel Fangio", carro: "Alfa Romeo 159", numero: "22", circuito: "Pedralbes", pistaNome: "Pedralbes", historia: "Fangio faturou o título após a Ferrari errar a estratégia de pneus de Ascari." },
+            { ano: 1952, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "10", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Dominou a temporada vencendo seis corridas consecutivas com o modelo de F2." },
+            { ano: 1953, piloto: "Alberto Ascari", carro: "Ferrari 500", numero: "4", circuito: "Bremgarten", pistaNome: "Bremgarten", historia: "Bicampeão consecutivo selando o título nas florestas da Suíça." },
+            { ano: 1954, piloto: "Juan Manuel Fangio", carro: "Mercedes W196 / Maserati 250F", numero: "18", circuito: "Bremgarten", pistaNome: "Bremgarten", historia: "Iniciou o ano de Maserati e mudou para as Flechas de Prata da Mercedes." },
+            { ano: 1955, piloto: "Juan Manuel Fangio", carro: "Mercedes W196", numero: "10", circuito: "Monza", pistaNome: "Monza", historia: "Temporada de domínio absoluto de Fangio com o Mercedes aerodinâmico carenado." },
+            { ano: 1956, piloto: "Juan Manuel Fangio", carro: "Ferrari D50", numero: "22", circuito: "Monza", pistaNome: "Monza", historia: "Venceu o título dividindo o carro da corrida final com seu companheiro Collins." },
+            { ano: 1957, piloto: "Juan Manuel Fangio", carro: "Maserati 250F", numero: "2", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Sia maior corrida histórica, superando as Ferraris na Alemanha para ser pentacampeão." },
+            { ano: 1958, piloto: "Mike Hawthorn", carro: "Ferrari 246 F1", numero: "6", circuito: "Ain-Diab", pistaNome: "Ain-Diab", historia: "Primeiro britânico campeão, vencendo apenas uma corrida no ano, mas com muita regularidade." },
+            { ano: 1959, piloto: "Jack Brabham", carro: "Cooper-Climax T51", numero: "8", circuito: "Sebring", pistaNome: "Sebring", historia: "Ficou sem combustível e empurrou o carro até a linha de chegada para ser campeão." },
+            { ano: 1960, piloto: "Jack Brabham", carro: "Cooper-Climax T53", numero: "2", circuito: "Porto", pistaNome: "Boavista", historia: "Consolidou a revolução dos carros de Fórmula 1 com motor traseiro central." },
+            { ano: 1961, piloto: "Phil Hill", carro: "Ferrari 156 F1", numero: "2", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro americano campeão sob a sombra da morte de seu rival Von Trips." },
+            { ano: 1962, piloto: "Graham Hill", carro: "BRM P57", numero: "3", circuito: "East London", pistaNome: "Prince George", historia: "Bateu a Lotus de Jim Clark na África do Sul após quebra mecânica do rival." },
+            { ano: 1963, piloto: "Jim Clark", carro: "Lotus-Climax 25", numero: "8", circuito: "Monza", pistaNome: "Monza", historia: "Temporada esmagadora com o chassi monocoque revolucionário de Colin Chapman." },
+            { ano: 1964, piloto: "John Surtees", carro: "Ferrari 158", numero: "7", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Único campeão mundial sobre duas rodas (Motos) e quatro rodas na história." },
+            { ano: 1965, piloto: "Jim Clark", carro: "Lotus-Climax 33", numero: "5", circuito: "Nurburgring", pistaNome: "Nurburgring", historia: "Venceu o título com folga e ainda ganhou as 500 Milhas de Indianápolis no mesmo ano." },
+            { ano: 1966, piloto: "Jack Brabham", carro: "Brabham-Repco BT19", numero: "3", circuito: "Monza", pistaNome: "Monza", historia: "Único piloto da história a ser campeão pilotando um carro de sua própria equipe." },
+            { ano: 1967, piloto: "Denny Hulme", carro: "Brabham-Repco BT24", numero: "2", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Bateu seu chefe Jack Brabham usando regularidade e inteligência tática." },
+            { ano: 1968, piloto: "Graham Hill", carro: "Lotus-Ford 49B", numero: "10", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Liderou e uniu a equipe Lotus após a trágica morte de Jim Clark." },
+            { ano: 1969, piloto: "Jackie Stewart", carro: "Matra-Ford MS80", numero: "3", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro título do escocês correndo com a equipe de Ken Tyrrell." },
+            { ano: 1970, piloto: "Jochen Rindt", carro: "Lotus-Ford 72C", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "O único campeão póstumo da F1. Faleceu nos treinos e ninguém superou seus pontos." },
+            { ano: 1971, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 003", numero: "11", circuito: "Osterreichring", pistaNome: "Zeltweg", historia: "Domínio absoluto vencendo 6 das 11 corridas com o icônico carro da Tyrrell." },
+            { ano: 1972, piloto: "Emerson Fittipaldi", carro: "Lotus-Ford 72D", numero: "8", circuito: "Monza", pistaNome: "Monza", historia: "O Brasil no topo. Emerson tornou-se o campeão mais jovem da história com a Lotus JPS." },
+            { ano: 1973, piloto: "Jackie Stewart", carro: "Tyrrell-Ford 006", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "Garantiu o tricampeonato em Monza e se aposentou logo em seguida." },
+            { ano: 1974, piloto: "Emerson Fittipaldi", carro: "McLaren-Ford M23", numero: "5", circuito: "Watkins Glen", pistaNome: "Watkins Glen", historia: "Mudou para a McLaren e levou a equipe ao seu primeiro título mundial." },
+            { ano: 1975, piloto: "Niki Lauda", carro: "Ferrari 312T", numero: "12", circuito: "Monza", pistaNome: "Monza", historia: "Primeiro título de Lauda, quebrando um jejum de 11 anos da Ferrari com o motor transversal." },
+            { ano: 1976, piloto: "James Hunt", carro: "McLaren-Ford M23", numero: "11", circuito: "Fuji", pistaNome: "Fuji", historia: "Bateu Lauda por um ponto no Japão sob chuva, após o austríaco abandonar por segurança." },
+            { ano: 1977, piloto: "Niki Lauda", carro: "Ferrari 312T2", numero: "11", circuito: "Watkins Glen", pistaNome: "Watkins Glen", historia: "A redenção técnica. Conquistou o campeonato com consistência e inteligência." },
+            { ano: 1978, piloto: "Mario Andretti", carro: "Lotus-Ford 79", numero: "5", circuito: "Monza", pistaNome: "Monza", historia: "Consagração do efeito solo (carro asa). Marcado pela morte de seu parceiro Peterson." },
+            { ano: 1979, piloto: "Jody Scheckter", carro: "Ferrari 312T4", numero: "11", circuito: "Monza", pistaNome: "Monza", historia: "Venceu o campeonato contando com a impressionante lealdade de Gilles Villeneuve." },
+            { ano: 1980, piloto: "Alan Jones", carro: "Williams-Ford FW07B", numero: "27", circuito: "Montreal", pistaNome: "Gilles Villeneuve", historia: "Primeiro título de pilotos da equipe de Frank Williams com um carro robusto." },
+            { ano: 1981, piloto: "Nelson Piquet", carro: "Brabham-Ford BT49C", numero: "5", circuito: "Las Vegas", pistaNome: "Caesars Palace", historia: "Piquet terminou exausto sob calor infernal no estacionamento de Vegas para garantir o título." },
+            { ano: 1982, piloto: "Keke Rosberg", carro: "Williams-Ford FW08", numero: "6", circuito: "Las Vegas", pistaNome: "Caesars Palace", historia: "O ano mais louco da F1. O finlandês levou o campeonato vencendo apenas uma corrida." },
+            { ano: 1983, piloto: "Nelson Piquet", carro: "Brabham-BMW BT52B", numero: "5", circuito: "Kyalami", pistaNome: "Kyalami", historia: "Primeiro título da história de um motor Turbo na F1, batendo Renault e Ferrari." },
+            { ano: 1984, piloto: "Niki Lauda", carro: "McLaren-TAG MP4/2", numero: "8", circuito: "Estoril", pistaNome: "Estoril", historia: "Menor diferença da história: Lauda bateu Alain Prost por apenas meio ponto." },
+            { ano: 1985, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2B", numero: "2", circuito: "Brands Hatch", pistaNome: "Brands Hatch", historia: "Após vários vice-campeonatos, o 'Professor' finalmente garantiu sua primeira coroa." },
+            { ano: 1986, piloto: "Alain Prost", carro: "McLaren-TAG MP4/2C", numero: "1", circuito: "Adelaide", pistaNome: "Adelaide", historia: "O pneu estourado de Mansell em Adelaide abriu as portas para o bicampeonato de Prost." },
+            { ano: 1987, piloto: "Nelson Piquet", carro: "Williams-Honda FW11B", numero: "6", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Guerra psicológica interna contra Mansell. Levou o tri após o inglês bater nos treinos." },
+            { ano: 1988, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/4", numero: "12", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Senna largou mal, caiu para 16º, fez uma recuperação incrível na chuva e venceu Prost." },
+            { ano: 1989, piloto: "Alain Prost", carro: "McLaren-Honda MP4/5", numero: "2", circuito: "Suzuka", pistaNome: "Suzuka", historia: "A polêmica colisão na chicane de Suzuka. Senna foi desclassificado e Prost levou o título." },
+            { ano: 1990, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/5B", numero: "27", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O troco de 1989. Senna tirou Prost da pista na primeira curva e garantiu o bicampeonato." },
+            { ano: 1991, piloto: "Ayrton Senna", carro: "McLaren-Honda MP4/6", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O tricampeonato incontestável. Senna dominou o ano com o motor Honda V12." },
+            { ano: 1992, piloto: "Nigel Mansell", carro: "Williams-Renault FW14B", numero: "5", circuito: "Hungaroring", pistaNome: "Hungaroring", historia: "Com suspensão ativa eletronica, Mansell destruiu a concorrencia e foi campeao em agosto." },
+            { ano: 1993, piloto: "Alain Prost", carro: "Williams-Renault FW15C", numero: "2", circuito: "Spa-Francorchamps", pistaNome: "Spa", historia: "Quarto e ultimo titulo do frances com o carro mais tecnologico da historia." },
+            { ano: 1994, piloto: "Michael Schumacher", carro: "Benetton-Ford B194", numero: "5", circuito: "Adelaide", pistaNome: "Adelaide", historia: "Apos bater, Schumacher jogou o carro em cima de Damon Hill para garantir a taca." },
+            { ano: 1995, piloto: "Michael Schumacher", carro: "Benetton-Renault B195", numero: "1", circuito: "Aida", pistaNome: "Aida", historia: "Schumacher dominou a temporada com motor Renault e garantiu o bicampeonato no Pacifico." },
+            { ano: 1996, piloto: "Damon Hill", carro: "Williams-Renault FW18", numero: "5", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Filho de Graham Hill, Damon superou a pressao e o companheiro Villeneuve para vencer." },
+            { ano: 1997, piloto: "Jacques Villeneuve", carro: "Williams-Renault FW19", numero: "3", circuito: "Jerez", pistaNome: "Jerez", historia: "Schumacher tentou bater em Villeneuve para tira-lo da prova, mas acabou desclassificado." },
+            { ano: 1998, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/13", numero: "8", circuito: "Suzuka", pistaNome: "Suzuka", historia: "O Finlandes Voador superou Schumacher na decisao com carro projetado por Newey." },
+            { ano: 1999, piloto: "Mika Hakkinen", carro: "McLaren-Mercedes MP4/14", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Bicampeao mundial apos travar uma batalha intensa contra Eddie Irvine da Ferrari." },
+            { ano: 2000, piloto: "Michael Schumacher", carro: "Ferrari F1-2000", numero: "3", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Encerrou o doloroso jejum de 21 anos sem titulos de pilotos da Ferrari." },
+            { ano: 2001, piloto: "Michael Schumacher", carro: "Ferrari F2001", numero: "1", circuito: "Hungaroring", pistaNome: "Hungaroring", historia: "Igualou o recorde de 4 titulos de Alain Prost vencendo na Hungria com antecedencia." },
+            { ano: 2002, piloto: "Michael Schumacher", carro: "Ferrari F2002", numero: "1", circuito: "Magny-Cours", pistaNome: "Magny Cours", historia: "O campeonato mais rapido da historia. Garantiu a taca em julho com 6 etapas de folga." },
+            { ano: 2003, piloto: "Michael Schumacher", carro: "Ferrari F2003-GA", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Superou o recorde de Fangio ao conquistar o sexto titulo mundial no Japao." },
+            { ano: 2004, piloto: "Michael Schumacher", carro: "Ferrari F2004", numero: "1", circuito: "Spa-Francorchamps", pistaNome: "Spa", historia: "O auge da era Schumacher. Faturou o heptacampeonato com um carro avassalador." },
+            { ano: 2005, piloto: "Fernando Alonso", carro: "Renault R25", numero: "5", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Alonso quebrou a hegemonia da Ferrari e tornou-se o campeao mais jovem no Brasil." },
+            { ano: 2006, piloto: "Fernando Alonso", carro: "Renault R26", numero: "1", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Bicampeonato em uma batalha espetacular contra a Ferrari no ano da despedida de Schumi." },
+            { ano: 2007, piloto: "Kimi Raikkonen", carro: "Ferrari F2007", numero: "6", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Kimi correu por fora contra Hamilton e Alonso, venceu no Brasil e levou por 1 ponto." },
+            { ano: 2008, piloto: "Lewis Hamilton", carro: "McLaren-Mercedes MP4-23", numero: "20", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Hamilton ultrapassou Glock na ultima curva da ultima volta e tirou o titulo de Massa." },
+            { ano: 2009, piloto: "Jenson Button", carro: "Brawn-Mercedes BGP 001", numero: "22", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Uma equipe comprada por 1 libra usou o difusor duplo e Button foi campeao no Brasil." },
+            { ano: 2010, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB6", numero: "5", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Vettel so liderou o campeonato na ultima corrida, desbancando Alonso e Webber." },
+            { ano: 2011, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB7", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Bicampeonato avassalador conquistando 15 pole positions na temporada." },
+            { ano: 2012, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB8", numero: "1", circuito: "Interlagos", pistaNome: "Interlagos", historia: "Rodou na largada, mas escalou o pelotão na chuva para ser tricampeao contra Alonso." },
+            { ano: 2013, piloto: "Sebastian Vettel", carro: "Red Bull-Renault RB9", numero: "1", circuito: "Buddh", pistaNome: "Buddh", historia: "Tetracampeonato historico selado na India com uma sequencia recorde de 9 vitorias." },
+            { ano: 2014, piloto: "Lewis Hamilton", carro: "Mercedes F1 W05 Hybrid", numero: "44", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Inicio da Era Hibrida V6. Hamilton bateu seu companheiro Nico Rosberg em Abu Dhabi." },
+            { ano: 2015, piloto: "Lewis Hamilton", carro: "Mercedes F1 W06 Hybrid", numero: "44", circuito: "Austin", pistaNome: "Austin", historia: "Conquistou o tricampeonato nos EUA apos erro de Rosberg sob pressao nas voltas finais." },
+            { ano: 2016, piloto: "Nico Rosberg", carro: "Mercedes F1 W07 Hybrid", numero: "6", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Rosberg resistiu a pressao de Hamilton para ser campeao e se aposentou 5 dias depois." },
+            { ano: 2017, piloto: "Lewis Hamilton", carro: "Mercedes F1 W08 EQ Power+", numero: "44", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Tetracampeonato conquistado apos intensa batalha contra a Ferrari de Sebastian Vettel." },
+            { ano: 2018, piloto: "Lewis Hamilton", carro: "Mercedes F1 W09 EQ Power+", numero: "44", circuito: "Cidade do Mexico", pistaNome: "Hermanos Rodriguez", historia: "Igualou os 5 titulos de Fangio com uma das melhores temporadas de sua carreira." },
+            { ano: 2019, piloto: "Lewis Hamilton", carro: "Mercedes F1 W10 EQ Power+", numero: "44", circuito: "Austin", pistaNome: "Austin", historia: "Hexacampeonato brasileiro garantido com um segundo lugar nos EUA." },
+            { ano: 2020, piloto: "Lewis Hamilton", carro: "Mercedes F1 W11 EQ Performance", numero: "44", circuito: "Istambul", pistaNome: "Istanbul Park", historia: "Heptacampeonato. Venceu na Turquia na chuva, igualando o recorde de Schumacher." },
+            { ano: 2021, piloto: "Max Verstappen", carro: "Red Bull-Honda RB16B", numero: "33", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Ultrapassou Hamilton na ultima volta em Abu Dhabi apos relargada controversa." },
+            { ano: 2022, piloto: "Max Verstappen", carro: "Red Bull-RB18", numero: "1", circuito: "Suzuka", pistaNome: "Suzuka", historia: "Dominou o novo regulamento de efeito solo, faturando o bi sob chuva no Japao." },
+            { ano: 2023, piloto: "Max Verstappen", carro: "Red Bull-RB19", numero: "1", circuito: "Lusail", pistaNome: "Lusail", historia: "O ano mais dominante de todos. Tri garantido em um sabado na corrida Sprint." },
+            { ano: 2024, piloto: "Max Verstappen", carro: "Red Bull-RB20", numero: "1", circuito: "Las Vegas", pistaNome: "Las Vegas", historia: "Tetracampeonato com raca, garantindo a taca com um 5º lugar nas luzes de Vegas." },
+            { ano: 2025, piloto: "Lando Norris", carro: "McLaren-Mercedes MCL38", numero: "4", circuito: "Yas Marina", pistaNome: "Yas Marina", historia: "Primeiro titulo do britanico, coroando a espetacular ressurreicao tecnica da equipe McLaren." }
+        ];
+                 
+        function renderGrid(dados = dadosColecao) {
+            const grid = document.getElementById('app-grid');
+            grid.innerHTML = '';
+            dados.forEach(item => {
+                const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
+                const card = document.createElement('div');
+                card.className = `card ${isOwned ? 'owned' : ''}`;
+                card.onclick = () => openModal(item);
+                card.innerHTML = `
+                    <span class="badge-year">${item.ano}</span>
+                    <p class="card-pilot">${item.piloto}</p>
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        return String(valor)
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .trim();
-    }
-
-
-    /*
-     * ============================================
-     * CHAVE DO LOCALSTORAGE
-     * ============================================
-     */
-
-    function obterChave(item) {
-
-        return STORAGE_PREFIX + String(item.ano);
-    }
-
-
-    /*
-     * ============================================
-     * VERIFICA SE A MINIATURA FOI ADQUIRIDA
-     * ============================================
-     */
-
-    function estaAdquirido(item) {
-
-        if (!item) {
-            return false;
-        }
-
-        try {
-
-            return (
-                localStorage.getItem(
-                    obterChave(item)
-                ) === "true"
+        function filtrarCards() {
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filtrados = dadosColecao.filter(item => 
+                item.ano.toString().includes(termo) ||
+                item.piloto.toLowerCase().includes(termo) ||
+                item.carro.toLowerCase().includes(termo) ||
+                item.circuito.toLowerCase().includes(termo)
             );
-
-        } catch (erro) {
-
-            console.warn(
-                "Não foi possível acessar o armazenamento local.",
-                erro
-            );
-
-            return false;
-        }
-    }
-
-
-    /*
-     * ============================================
-     * SALVA O STATUS DA MINIATURA
-     * ============================================
-     */
-
-    function salvarStatusAdquirido(item, status) {
-
-        if (!item) {
-            return;
+            renderGrid(filtrados);
         }
 
-        try {
+        let itemSelecionado = null;
 
-            if (status) {
+        function openModal(item) {
+            itemSelecionado = item;
+            document.getElementById('modal-title').innerText = "Temporada " + item.ano;
+            document.getElementById('modal-pilot').innerText = item.piloto;
+            document.getElementById('modal-car').innerText = item.carro;
+            document.getElementById('modal-number').innerText = "#" + item.numero;
+            document.getElementById('modal-track').innerText = item.circuito;
+            document.getElementById('modal-history').innerText = item.historia;
+            
+            document.getElementById('img-car').src = "https://placeholders.dev" + encodeURIComponent(item.carro) + "&bgColor=%23252525&textColor=%23ffffff";
+            document.getElementById('img-track').src = "https://placeholders.dev" + encodeURIComponent(item.pistaNome) + "&bgColor=%23252525&textColor=%23ffffff";
 
-                localStorage.setItem(
-                    obterChave(item),
-                    "true"
-                );
-
+            const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
+            const btn = document.getElementById('btn-own');
+            if(isOwned) {
+                btn.innerText = "✓ Na Minha Estante";
+                btn.classList.add('owned');
             } else {
-
-                localStorage.removeItem(
-                    obterChave(item)
-                );
+                btn.innerText = "Marcar como Adquirido";
+                btn.classList.remove('owned');
             }
-
-        } catch (erro) {
-
-            console.warn(
-                "Não foi possível salvar o status da miniatura.",
-                erro
-            );
-        }
-    }
-
-
-    /*
-     * ============================================
-     * CRIA UM CARD
-     * ============================================
-     */
-
-    function criarCard(item) {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        /*
-         * Se já estiver na coleção,
-         * adiciona a classe "owned".
-         */
-
-        if (estaAdquirido(item)) {
-            card.classList.add("owned");
+            document.getElementById('detail-modal').style.display = 'flex';
         }
 
-
-        /*
-         * Ano
-         */
-
-        const ano = document.createElement("span");
-
-        ano.className = "badge-year";
-
-        ano.textContent = item.ano;
-
-
-        /*
-         * Nome do piloto
-         */
-
-        const piloto = document.createElement("p");
-
-        piloto.className = "card-pilot";
-
-        piloto.textContent = item.piloto;
-
-
-        /*
-         * Monta o card
-         */
-
-        card.appendChild(ano);
-        card.appendChild(piloto);
-
-
-        /*
-         * Acessibilidade
-         */
-
-        card.setAttribute(
-            "role",
-            "button"
-        );
-
-        card.setAttribute(
-            "tabindex",
-            "0"
-        );
-
-        card.setAttribute(
-            "aria-label",
-            "Abrir informações da temporada " +
-            item.ano +
-            ", campeão " +
-            item.piloto
-        );
-
-
-        /*
-         * Clique do mouse
-         */
-
-        card.addEventListener(
-            "click",
-            function() {
-
-                abrirModal(item);
-
-            }
-        );
-
-
-        /*
-         * Permite abrir com ENTER ou ESPAÇO
-         */
-
-        card.addEventListener(
-            "keydown",
-            function(evento) {
-
-                if (
-                    evento.key === "Enter" ||
-                    evento.key === " "
-                ) {
-
-                    evento.preventDefault();
-
-                    abrirModal(item);
-                }
-            }
-        );
-
-
-        return card;
-    }
-
-
-    /*
-     * ============================================
-     * MOSTRA OS CARDS
-     * ============================================
-     */
-
-    function renderizarColecao(lista) {
-
-        grid.innerHTML = "";
-
-
-        /*
-         * Segurança:
-         * se dadosColecao não existir.
-         */
-
-        if (!bancoDeDadosValido()) {
-
-            const erro = document.createElement("div");
-
-            erro.className = "empty-message";
-
-            erro.textContent =
-                "Não foi possível carregar o arquivo dados.js.";
-
-            grid.appendChild(erro);
-
-            return;
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
         }
 
-
-        /*
-         * Se a lista não for um array,
-         * usa a coleção completa.
-         */
-
-        const dadosParaExibir =
-            Array.isArray(lista)
-                ? lista
-                : dadosColecao;
-
-
-        /*
-         * Nenhum resultado.
-         */
-
-        if (dadosParaExibir.length === 0) {
-
-            const vazio = document.createElement("div");
-
-            vazio.className = "empty-message";
-
-            vazio.textContent =
-                "Nenhuma temporada encontrada.";
-
-            grid.appendChild(vazio);
-
-            return;
+        function toggleOwnership() {
+            if(!itemSelecionado) return;
+            const key = 'f1_143_' + itemSelecionado.ano;
+            const current = localStorage.getItem(key) === 'true';
+            localStorage.setItem(key, !current);
+            openModal(itemSelecionado);
+            filtrarCards();
         }
 
-
-        /*
-         * Cria os cards.
-         */
-
-        dadosParaExibir.forEach(
-            function(item) {
-
-                if (!item) {
-                    return;
-                }
-
-                grid.appendChild(
-                    criarCard(item)
-                );
-            }
-        );
-    }
-
-
-    /*
-     * ============================================
-     * PESQUISA
-     * ============================================
-     */
-
-    function pesquisarColecao() {
-
-        if (!bancoDeDadosValido()) {
-            return;
-        }
-
-
-        const termo =
-            normalizarTexto(
-                searchInput.value
-            );
-
-
-        /*
-         * Campo vazio:
-         * mostra tudo.
-         */
-
-        if (!termo) {
-
-            renderizarColecao(
-                dadosColecao
-            );
-
-            return;
-        }
-
-
-        /*
-         * Procura em todos estes campos:
-         *
-         * ano
-         * piloto
-         * carro
-         * número
-         * circuito
-         * pista
-         * história
-         */
-
-        const resultados =
-            dadosColecao.filter(
-                function(item) {
-
-                    const campos = [
-
-                        item.ano,
-                        item.piloto,
-                        item.carro,
-                        item.numero,
-                        item.circuito,
-                        item.pistaNome,
-                        item.historia
-
-                    ];
-
-                    return campos.some(
-                        function(campo) {
-
-                            return normalizarTexto(
-                                campo
-                            ).includes(termo);
-
-                        }
-                    );
-                }
-            );
-
-
-        renderizarColecao(
-            resultados
-        );
-    }
-
-
-    /*
-     * ============================================
-     * CRIA IMAGEM SVG LOCAL
-     *
-     * Isto evita depender de sites externos
-     * de imagens/placeholder.
-     * ============================================
-     */
-
-    function criarImagemSVG(texto, tipo) {
-
-        const simbolo =
-            tipo === "carro"
-                ? "🏎️"
-                : "🏁";
-
-
-        const textoSeguro =
-            String(texto || "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&apos;");
-
-
-        const svg = `
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="600"
-                height="300"
-                viewBox="0 0 600 300"
-            >
-
-                <rect
-                    width="600"
-                    height="300"
-                    rx="20"
-                    fill="#252525"
-                />
-
-                <text
-                    x="300"
-                    y="105"
-                    text-anchor="middle"
-                    font-size="70"
-                    fill="#e10600"
-                >
-                    ${simbolo}
-                </text>
-
-                <text
-                    x="300"
-                    y="165"
-                    text-anchor="middle"
-                    font-family="Arial, sans-serif"
-                    font-size="25"
-                    fill="white"
-                >
-                    ${textoSeguro}
-                </text>
-
-                <text
-                    x="300"
-                    y="210"
-                    text-anchor="middle"
-                    font-family="Arial, sans-serif"
-                    font-size="16"
-                    fill="#999999"
-                >
-                    MINIATURA F1 1:43
-                </text>
-
-            </svg>
-        `;
-
-
-        return (
-            "data:image/svg+xml;charset=UTF-8," +
-            encodeURIComponent(svg)
-        );
-    }
-
-
-    /*
-     * ============================================
-     * ABRE O MODAL
-     * ============================================
-     */
-
-    function abrirModal(item) {
-
-        if (!item) {
-            return;
-        }
-
-
-        itemSelecionado = item;
-
-
-        /*
-         * Preenche as informações.
-         */
-
-        modalTitle.textContent =
-            "Temporada " + item.ano;
-
-        modalPilot.textContent =
-            item.piloto || "Não informado";
-
-        modalCar.textContent =
-            item.carro || "Não informado";
-
-        modalNumber.textContent =
-            item.numero
-                ? "#" + item.numero
-                : "Não informado";
-
-        modalTrack.textContent =
-            item.circuito ||
-            item.pistaNome ||
-            "Não informado";
-
-        modalHistory.textContent =
-            item.historia ||
-            "Nenhuma história cadastrada.";
-
-
-        /*
-         * Imagens.
-         */
-
-        imgCar.src =
-            criarImagemSVG(
-                item.carro || "Carro F1",
-                "carro"
-            );
-
-        imgTrack.src =
-            criarImagemSVG(
-                item.pistaNome ||
-                item.circuito ||
-                "Circuito",
-                "circuito"
-            );
-
-
-        /*
-         * Atualiza o botão.
-         */
-
-        atualizarBotaoAdquirido();
-
-
-        /*
-         * Abre o modal.
-         */
-
-        modal.classList.add("show");
-
-
-        /*
-         * Impede o fundo de rolar
-         * enquanto o modal estiver aberto.
-         */
-
-        document.body.style.overflow = "hidden";
-    }
-    /*
-     * ============================================
-     * ATUALIZA O BOTÃO "ADQUIRIDO"
-     * ============================================
-     */
-
-    function atualizarBotaoAdquirido() {
-
-        if (!itemSelecionado) {
-            return;
-        }
-
-        const adquirido =
-            estaAdquirido(itemSelecionado);
-
-
-        if (adquirido) {
-
-            ownershipButton.textContent =
-                "✓ Na Minha Coleção";
-
-            ownershipButton.classList.add(
-                "owned"
-            );
-
-        } else {
-
-            ownershipButton.textContent =
-                "Marcar como Adquirido";
-
-            ownershipButton.classList.remove(
-                "owned"
-            );
-        }
-    }
-
-
-    /*
-     * ============================================
-     * ALTERNA O STATUS DA MINIATURA
-     * ============================================
-     */
-
-    function toggleOwnership() {
-
-        if (!itemSelecionado) {
-            return;
-        }
-
-
-        const statusAtual =
-            estaAdquirido(itemSelecionado);
-
-
-        /*
-         * Inverte o status:
-         *
-         * false → true
-         * true  → false
-         */
-
-        salvarStatusAdquirido(
-            itemSelecionado,
-            !statusAtual
-        );
-
-
-        /*
-         * Atualiza o botão dentro do modal.
-         */
-
-        atualizarBotaoAdquirido();
-
-
-        /*
-         * Atualiza os cards atrás do modal.
-         */
-
-        pesquisarColecao();
-    }
-
-
-    /*
-     * ============================================
-     * FECHA O MODAL
-     * ============================================
-     */
-
-    function fecharModal() {
-
-        modal.classList.remove(
-            "show"
-        );
-
-
-        /*
-         * Libera novamente a rolagem
-         * da página.
-         */
-
-        document.body.style.overflow = "";
-
-
-        /*
-         * Limpa o item selecionado.
-         */
-
-        itemSelecionado = null;
-    }
-
-
-    /*
-     * ============================================
-     * EVENTO DE PESQUISA
-     * ============================================
-     */
-
-    searchInput.addEventListener(
-        "input",
-        function() {
-
-            pesquisarColecao();
-
-        }
-    );
-
-
-    /*
-     * ============================================
-     * BOTÃO X DO MODAL
-     * ============================================
-     */
-
-    closeModalButton.addEventListener(
-        "click",
-        function() {
-
-            fecharModal();
-
-        }
-    );
-
-
-    /*
-     * ============================================
-     * BOTÃO "ADQUIRIDO"
-     * ============================================
-     */
-
-    ownershipButton.addEventListener(
-        "click",
-        function() {
-
-            toggleOwnership();
-
-        }
-    );
-
-
-    /*
-     * ============================================
-     * FECHAR CLICANDO FORA DO MODAL
-     * ============================================
-     */
-
-    modal.addEventListener(
-        "click",
-        function(evento) {
-
-            /*
-             * Só fecha se o usuário clicar
-             * na área escura fora do conteúdo.
-             */
-
-            if (
-                evento.target === modal
-            ) {
-
-                fecharModal();
-
-            }
-        }
-    );
-
-
-    /*
-     * ============================================
-     * FECHAR COM A TECLA ESC
-     * ============================================
-     */
-
-    document.addEventListener(
-        "keydown",
-        function(evento) {
-
-            if (
-                evento.key === "Escape" &&
-                modal.classList.contains("show")
-            ) {
-
-                fecharModal();
-
-            }
-        }
-    );
-
-
-    /*
-     * ============================================
-     * PROTEÇÃO CONTRA IMAGEM QUEBRADA
-     * ============================================
-     *
-     * Caso alguma imagem externa ainda seja
-     * utilizada futuramente, mostramos uma
-     * imagem SVG interna no lugar.
-     */
-
-    imgCar.addEventListener(
-        "error",
-        function() {
-
-            if (itemSelecionado) {
-
-                imgCar.src =
-                    criarImagemSVG(
-                        itemSelecionado.carro ||
-                        "Carro F1",
-                        "carro"
-                    );
-            }
-        }
-    );
-
-
-    imgTrack.addEventListener(
-        "error",
-        function() {
-
-            if (itemSelecionado) {
-
-                imgTrack.src =
-                    criarImagemSVG(
-                        itemSelecionado.pistaNome ||
-                        itemSelecionado.circuito ||
-                        "Circuito",
-                        "circuito"
-                    );
-            }
-        }
-    );
-
-
-    /*
-     * ============================================
-     * INICIALIZAÇÃO DO APLICATIVO
-     * ============================================
-     */
-
-    function iniciarAplicativo() {
-
-        /*
-         * Verifica se dados.js foi carregado.
-         */
-
-        if (!bancoDeDadosValido()) {
-
-            grid.innerHTML = "";
-
-            const mensagemErro =
-                document.createElement("div");
-
-            mensagemErro.className =
-                "empty-message";
-
-            mensagemErro.textContent =
-                "Erro: o arquivo dados.js não foi carregado.";
-
-            grid.appendChild(
-                mensagemErro
-            );
-
-            console.error(
-                "ERRO: dadosColecao não
-                </body>
+        window.onload = () => {
+            renderGrid();
+        };
+    </script>
+</body>
 </html>
+
+        // LOGICA DE FUNCIONAMENTO DO APP
+        function renderGrid(dados = dadosColecao) {
+            const grid = document.getElementById('app-grid');
+            grid.innerHTML = '';
+            dados.forEach(item => {
+                const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
+                const card = document.createElement('div');
+                card.className = `card ${isOwned ? 'owned' : ''}`;
+                card.onclick = () => openModal(item);
+                card.innerHTML = `
+                    <span class="badge-year">${item.ano}</span>
+                    <p class="card-pilot">${item.piloto}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filtrarCards() {
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filtrados = dadosColecao.filter(item => 
+                item.ano.toString().includes(termo) ||
+                item.piloto.toLowerCase().includes(termo) ||
+                item.carro.toLowerCase().includes(termo) ||
+                item.circuito.toLowerCase().includes(termo)
+            );
+            renderGrid(filtrados);
+        }
+
+        let itemSelecionado = null;
+
+        
