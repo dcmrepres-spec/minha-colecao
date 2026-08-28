@@ -332,8 +332,8 @@
             document.getElementById('modal-history').innerText = item.historia;
             
             // Sistema de Imagens Inteligentes via Unsplash Source para evitar links quebrados
-            document.getElementById('img-car').src = "https://picsum.photos" + item.ano;
-            document.getElementById('img-track').src = "https://picsum.photos" + (item.ano + 50);
+            document.getElementById('img-car').src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏎️</text></svg>";
+            document.getElementById('img-track').src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏁</text></svg>";
 
             const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
             const btn = document.getElementById('btn-own');
