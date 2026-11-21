@@ -657,83 +657,151 @@ img { max-width: 100%; }
   var filter = "all", query = "", current = null, pickTarget = null;
 
   /* ---------- fotos automáticas (Wikipédia / Wikimedia Commons) ---------- */
-  var CIRC_Q = {
-    "Monza": "Monza Circuit",
-    "Pedralbes (Barcelona)": "Pedralbes Circuit",
-    "Zandvoort": "Circuit Zandvoort",
-    "Bremgarten (Berna)": "Bremgarten Circuit",
-    "Ain-Diab (Casablanca)": "Ain-Diab Circuit",
-    "Sebring": "Sebring International Raceway",
-    "Boavista (Porto)": "Circuito da Boavista",
-    "East London": "Prince George Circuit",
-    "Hermanos Rodríguez (Cidade do México)": "Autódromo Hermanos Rodríguez",
-    "Nürburgring": "Nürburgring Nordschleife",
-    "Österreichring (Zeltweg)": "Red Bull Ring",
-    "Watkins Glen": "Watkins Glen International",
-    "Fuji": "Fuji Speedway",
-    "Montreal": "Circuit Gilles Villeneuve",
-    "Las Vegas (Caesars Palace)": "Caesars Palace Grand Prix",
-    "Kyalami": "Kyalami",
-    "Estoril": "Autódromo do Estoril",
-    "Brands Hatch": "Brands Hatch",
-    "Adelaide": "Adelaide Street Circuit",
-    "Suzuka": "Suzuka Circuit",
-    "Hungaroring": "Hungaroring",
-    "Aida": "Okayama International Circuit",
-    "Jerez": "Circuito de Jerez",
-    "Magny-Cours": "Circuit de Nevers Magny-Cours",
-    "Spa-Francorchamps": "Circuit de Spa-Francorchamps",
-    "Interlagos": "Autódromo José Carlos Pace",
-    "Yas Marina": "Yas Marina Circuit",
-    "Buddh (Greater Noida)": "Buddh International Circuit",
-    "Circuito das Américas": "Circuit of the Americas",
-    "Istanbul Park": "Istanbul Park",
-    "Lusail": "Lusail International Circuit",
-    "Las Vegas": "Las Vegas Strip Circuit"
+  // Cada foto vem de uma página exata da Wikipédia (sem busca por texto, que errava a pessoa).
+  var DRIVER_T = { "Alan Jones": "Alan Jones (racing driver)" };
+  var CAR_T = {
+    1950: ["Alfa Romeo 158/159 Alfetta"], 1951: ["Alfa Romeo 158/159 Alfetta"],
+    1952: ["Ferrari 500"], 1953: ["Ferrari 500"],
+    1954: ["Mercedes-Benz W196"], 1955: ["Mercedes-Benz W196"],
+    1956: ["Lancia D50"], 1957: ["Maserati 250F"],
+    1958: ["Ferrari 246 F1", "Ferrari Dino 246 F1"], 1959: ["Cooper T51"], 1960: ["Cooper T53"],
+    1961: ["Ferrari 156 F1", "Ferrari 156"], 1962: ["BRM P57"], 1963: ["Lotus 25"], 1964: ["Ferrari 158"],
+    1965: ["Lotus 33"], 1966: ["Brabham BT19"], 1967: ["Brabham BT24"], 1968: ["Lotus 49"],
+    1969: ["Matra MS80"], 1970: ["Lotus 72"], 1971: ["Tyrrell 003"], 1972: ["Lotus 72"], 1973: ["Tyrrell 006"],
+    1974: ["McLaren M23"], 1975: ["Ferrari 312T"], 1976: ["McLaren M23"], 1977: ["Ferrari 312T"],
+    1978: ["Lotus 79"], 1979: ["Ferrari 312T"], 1980: ["Williams FW07"], 1981: ["Brabham BT49"],
+    1982: ["Williams FW08"], 1983: ["Brabham BT52"], 1984: ["McLaren MP4/2"], 1985: ["McLaren MP4/2"],
+    1986: ["McLaren MP4/2"], 1987: ["Williams FW11"], 1988: ["McLaren MP4/4"], 1989: ["McLaren MP4/5"],
+    1990: ["McLaren MP4/5"], 1991: ["McLaren MP4/6"], 1992: ["Williams FW14B"], 1993: ["Williams FW15C"],
+    1994: ["Benetton B194"], 1995: ["Benetton B195"], 1996: ["Williams FW18"], 1997: ["Williams FW19"],
+    1998: ["McLaren MP4/13", "McLaren MP4-13"], 1999: ["McLaren MP4/14"], 2000: ["Ferrari F1-2000"],
+    2001: ["Ferrari F2001"], 2002: ["Ferrari F2002"], 2003: ["Ferrari F2003-GA"], 2004: ["Ferrari F2004"],
+    2005: ["Renault R25"], 2006: ["Renault R26"], 2007: ["Ferrari F2007"], 2008: ["McLaren MP4-23"],
+    2009: ["Brawn BGP 001"], 2010: ["Red Bull RB6"], 2011: ["Red Bull RB7"], 2012: ["Red Bull RB8"],
+    2013: ["Red Bull RB9"], 2014: ["Mercedes F1 W05 Hybrid", "Mercedes-AMG F1 W05 Hybrid"],
+    2015: ["Mercedes F1 W06 Hybrid", "Mercedes-AMG F1 W06 Hybrid"],
+    2016: ["Mercedes F1 W07 Hybrid", "Mercedes-AMG F1 W07 Hybrid"],
+    2017: ["Mercedes F1 W08 EQ Power+", "Mercedes-AMG F1 W08 EQ Power+"],
+    2018: ["Mercedes-AMG F1 W09 EQ Power+", "Mercedes F1 W09 EQ Power+"],
+    2019: ["Mercedes-AMG F1 W10 EQ Power+", "Mercedes F1 W10 EQ Power+"],
+    2020: ["Mercedes-AMG F1 W11 EQ Performance", "Mercedes F1 W11 EQ Performance"],
+    2021: ["Red Bull RB16B"], 2022: ["Red Bull RB18"], 2023: ["Red Bull RB19"], 2024: ["Red Bull RB20"],
+    2025: ["McLaren MCL39"]
   };
+  var CIRC_T = {
+    "Monza": ["Monza Circuit", "Autodromo Nazionale Monza"],
+    "Pedralbes (Barcelona)": ["Pedralbes Circuit"],
+    "Zandvoort": ["Circuit Zandvoort", "Circuit Park Zandvoort"],
+    "Bremgarten (Berna)": ["Circuit Bremgarten", "Bremgarten Circuit"],
+    "Ain-Diab (Casablanca)": ["Ain-Diab Circuit"],
+    "Sebring": ["Sebring International Raceway"],
+    "Boavista (Porto)": ["Circuito da Boavista"],
+    "East London": ["Prince George Circuit"],
+    "Hermanos Rodríguez (Cidade do México)": ["Autódromo Hermanos Rodríguez"],
+    "Nürburgring": ["Nürburgring"],
+    "Österreichring (Zeltweg)": ["Red Bull Ring"],
+    "Watkins Glen": ["Watkins Glen International"],
+    "Fuji": ["Fuji Speedway"],
+    "Montreal": ["Circuit Gilles Villeneuve"],
+    "Las Vegas (Caesars Palace)": ["Caesars Palace Grand Prix"],
+    "Kyalami": ["Kyalami"],
+    "Estoril": ["Autódromo do Estoril"],
+    "Brands Hatch": ["Brands Hatch"],
+    "Adelaide": ["Adelaide Street Circuit"],
+    "Suzuka": ["Suzuka International Racing Course", "Suzuka Circuit"],
+    "Hungaroring": ["Hungaroring"],
+    "Aida": ["Okayama International Circuit"],
+    "Jerez": ["Circuito de Jerez"],
+    "Magny-Cours": ["Circuit de Nevers Magny-Cours"],
+    "Spa-Francorchamps": ["Circuit de Spa-Francorchamps"],
+    "Interlagos": ["Autódromo José Carlos Pace"],
+    "Yas Marina": ["Yas Marina Circuit"],
+    "Buddh (Greater Noida)": ["Buddh International Circuit"],
+    "Circuito das Américas": ["Circuit of the Americas"],
+    "Istanbul Park": ["Istanbul Park"],
+    "Lusail": ["Lusail International Circuit"],
+    "Las Vegas": ["Las Vegas Strip Circuit", "Las Vegas Grand Prix"]
+  };
+  // A chave é a lista de títulos da página, separados por "|" (o primeiro que existir e tiver imagem vale).
   function photoQuery(d, slot) {
-    if (slot === "driver") return d.driver + " racing driver";
-    if (slot === "car") return d.car.replace(/["“”]/g, "") + " Formula One car";
-    return CIRC_Q[d.circuit] || (d.circuit.replace(/\s*\(.*\)/, "") + " circuit");
+    if (slot === "driver") return DRIVER_T[d.driver] || d.driver;
+    if (slot === "car") return (CAR_T[d.year] || [d.car]).join("|");
+    return (CIRC_T[d.circuit] || [d.circuit]).join("|");
   }
   function initials(name) {
     var p = name.split(" ");
     return (p[0].charAt(0) + p[p.length - 1].charAt(0)).toUpperCase();
   }
-  var WIKI_KEY = "f1-wiki-v1";
+  var WIKI_KEY = "f1-wiki-v2";
+  try { localStorage.removeItem("f1-wiki-v1"); } catch (e) {} // apaga as fotos erradas da versão anterior
   var wikiCache = {};
   try { wikiCache = JSON.parse(localStorage.getItem(WIKI_KEY) || "{}") || {}; } catch (e) { wikiCache = {}; }
   function saveWiki() { try { localStorage.setItem(WIKI_KEY, JSON.stringify(wikiCache)); } catch (e) {} }
-  var wikiMiss = {}, wikiBad = {}, inflight = {}, queue = [], active = 0, MAXREQ = 3;
+  var wikiMiss = {}, wikiErr = {}, wikiBad = {}, inflight = {}, queue = [], active = 0, MAXREQ = 3;
 
-  // Lê a resposta da API da Wikipédia e devolve a imagem principal do melhor resultado.
-  function pickImage(j) {
-    var pages = (j && j.query && j.query.pages) ? Object.keys(j.query.pages).map(function (k) { return j.query.pages[k]; }) : [];
-    pages.sort(function (a, b) { return (a.index || 99) - (b.index || 99); });
-    for (var i = 0; i < Math.min(pages.length, 2); i++) {
-      var p = pages[i];
-      if (p.thumbnail && p.thumbnail.source) {
-        return { src: p.thumbnail.source, page: p.fullurl || ("https://en.wikipedia.org/?curid=" + p.pageid), title: p.title };
-      }
-    }
-    return null;
+  function fetchJson(u) {
+    return fetch(u).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); });
   }
   function wikiUrl(q) {
-    return "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=" +
-      encodeURIComponent(q) + "&gsrlimit=3&gsrnamespace=0&prop=pageimages%7Cinfo&piprop=thumbnail&pithumbsize=720&inprop=url";
+    return "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1&titles=" + encodeURIComponent(q) +
+      "&prop=pageimages%7Cpageprops%7Cinfo&piprop=thumbnail&pithumbsize=720&ppprop=wikibase_item&inprop=url";
+  }
+  // Acha a página devolvida para um título pedido, seguindo normalização e redirecionamento.
+  function pageFor(j, title) {
+    var q = (j && j.query) || {}, t = title, k;
+    (q.normalized || []).forEach(function (n) { if (n.from === t) t = n.to; });
+    (q.redirects || []).forEach(function (r) { if (r.from === t) t = r.to; });
+    var pages = q.pages || {};
+    for (k in pages) { if (pages[k].title === t) return pages[k]; }
+    return null;
+  }
+  function pickPage(j, q) {
+    var titles = q.split("|"), item = null, i, p;
+    for (i = 0; i < titles.length; i++) {
+      p = pageFor(j, titles[i]);
+      if (!p || p.missing !== undefined) continue;
+      if (p.thumbnail && p.thumbnail.source) {
+        return { hit: { src: p.thumbnail.source, page: p.fullurl || ("https://en.wikipedia.org/?curid=" + p.pageid), title: p.title }, item: null };
+      }
+      if (!item && p.pageprops && p.pageprops.wikibase_item) item = p.pageprops.wikibase_item;
+    }
+    return { hit: null, item: item };
+  }
+  // Se a página não tem foto livre, usa a imagem principal do item no Wikidata (sempre do Commons).
+  function wikidataImage(item) {
+    return fetchJson("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P18&entity=" + encodeURIComponent(item))
+      .then(function (j) {
+        var c = j && j.claims && j.claims.P18 && j.claims.P18[0];
+        var f = c && c.mainsnak && c.mainsnak.datavalue && c.mainsnak.datavalue.value;
+        if (!f) return null;
+        return {
+          src: "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f) + "?width=720",
+          page: "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(f.replace(/ /g, "_")),
+          title: f, commons: true
+        };
+      });
+  }
+  function lookup(q) {
+    var fails = 0;
+    return fetchJson(wikiUrl(q)).then(function (j) { return pickPage(j, q); }, function () { fails++; return { hit: null, item: null }; })
+      .then(function (r) {
+        if (r.hit || !r.item) return r.hit;
+        return wikidataImage(r.item).catch(function () { fails++; return null; });
+      })
+      .then(function (hit) { return { hit: hit, fails: fails }; });
   }
   function pump() {
     while (active < MAXREQ && queue.length) {
       (function (job) {
         active++;
-        fetch(wikiUrl(job.q))
-          .then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })
-          .then(function (j) {
-            var hit = pickImage(j);
-            if (hit) { wikiCache[job.q] = hit; saveWiki(); } else { wikiMiss[job.q] = 1; }
-            job.resolve(hit);
+        lookup(job.q)
+          .then(function (res) {
+            if (res.hit) { wikiCache[job.q] = res.hit; delete wikiErr[job.q]; saveWiki(); }
+            else if (res.fails >= 1) { wikiErr[job.q] = 1; }
+            else { wikiMiss[job.q] = 1; }
+            job.resolve(res.hit);
           })
-          .catch(function () { job.resolve(null); })
+          .catch(function () { wikiErr[job.q] = 1; job.resolve(null); })
           .then(function () { active--; delete inflight[job.q]; pump(); });
       })(queue.shift());
     }
@@ -741,6 +809,7 @@ img { max-width: 100%; }
   function wikiGet(q) {
     if (wikiCache[q]) return Promise.resolve(wikiCache[q]);
     if (wikiMiss[q]) return Promise.resolve(null);
+    delete wikiErr[q];
     if (inflight[q]) return inflight[q];
     inflight[q] = new Promise(function (resolve) { queue.push({ q: q, resolve: resolve }); pump(); });
     return inflight[q];
@@ -871,18 +940,20 @@ img { max-width: 100%; }
       var q = photoQuery(d, s.id);
       var hit = wikiCache[q];
       if (hit && wikiBad[hit.src]) hit = null;
-      var loading = !mine && !hit && !wikiMiss[q] && !wikiBad[(wikiCache[q] || {}).src];
+      var failed = !mine && !hit && !!wikiErr[q];
+      var loading = !mine && !hit && !failed && !wikiMiss[q] && !wikiBad[(wikiCache[q] || {}).src];
       var shot, actions;
       if (mine) {
         shot = '<div class="shot filled"><img src="' + mine + '" alt="' + s.label + " " + d.year + '"></div>';
         actions = '<button data-pick="' + s.id + '">Trocar foto</button><button data-clear="' + s.id + '" class="danger">Voltar à automática</button>';
       } else if (hit) {
         shot = '<div class="shot filled"><img src="' + esc(hit.src) + '" alt="' + s.label + " " + d.year + '" referrerpolicy="no-referrer" onerror="f1ImgFailed(this)"></div>';
-        actions = '<a href="' + esc(hit.page) + '" target="_blank" rel="noopener">Fonte: Wikipédia</a><button data-pick="' + s.id + '">Usar minha foto</button>';
+        actions = '<a href="' + esc(hit.page) + '" target="_blank" rel="noopener">Fonte: ' + (hit.commons ? "Wikimedia Commons" : "Wikipédia") + '</a><button data-pick="' + s.id + '">Usar minha foto</button>';
       } else {
         shot = '<button class="shot' + (loading ? " loading" : "") + '" data-pick="' + s.id + '" aria-label="Adicionar foto: ' + s.label + '">' + ph[s.id] +
-          '<span class="add">' + (loading ? "Buscando foto…" : "+ foto") + '</span></button>';
-        actions = '<button data-pick="' + s.id + '">Adicionar foto</button><a href="' + searchUrl(d, s.id) + '" target="_blank" rel="noopener">Buscar no Google</a>';
+          '<span class="add">' + (loading ? "Buscando foto…" : failed ? "Sem conexão com a Wikipédia" : "Sem foto automática") + '</span></button>';
+        actions = (loading ? "" : '<button data-retry="1">Tentar de novo</button>') +
+          '<button data-pick="' + s.id + '">Adicionar minha foto</button><a href="' + searchUrl(d, s.id) + '" target="_blank" rel="noopener">Buscar no Google</a>';
       }
       return '<div class="slot"><span class="slot-label">' + s.label + '</span>' + shot + '<div class="slot-actions">' + actions + '</div></div>';
     }).join("");
@@ -982,6 +1053,11 @@ img { max-width: 100%; }
     var step = t.closest("[data-step]");
     if (step) { var i = DATA.indexOf(byYear[current]) + +step.dataset.step; if (DATA[i]) { current = DATA[i].year; renderSheet(); panel.scrollTop = 0; } return; }
     if (t.closest("[data-close]")) return closeSheet();
+    if (t.closest("[data-retry]")) {
+      var dd = byYear[current];
+      SLOTS.forEach(function (s) { var qq = photoQuery(dd, s.id); delete wikiErr[qq]; delete wikiMiss[qq]; });
+      updatePhotos(); ensureAuto(dd); return;
+    }
     var pick = t.closest("[data-pick]");
     if (pick) { pickTarget = current + "-" + pick.dataset.pick; picker.click(); return; }
     var clr = t.closest("[data-clear]");
