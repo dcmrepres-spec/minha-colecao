@@ -1,1087 +1,368 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0e0f12">
-<title>Miniaturas F1 1:43</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<style>
-/* Layout: cabeçalho com progresso da estante, busca e filtros; grade de temporadas; folha inferior com três fotos (piloto, carro, circuito) e ficha do título. */
-:root {
-  --bg: #0e0f12;
-  --surface: #17191e;
-  --surface-2: #20232a;
-  --line: #2c303a;
-  --fg: #eef0f3;
-  --muted: #9aa2af;
-  --accent: #ff4d3d;
-  --accent-ink: #ffffff;
-  --ok: #3ecf7a;
-  --ok-bg: rgba(62, 207, 122, 0.12);
-  --scrim: rgba(5, 6, 8, 0.72);
-  --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
-  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg: #f3f4f6;
-    --surface: #ffffff;
-    --surface-2: #eceef2;
-    --line: #dcdfe6;
-    --fg: #14161a;
-    --muted: #596270;
-    --accent: #d02a1c;
-    --accent-ink: #ffffff;
-    --ok: #12834a;
-    --ok-bg: rgba(18, 131, 74, 0.1);
-    --scrim: rgba(20, 22, 26, 0.55);
-    color-scheme: light;
-  }
-}
-:root[data-theme="light"] {
-  --bg: #f3f4f6;
-  --surface: #ffffff;
-  --surface-2: #eceef2;
-  --line: #dcdfe6;
-  --fg: #14161a;
-  --muted: #596270;
-  --accent: #d02a1c;
-  --accent-ink: #ffffff;
-  --ok: #12834a;
-  --ok-bg: rgba(18, 131, 74, 0.1);
-  --scrim: rgba(20, 22, 26, 0.55);
-  color-scheme: light;
-}
-
-* { box-sizing: border-box; }
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.45;
-  padding-inline: 16px;
-  padding-block: 20px 40px;
-}
-body.locked { overflow: hidden; }
-button { font: inherit; color: inherit; cursor: pointer; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.wrap { max-width: 920px; margin-inline: auto; display: flex; flex-direction: column; gap: 18px; }
-
-header { display: flex; flex-direction: column; gap: 14px; }
-h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.2rem, 9vw, 3.4rem);
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  margin: 0;
-  text-wrap: balance;
-}
-h1 span { color: var(--accent); }
-.sub { margin: 4px 0 0; color: var(--muted); }
-
-.progress { display: flex; flex-direction: column; gap: 6px; }
-.progress-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9rem; color: var(--muted); }
-.progress-top strong { font-family: var(--font-display); font-size: 1.5rem; color: var(--fg); font-variant-numeric: tabular-nums; }
-.bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
-.bar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width 0.35s ease; }
-
-.tools { display: flex; flex-direction: column; gap: 10px; }
-.search {
-  width: 100%;
-  background: var(--surface);
-  color: var(--fg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 13px 14px;
-  font: inherit;
-}
-.search::placeholder { color: var(--muted); }
-.chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chip {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-@media (min-width: 560px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 860px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px;
-  min-width: 0;
-  min-height: 118px;
-}
-.card:hover { border-color: var(--muted); }
-.card.have { border-color: var(--ok); background: linear-gradient(var(--ok-bg), var(--ok-bg)), var(--surface); }
-.card .yr {
-  align-self: flex-start;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.5rem;
-  line-height: 1;
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-radius: 6px;
-  padding: 3px 9px;
-  font-variant-numeric: tabular-nums;
-}
-.card .who { font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
-.card .car { color: var(--muted); font-size: 0.82rem; line-height: 1.25; margin-top: auto; overflow-wrap: anywhere; }
-.card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.card .ava {
-  flex: 0 0 auto;
-  width: 46px; height: 46px; border-radius: 50%;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  overflow: hidden;
-  display: grid; place-items: center;
-  color: var(--muted);
-  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
-}
-.card .ava img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
-.card .tick {
-  position: absolute; top: 46px; right: 8px;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--ok); color: #fff;
-  border: 2px solid var(--surface);
-  display: grid; place-items: center; font-size: 0.8rem; font-weight: 700;
-}
-.strip {
-  height: 10px;
-  background: repeating-conic-gradient(var(--fg) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
-  opacity: 0.85;
-  border-radius: 2px;
-}
-.empty { color: var(--muted); text-align: center; padding: 32px 0; grid-column: 1 / -1; }
-
-/* Folha da temporada */
-.overlay {
-  position: fixed; inset: 0;
-  background: var(--scrim);
-  display: flex; align-items: flex-end; justify-content: center;
-  z-index: 10;
-}
-.panel {
-  width: 100%; max-width: 640px;
-  max-height: 94%;
-  overflow-y: auto;
-  background: var(--surface);
-  border-top-left-radius: 18px; border-top-right-radius: 18px;
-  border: 1px solid var(--line);
-  padding: 18px 16px;
-  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; gap: 16px;
-}
-.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.panel-head h2 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.8rem;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.nav { display: flex; gap: 6px; }
-.icon-btn {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
-  font-size: 1.1rem;
-  display: grid; place-items: center;
-}
-.icon-btn:disabled { opacity: 0.35; cursor: default; }
-
-.photos {
-  display: flex; gap: 10px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px;
-  padding-bottom: 4px;
-}
-.slot { flex: 0 0 82%; scroll-snap-align: start; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-@media (min-width: 560px) {
-  .photos { overflow: visible; margin-inline: 0; padding-inline: 0; }
-  .slot { flex: 1 1 0; }
-}
-.slot-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
-.shot {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  border-radius: 12px;
-  border: 1px dashed var(--line);
-  background: var(--surface-2);
-  overflow: hidden;
-  padding: 0;
-  display: block;
-}
-@media (min-width: 560px) { .shot { aspect-ratio: 1 / 1; } }
-.shot.filled { border-style: solid; }
-.shot.loading svg { animation: pulse 1.2s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: 0.35; } }
-.shot img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
-.credit { font-size: 0.72rem; color: var(--muted); }
-.cur { display: flex; flex-direction: column; gap: 10px; }
-.cur-item { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
-.cur-tag { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-size: 1rem; }
-.cur-item p { margin: 0; line-height: 1.5; }
-.shot svg { width: 100%; height: 100%; display: block; color: var(--muted); }
-.shot .add {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.65));
-  color: #fff; font-size: 0.72rem; font-weight: 600;
-  padding: 18px 4px 6px; text-align: center;
-}
-.slot-actions { display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; }
-.slot-actions a, .slot-actions button {
-  background: none; border: 0; padding: 2px 0; text-align: left;
-  color: var(--accent); text-decoration: underline; text-underline-offset: 2px; font-size: inherit;
-}
-.slot-actions button.danger { color: var(--muted); }
-
-dl { margin: 0; display: flex; flex-direction: column; }
-.row { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
-.row dt { color: var(--muted); font-weight: 600; flex: 0 0 38%; min-width: 0; }
-.row dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.row .hint { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
-.storybox { display: flex; flex-direction: column; gap: 10px; }
-.story { margin: 0; line-height: 1.6; max-width: 62ch; }
-.own {
-  width: 100%;
-  border: 0; border-radius: 12px;
-  padding: 15px;
-  font-weight: 700; font-size: 1.05rem;
-  background: var(--surface-2); color: var(--fg);
-  border: 1px solid var(--line);
-}
-.own[aria-pressed="true"] { background: var(--ok); color: #fff; border-color: var(--ok); }
-.note { color: var(--muted); font-size: 0.8rem; margin: 0; }
-.toast {
-  position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  max-width: 420px; margin-inline: auto;
-  background: var(--fg); color: var(--bg);
-  border-radius: 10px; padding: 11px 14px; font-size: 0.9rem; z-index: 20; text-align: center;
-}
-@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } .shot.loading svg { animation: none; } }
-.panel { overscroll-behavior: contain; }
-.panel > * { flex-shrink: 0; }
-footer { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
-footer a { color: var(--accent); }
-</style>
-<style>
-/* base para funcionar como página própria */
-[hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Coleção F1 1:43</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --card-hover: #2a2a2a;
+            --accent-color: #e10600;
+            --text-color: #ffffff;
+            --text-secondary: #aaaaaa;
+            --success-color: #00b050;
+        }
+        body {
+            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            padding-bottom: 60px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            margin: 0;
+            color: var(--accent-color);
+            font-size: 1.8em;
+            letter-spacing: 1px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: var(--card-bg);
+            color: white;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: var(--card-bg);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            background-color: var(--card-hover);
+        }
+        .card.owned {
+            border-color: var(--success-color);
+        }
+        .card.owned::after {
+            content: "✓";
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .badge-year {
+            background-color: var(--accent-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+        .card-pilot {
+            margin: 8px 0 0 0;
+            font-size: 0.85em;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 450px;
+            width: 85%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close {
+            position: absolute; top: 10px; right: 15px;
+            font-size: 28px; cursor: pointer; color: #888;
+        }
+        .info-row {
+            margin: 10px 0;
+            font-size: 0.95em;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+        .info-row strong { color: var(--text-secondary); }
+        .img-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .img-box div {
+            flex: 1;
+            background: #252525;
+            padding: 5px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .img-box span {
+            display: block;
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .modal img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #1a1a1a;
+        }
+        .history-text {
+            font-size: 0.88em;
+            line-height: 1.4;
+            color: #dddddd;
+            margin-top: 15px;
+            background: #252525;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .btn-toggle {
+            background-color: #333; color: white; border: none;
+            padding: 12px; width: 100%; border-radius: 6px;
+            font-weight: bold; cursor: pointer; margin-top: 15px;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+        .btn-toggle.owned {
+            background-color: var(--success-color);
+        }
+    </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>Miniaturas <span>F1</span> 1:43</h1>
-      <p class="sub">Campeões mundiais de 1950 a 2025 e a sua estante</p>
+
+    <div class="header">
+        <h1>🏎️ Miniaturas F1 1:43</h1>
+        <p>Catálogo de Campeões Mundiais & Inventário</p>
     </div>
-    <div class="strip" aria-hidden="true"></div>
-    <div class="progress" aria-live="polite">
-      <div class="progress-top"><span><strong id="count">0</strong> de <span id="total">76</span> na estante</span><span id="pct">0%</span></div>
-      <div class="bar"><i id="barfill"></i></div>
+
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-box" placeholder="Pesquisar por ano, piloto, carro ou pista..." oninput="filtrarCards()">
     </div>
-    <div class="tools">
-      <label for="q" hidden>Pesquisar</label>
-      <input id="q" class="search" type="search" placeholder="Pesquisar por ano, piloto, carro ou pista..." autocomplete="off">
-      <div class="chips" role="group" aria-label="Filtro">
-        <button class="chip" data-f="all" aria-pressed="true">Todas</button>
-        <button class="chip" data-f="have" aria-pressed="false">Tenho</button>
-        <button class="chip" data-f="miss" aria-pressed="false">Faltam</button>
-      </div>
+
+    <div class="grid" id="app-grid"></div>
+
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="margin-top:0; color:var(--accent-color);">Ano</h2>
+            <div class="info-row"><strong>Piloto:</strong> <span id="modal-pilot"></span></div>
+            <div class="info-row"><strong>Carro:</strong> <span id="modal-car"></span></div>
+            <div class="info-row"><strong>Número Correto na Miniatura:</strong> <span id="modal-number"></span></div>
+            <div class="info-row"><strong>Pista do Título:</strong> <span id="modal-track"></span></div>
+            
+            <div class="img-box">
+                <div>
+                    <span>Estilo do Carro</span>
+                    <img id="img-car" src="" alt="Foto do Carro">
+                </div>
+                <div>
+                    <span>Estilo do Circuito</span>
+                    <img id="img-track" src="" alt="Circuito">
+                </div>
+            </div>
+            
+            <div class="history-text" id="modal-history"></div>
+            <button class="btn-toggle" id="btn-own" onclick="toggleOwnership()">Marcar como Adquirido</button>
+        </div>
     </div>
-  </header>
-  <main class="grid" id="grid"></main>
-  <footer>Fotos da Wikipédia e do Wikimedia Commons, em sua maioria com licença livre. Toque em “Fonte” na tela de cada temporada para ver o crédito. Aparecem quando o aparelho está online. A foto do circuito costuma mostrar a pista de hoje.</footer>
-</div>
 
-<div class="overlay" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <div class="panel" id="panel"></div>
-</div>
-<input type="file" id="picker" accept="image/*" hidden>
-<div class="toast" id="toast" hidden></div>
+    <script>
+        const dadosColecao = [
+            { ano: 1950, piloto: "Giuseppe Farina 🇮🇹", carro: "Alfa Romeo 158", numero: "2", circuito: "Monza 🇮🇹", qCar: "vintage-race-car", qTrack: "monza-circuit", historia: "Farina venceu em casa para superar Fangio e ser o primeiro campeão da história da F1." },
+            { ano: 1951, piloto: "Juan Manuel Fangio 🇦🇷", carro: "Alfa Romeo 159", numero: "22", circuito: "Pedralbes 🇪🇸", qCar: "alfa-romeo-classic", qTrack: "barcelona-street", historia: "Fangio faturou o título após a Ferrari errar a estratégia de escolha do tamanho de pneus de Ascari." },
+            { ano: 1952, piloto: "Alberto Ascari 🇮🇹", carro: "Ferrari 500", numero: "10", circuito: "Nürburgring 🇩🇪", qCar: "ferrari-f2-classic", qTrack: "nurburgring", historia: "Dominou completamente a temporada vencendo seis corridas consecutivas com o modelo lendário de F2." },
+            { ano: 1953, piloto: "Alberto Ascari 🇮🇹", carro: "Ferrari 500", numero: "4", circuito: "Bremgarten 🇨🇭", qCar: "classic-ferrari-race", qTrack: "forest-road", historia: "Bicampeão consecutivo selando o título mundial de forma magistral nas florestas da Suíça." },
+            { ano: 1954, piloto: "Juan Manuel Fangio 🇦🇷", carro: "Mercedes W196 / Maserati 250F", numero: "18", circuito: "Bremgarten 🇨🇭", qCar: "mercedes-w196", qTrack: "forest-road", historia: "Iniciou o ano pilotando uma Maserati e mudou para as inovadoras Flechas de Prata da Mercedes." },
+            { ano: 1955, piloto: "Juan Manuel Fangio 🇦🇷", carro: "Mercedes W196", numero: "10", circuito: "Monza 🇮🇹", qCar: "silver-arrows-f1", qTrack: "monza-track", historia: "Temporada de domínio absoluto de Fangio pilotando a versão com carenagem aerodinâmica fechada." },
+            { ano: 1956, piloto: "Juan Manuel Fangio 🇦🇷", carro: "Ferrari D50", numero: "22", circuito: "Monza 🇮🇹", qCar: "lancia-ferrari", qTrack: "monza-track", historia: "Venceu o campeonato após dividir o cockpit do carro na corrida final com o companheiro Collins." },
+            { ano: 1957, piloto: "Juan Manuel Fangio 🇦🇷", carro: "Maserati 250F", numero: "2", circuito: "Nürburgring 🇩🇪", qCar: "maserati-250f", qTrack: "nurburgring-race", historia: "Sua maior exibição histórica, quebrando o recorde da pista alemã para ser pentacampeão." },
+            { ano: 1958, piloto: "Mike Hawthorn 🇬🇧", carro: "Ferrari 246 F1", numero: "6", circuito: "Ain-Diab 🇲🇦", qCar: "ferrari-246", qTrack: "morocco-street", historia: "Primeiro britânico campeão mundial, vencendo apenas uma prova, mas pontuando com consistência." },
+            { ano: 1959, piloto: "Jack Brabham 🇦🇺", carro: "Cooper-Climax T51", numero: "8", circuito: "Sebring 🇺🇸", qCar: "cooper-climax", qTrack: "sebring-track", historia: "Ficou sem combustível na última volta e empurrou o carro até a linha para ser campeão." },
+            { ano: 1960, piloto: "Jack Brabham 🇦🇺", carro: "Cooper-Climax T53", numero: "2", circuito: "Porto 🇵🇹", qCar: "cooper-climax-rear", qTrack: "porto-street", historia: "Consolidou de vez a revolução dos carros de Fórmula 1 equipados com motor traseiro." },
+            { ano: 1961, piloto: "Phil Hill 🇺🇸", carro: "Ferrari 156 F1", numero: "2", circuito: "Monza 🇮🇹", qCar: "ferrari-sharknose", qTrack: "monza-banking", historia: "Primeiro americano campeão, em uma decisão marcada pela trágica morte de Von Trips." },
+            { ano: 1962, piloto: "Graham Hill 🇬🇧", carro: "BRM P57", numero: "3", circuito: "East London 🇿🇦", qCar: "brm-f1-car", qTrack: "south-africa-circuit", historia: "Bateu a Lotus de Jim Clark na África do Sul após uma quebra mecânica no carro do rival." },
+            { ano: 1963, piloto: "Jim Clark 🇬🇧", carro: "Lotus-Climax 25", numero: "8", circuito: "Monza 🇮🇹", qCar: "lotus-25-climax", qTrack: "monza-track", historia: "Temporada esmagadora conquistada com o inovador chassi monocoque de Colin Chapman." },
+            { ano: 1964, piloto: "John Surtees 🇬🇧", carro: "Ferrari 158", numero: "7", circuito: "Cidade do México 🇲🇽", qCar: "ferrari-158", qTrack: "mexico-circuit", historia: "O único homem a ser campeão mundial sobre duas rodas (Motos) e sobre quatro rodas." },
+            { ano: 1965, piloto: "Jim Clark 🇬🇧", carro: "Lotus-Climax 33", numero: "5", circuito: "Nürburgring 🇩🇪", qCar: "lotus-33", qTrack: "nurburgring-green", historia: "Ganhou o campeonato com enorme facilidade e faturou as 500 Milhas de Indianápolis no mesmo ano." },
+            { ano: 1966, piloto: "Jack Brabham 🇦🇺", carro: "Brabham-Repco BT19", numero: "3", circuito: "Monza 🇮🇹", qCar: "brabham-repco", qTrack: "monza-track", historia: "Único piloto da história a erguer a taça pilotando um bólido de sua própria escuderia." },
+            { ano: 1967, piloto: "Denny Hulme 🇳🇿", carro: "Brabham-Repco BT24", numero: "2", circuito: "Cidade do México 🇲🇽", qCar: "brabham-f1-classic", qTrack: "mexico-track", historia: "Superou seu próprio patrão Jack Brabham usando regularidade técnica e inteligência de corrida." },
+            { ano: 1968, piloto: "Graham Hill 🇬🇧", carro: "Lotus-Ford 49B", numero: "10", circuito: "Cidade do México 🇲🇽", qCar: "lotus-49b-ford", qTrack: "mexico-track", historia: "Liderou e reergueu a escuderia Lotus emocionalmente após a morte trágica de Jim Clark." },
+            { ano: 1969, piloto: "Jackie Stewart 🇬🇧", carro: "Matra-Ford MS80", numero: "3", circuito: "Monza 🇮🇹", pistaNome: "Monza", historia: "Primeiro título mundial do escocês voando com o chassi azul da francesa Matra." },
+            { ano: 1970, piloto: "Jochen Rindt 🇦🇹", carro: "Lotus-Ford 72C", numero: "5", circuito: "Monza 🇮🇹", qCar: "lotus-72-gold", qTrack: "monza-track", historia: "O único campeão póstumo. Faleceu em Monza e nenhum oponente alcançou seus pontos." },
+            { ano: 1971, piloto: "Jackie Stewart 🇬🇧", carro: "Tyrrell-Ford 003", numero: "11", circuito: "Österreichring 🇦🇹", qCar: "tyrrell-003", qTrack: "austria-circuit", historia: "Domínio absoluto vencendo 6 das 11 corridas da temporada com o bólido azul da Tyrrell." },
+            { ano: 1972, piloto: "Emerson Fittipaldi 🇧🇷", carro: "Lotus-Ford 72D", numero: "8", circuito: "Monza 🇮🇹", qCar: "lotus-72d-jps", qTrack: "monza-track", historia: "O Brasil no topo do mundo. Emerson virou o campeão mais jovem da história até ali com a lendária pintura JPS." },
+            { ano: 1973, piloto: "Jackie Stewart 🇬🇧", carro: "Tyrrell-Ford 006", numero: "5", circuito: "Monza 🇮🇹", qCar: "tyrrell-006", qTrack: "monza-track", historia: "Assegurou o tricampeonato mundial em Monza e anunciou sua aposentadoria das pistas." },
+            { ano: 1974, piloto: "Emerson Fittipaldi 🇧🇷", carro: "McLaren-Ford M23", numero: "5", circuito: "Watkins Glen 🇺🇸", qCar: "mclaren-m23", qTrack: "watkins-glen", historia: "Migrou para a McLaren e carregou a marca inglesa ao seu primeiríssimo título mundial." },
+            { ano: 1975, piloto: "Niki Lauda 🇦🇹", carro: "Ferrari 312T", numero: "12", circuito: "Monza 🇮🇹", qCar: "ferrari-312t", qTrack: "monza-track", historia: "Primeira taça de Lauda, quebrando um jejum de 11 anos da Ferrari com o motor boxer flat-12." },
+            { ano: 1976, piloto: "James Hunt 🇬🇧", carro: "McLaren-Ford M23", numero: "11", circuito: "Fuji 🇯🇵", qCar: "mclaren-f1-70s", qTrack: "fuji-speedway", historia: "Derrotou Lauda por um ponto sob o dilúvio no Japão, após o austríaco abandonar por segurança." },
+            { ano: 1977, piloto: "Niki Lauda 🇦🇹", carro: "Ferrari 312T2", numero: "11", circuito: "Watkins Glen 🇺🇸", qCar: "ferrari-312t2", qTrack: "watkins-glen", historia: "A consagração da frieza técnica. Faturou a temporada anotando pontos com maestria matemática." },
+            { ano: 1978, piloto: "Mario Andretti 🇺🇸", carro: "Lotus-Ford 79", numero: "5", circuito: "Monza 🇮🇹", qCar: "lotus-79-black", qTrack: "monza-track", historia: "Consagração definitiva do efeito solo. Título marcado pelo luto de seu companheiro Peterson." },
+            { ano: 1979, piloto: "Jody Scheckter 🇿🇦", carro: "Ferrari 312T4", numero: "11", circuito: "Monza 🇮🇹", qCar: "ferrari-312t4", qTrack: "monza-track", historia: "Conquistou o campeonato contando com o trabalho e lealdade fiel de Gilles Villeneuve." },
+            { ano: 1980, piloto: "Alan Jones 🇦🇺", carro: "Williams-Ford FW07B", numero: "27", circuito: "Montreal 🇨🇦", qCar: "williams-fw07", qTrack: "montreal-track", historia: "Primeiro título mundial de pilotos da lendária escuderia fundada por Sir Frank Williams." },
+            { ano: 1981, piloto: "Nelson Piquet 🇧🇷", carro: "Brabham-Ford BT49C", numero: "5", circuito: "Las Vegas 🇺🇸", qCar: "brabham-bt49c", qTrack: "vegas-strip", historia: "Piquet cruzou exausto e desmaiou no cockpit sob o calor de Vegas, garantindo o título por um ponto." },
+            { ano: 1982, piloto: "Keke Rosberg 🇫🇮", carro: "Williams-Ford FW08", numero: "6", circuito: "Las Vegas 🇺🇸", qCar: "williams-fw08", qTrack: "vegas-strip", historia: "O ano mais equilibrado e imprevisível. O finlandês faturou a taça vencendo uma única corrida." },
+            { ano: 1983, piloto: "Nelson Piquet 🇧🇷", carro: "Brabham-BMW BT52B", numero: "5", circuito: "Kyalami 🇿🇦", qCar: "brabham-bt52", qTrack: "kyalami", historia: "Primeiro campeonato da história da F1 vencido por um motor Turbo, superando as Ferraris." },
+            { ano: 1984, piloto: "Niki Lauda 🇦🇹", carro: "McLaren-TAG MP4/2", numero: "8", circuito: "Estoril 🇵🇹", qCar: "mclaren-mp4-2", qTrack: "estoril-track", historia: "Menor margem histórica: Lauda bateu seu parceiro Alain Prost por incríveis meio ponto (0,5)." },
+            { ano: 1985, piloto: "Alain Prost 🇫🇷", carro: "McLaren-TAG MP4/2B", numero: "2", circuito: "Brands Hatch 🇬🇧", qCar: "mclaren-mp4", qTrack: "brands-hatch", historia: "Após bater na trave várias vezes, o 'Professor' finalmente carimbou seu primeiro título." },
+            { ano: 1986, piloto: "Alain Prost 🇫🇷", carro: "McLaren-TAG MP4/2C", numero: "1", circuito: "Adelaide 🇦🇺", qCar: "mclaren-mp4", qTrack: "adelaide-circuit", historia: "O pneu traseiro explodido de Mansell na reta de Adelaide deu o bicampeonato de bandeja a Prost." },
+            { ano: 1987, piloto: "Nelson Piquet 🇧🇷", carro: "Williams-Honda FW11B", numero: "6", circuito: "Suzuka 🇯🇵", qCar: "williams-honda-f1", qTrack: "suzuka-circuit", historia: "Guerra mental interna na Williams. Piquet levou o tri após Mansell sofrer forte acidente nos treinos." },
+            { ano: 1988, piloto: "Ayrton Senna 🇧🇷", carro: "McLaren-Honda MP4/4", numero: "12", circuito: "Suzuka 🇯🇵", qCar: "mclaren-mp4-4", qTrack: "suzuka-circuit", historia: "O carro apagou na largada, Senna despencou para 16º, mas escalou sob chuva e venceu para ser campeão." },
+            { ano: 1989, piloto: "Alain Prost 🇫🇷", carro: "McLaren-Honda MP4/5", numero: "2", circuito: "Suzuka 🇯🇵", qCar: "mclaren-mp4-5", qTrack: "suzuka-circuit", historia: "A histórica e polêmica batida na chicane. Senna foi desclassificado nos bastidores e Prost levou." },
+            { ano: 1990, piloto: "Ayrton Senna 🇧🇷", carro: "McLaren-Honda MP4/5B", numero: "27", circuito: "Suzuka 🇯🇵", qCar: "mclaren-f1-car", qTrack: "suzuka-circuit", historia: "O troco de 1989. Senna tirou Prost da pista na primeira curva logo após a largada e garantiu o bicampeonato." },
+            { ano: 1991, piloto: "Ayrton Senna 🇧🇷", carro: "McLaren-Honda MP4/6", numero: "1", circuito: "Suzuka 🇯🇵", qCar: "mclaren-v12", qTrack: "suzuka-circuit", historia: "O tricampeonato incontestável. Senna dominou o ano inteiro com o motor Honda V12 e entregou a vitória pro fiel escudeiro Berger." },
+            { ano: 1992, piloto: "Nigel Mansell 🇬🇧", carro: "Williams-Renault FW14B", numero: "5", circuito: "Hungaroring 🇭🇺", qCar: "williams-fw14b", qTrack: "budapest-circuit", historia: "Com suspensão ativa eletrônica e um carro de outro planeta, Mansell destruiu a concorrência e foi campeão em agosto." },
+            { ano: 1993, piloto: "Alain Prost 🇫🇷", carro: "Williams-Renault FW15C", numero: "2", circuito: "Spa-Francorchamps 🇧🇪", qCar: "williams-f1-team", qTrack: "spa-francorchamps", historia: "Quarto e último título mundial do francês com o carro mais tecnológico da história antes de se aposentar." },
+            { ano: 1994, piloto: "Michael Schumacher 🇩🇪", carro: "Benetton-Ford B194", numero: "5", circuito: "Adelaide 🇦🇺", qCar: "benetton-f1", qTrack: "adelaide-circuit", historia: "Título polêmico. Após bater no muro, Schumacher jogou o carro para cima de Damon Hill em Adelaide para garantir a taça." },
+            { ano: 1995, piloto: "Michael Schumacher 🇩🇪", carro: "Benetton-Renault B195", numero: "1", circuito: "Aida 🇯🇵", qCar: "benetton-f1", qTrack: "japan-race-track", historia: "Schumacher dominou completamente a temporada com motor Renault e assegurou o bicampeonato no GP do Pacífico." },
+            { ano: 1996, piloto: "Damon Hill 🇬🇧", carro: "Williams-Renault FW18", numero: "5", circuito: "Suzuka 🇯🇵", qCar: "williams-f1-car", qTrack: "suzuka-circuit", historia: "Filho do lendário Graham Hill, Damon superou a enorme pressão interna e o estreante Villeneuve para vencer." },
+            { ano: 1997, piloto: "Jacques Villeneuve 🇨🇦", carro: "Williams-Renault FW19", numero: "3", circuito: "Jerez 🇪🇸", qCar: "williams-f1", qTrack: "jerez-circuit", historia: "Schumacher tentou jogar o carro em Villeneuve na decisão em Jerez para tirá-lo da prova, mas quebrou e acabou desclassificado." },
+            { ano: 1998, piloto: "Mika Häkkinen 🇫🇮", carro: "McLaren-Mercedes MP4/13", numero: "8", circuito: "Suzuka 🇯🇵", qCar: "mclaren-f1-90s", qTrack: "suzuka-circuit", historia: "O Finlandês Voador superou o favoritismo de Schumacher na grande decisão em Suzuka com o veloz carro de Adrian Newey." },
+            { ano: 1999, piloto: "Mika Häkkinen 🇫🇮", carro: "McLaren-Mercedes MP4/14", numero: "1", circuito: "Suzuka 🇯🇵", qCar: "mclaren-mercedes", qTrack: "suzuka-circuit", historia: "Bicampeão mundial após travar uma batalha intensa de fim de ano contra Eddie Irvine da escuderia Ferrari." },
+            { ano: 2000, piloto: "Michael Schumacher 🇩🇪", carro: "Ferrari F1-2000", numero: "3", circuito: "Suzuka 🇯🇵", qCar: "ferrari-f1-car", qTrack: "suzuka-circuit", historia: "Encerrou o doloroso e longo jejum de 21 anos sem títulos mundiais de pilotos da Scuderia Ferrari com vitória no Japão." },
+            { ano: 2001, piloto: "Michael Schumacher 🇩🇪", carro: "Ferrari F2001", numero: "1", circuito: "Hungaroring 🇭🇺", qCar: "ferrari-f1", qTrack: "budapest-circuit", historia: "Igualou o recorde de 4 títulos mundiais de Alain Prost vencendo na Hungria com enorme antecedência." },
+            { ano: 2002, piloto: "Michael Schumacher 🇩🇪", carro: "Ferrari F2002", numero: "1", circuito: "Magny-Cours 🇫🇷", qCar: "ferrari-racing", qTrack: "france-circuit", historia: "O campeonato mais rápido da história moderna. Garantiu a taça em julho com 6 etapas de folga na França." },
+            { ano: 2003, piloto: "Michael Schumacher 🇩🇪", carro: "Ferrari F2003-GA", numero: "1", circuito: "Suzuka 🇯🇵", qCar: "ferrari-f1", qTrack: "suzuka-circuit", historia: "Superou o recorde histórico absoluto de Juan Manuel Fangio ao conquistar o inédito sexto título mundial." },
+            { ano: 2004, piloto: "Michael Schumacher 🇩🇪", carro: "Ferrari F2004", numero: "1", circuito: "Spa-Francorchamps 🇧🇪", qCar: "ferrari-f1-car", qTrack: "spa-francorchamps", historia: "O auge absoluto da era Schumacher na F1. Faturou o heptacampeonato com um carro avassalador que quebrou recordes." },
+            { ano: 2005, piloto: "Fernando Alonso 🇪🇸", carro: "Renault R25", numero: "5", circuito: "Interlagos 🇧🇷", qCar: "renault-f1", qTrack: "interlagos-circuit", historia: "Alonso quebrou a hegemonia da Ferrari e tornou-se o campeão mundial mais jovem da história no Brasil." },
+            { ano: 2006, piloto: "Fernando Alonso 🇪🇸", carro: "Renault R26", numero: "1", circuito: "Interlagos 🇧🇷", qCar: "renault-f1-team", qTrack: "interlagos-circuit", historia: "Bicampeonato em uma batalha espetacular contra a Ferrari no ano da primeira despedida oficial de Schumacher." },
+            { ano: 2007, piloto: "Kimi Räikkönen 🇫🇮", carro: "Ferrari F2007", numero: "6", circuito: "Interlagos 🇧🇷", qCar: "ferrari-f2007", qTrack: "interlagos-circuit", historia: "Kimi correu totalmente por fora contra as McLarens de Hamilton e Alonso, venceu no Brasil e levou o caneco por 1 ponto." },
+            { ano: 2008, piloto: "Lewis Hamilton 🇬🇧", carro: "McLaren-Mercedes MP4-23", numero: "22", circuito: "Interlagos 🇧🇷", qCar: "mclaren-f1", qTrack: "interlagos-circuit", historia: "A final mais cardíaca de todas. Hamilton ultrapassou Glock na última curva da última volta no Brasil para tirar o título de Massa." },
+            { ano: 2009, piloto: "Jenson Button 🇬🇧", carro: "Brawn-Mercedes BGP 001", numero: "22", circuito: "Interlagos 🇧🇷", qCar: "brawn-gp", qTrack: "interlagos-circuit", historia: "O conto de fadas da F1. Uma equipe comprada por apenas 1 libra usou o difusor duplo e Button foi campeão no Brasil." },
+            { ano: 2010, piloto: "Sebastian Vettel 🇩🇪", carro: "Red Bull-Renault RB6", numero: "5", circuito: "Yas Marina 🇦🇪", qCar: "red-bull-f1", qTrack: "yas-marina", historia: "Vettel nao liderou o campeonato em nenhuma corrida do ano, exceto na ultima prova em Abu Dhabi, batendo Alonso." },
+            { ano: 2011, piloto: "Sebastian Vettel 🇩🇪", carro: "Red Bull-Renault RB7", numero: "1", circuito: "Suzuka 🇯🇵", qCar: "red-bull-racing", qTrack: "suzuka-circuit", historia: "Bicampeonato avassalador com o carro apelidado de 'Kinky Kylie', anotando 15 pole positions." },
+            { ano: 2012, piloto: "Sebastian Vettel 🇩🇪", carro: "Red Bull-Renault RB8", numero: "1", circuito: "Interlagos 🇧🇷", qCar: "f1-race-car", qTrack: "interlagos-circuit", historia: "Levou um toque na largada, caiu para ultimo com o carro danificado, mas escalou na chuva para ser tri." },
+            { ano: 2013, piloto: "Sebastian Vettel 🇩🇪", carro: "Red Bull-Renault RB9", numero: "1", circuito: "Buddh 🇮🇳", qCar: "red-bull-f1", qTrack: "india-race-track", historia: "Tetracampeonato historico selado na India com uma sequencia recorde de 9 vitórias consecutivas." },
+            { ano: 2014, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W05 Hybrid", numero: "44", circuito: "Yas Marina 🇦🇪", qCar: "mercedes-f1", qTrack: "yas-marina", historia: "Inicio da Era Hibrida V6 Turbo. Hamilton bateu seu companheiro Nico Rosberg na decisao de Abu Dhabi." },
+            { ano: 2015, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W06 Hybrid", numero: "44", circuito: "Austin 🇺🇸", qCar: "mercedes-amg-f1", qTrack: "texas-race-track", historia: "Conquistou o tricampeonato nos EUA com tres etapas de antecedencia apos erro de Rosberg sob pressao." },
+            { ano: 2016, piloto: "Nico Rosberg 🇩🇪", carro: "Mercedes F1 W07 Hybrid", numero: "6", circuito: "Yas Marina 🇦🇪", qCar: "mercedes-f1", qTrack: "yas-marina", historia: "Guerra mental extrema. Rosberg resistiu a Hamilton em Abu Dhabi para ser campeao e se aposentou 5 dias depois." },
+            { ano: 2017, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W08 EQ Power+", numero: "44", circuito: "Cidade do México 🇲🇽", qCar: "mercedes-f1", qTrack: "mexico-track", historia: "Tetracampeonato conquistado apos intensa batalha contra a Ferrari de Sebastian Vettel na primeira metade." },
+            { ano: 2018, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W09 EQ Power+", numero: "44", circuito: "Cidade do México 🇲🇽", qCar: "mercedes-amg", qTrack: "mexico-track", historia: "Igualou os 5 titulos de Fangio com uma das melhores temporadas de sua carreira, batendo a Ferrari." },
+            { ano: 2019, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W10 EQ Power+", numero: "44", circuito: "Austin 🇺🇸", qCar: "mercedes-f1", qTrack: "texas-race-track", historia: "Hexacampeonato garantido com um segundo lugar nos EUA, isolando-se como segundo maior vencedor da historia." },
+            { ano: 2020, piloto: "Lewis Hamilton 🇬🇧", carro: "Mercedes F1 W11 EQ Performance", numero: "44", circuito: "Istambul 🇹🇷", qCar: "black-mercedes-f1", qTrack: "istanbul-park", historia: "O Heptacampeonato. Venceu na Turquia com uma aula de pilotagem na chuva, igualando o recorde de Schumacher." },
+            { ano: 2021, piloto: "Max Verstappen 🇳🇱", carro: "Red Bull-Honda RB16B", numero: "33", circuito: "Yas Marina 🇦🇪", qCar: "verstappen-f1", qTrack: "yas-marina", historia: "A decisao mais polêmica do seculo. Ultrapassou Hamilton na ultima volta apos uma relargada controversa." },
+            { ano: 2022, piloto: "Max Verstappen 🇳🇱", carro: "Red Bull-RB18", numero: "1", circuito: "Suzuka 🇯🇵", qCar: "red-bull-f1", qTrack: "suzuka-circuit", historia: "Dominou completamente o novo regulamento de efeito solo, faturando o bicampeonato sob chuva no Japao." },
+            { ano: 2023, piloto: "Max Verstappen 🇳🇱", carro: "Red Bull-RB19", numero: "1", circuito: "Lusail 🇶🇦", qCar: "red-bull-racing", qTrack: "qatar-circuit", historia: "O ano mais dominante da historia. Conquistou o tri de forma inedita em um sabado na corrida Sprint." },
+            { ano: 2024, piloto: "Max Verstappen 🇳🇱", carro: "Red Bull-RB20", numero: "1", circuito: "Las Vegas 🇺🇸", qCar: "red-bull-f1", qTrack: "vegas-strip", historia: "Tetracampeonato com raca. Apesar de o carro perder rendimento, garantiu a taca com um 5º lugar em Vegas." },
+            { ano: 2025, piloto: "Lando Norris 🇬🇧", carro: "McLaren-Mercedes MCL38", numero: "4", circuito: "Yas Marina 🇦🇪", qCar: "mclaren-f1-team", qTrack: "yas-marina", historia: "Primeiro titulo mundial do britanico, coroando a espetacular ressurreicao tecnica da equipe McLaren." }
+        ];
 
-<script>
-(function () {
-  var FLAG = {IT:"🇮🇹",AR:"🇦🇷",GB:"🇬🇧",AU:"🇦🇺",US:"🇺🇸",DE:"🇩🇪",AT:"🇦🇹",ZA:"🇿🇦",BR:"🇧🇷",FI:"🇫🇮",FR:"🇫🇷",ES:"🇪🇸",CA:"🇨🇦",NZ:"🇳🇿",NL:"🇳🇱",CH:"🇨🇭",PT:"🇵🇹",JP:"🇯🇵",HU:"🇭🇺",BE:"🇧🇪",MX:"🇲🇽",TR:"🇹🇷",QA:"🇶🇦",AE:"🇦🇪",IN:"🇮🇳",MA:"🇲🇦"};
-  var flag = function (c) { return FLAG[c] || ""; };
+        // LÓGICA DE ATIVAÇÃO DO APLICATIVO DO INVENTÁRIO
+        function renderGrid(dados = dadosColecao) {
+            const grid = document.getElementById('app-grid');
+            grid.innerHTML = '';
+            dados.forEach(item => {
+                const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
+                const card = document.createElement('div');
+                card.className = `card ${isOwned ? 'owned' : ''}`;
+                card.onclick = () => openModal(item);
+                card.innerHTML = `
+                    <span class="badge-year">${item.ano}</span>
+                    <p class="card-pilot">${item.piloto}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-  // ano | piloto | país | carro | país do carro | nº | pista do título | país | história
-  var RAW = [
-"1950|Giuseppe Farina|IT|Alfa Romeo 158|IT||Monza|IT|Farina venceu o primeiro Mundial da história. O título saiu na última etapa, em Monza, contra Fangio e Fagioli, todos da Alfa Romeo.",
-"1951|Juan Manuel Fangio|AR|Alfa Romeo 159|IT||Pedralbes (Barcelona)|ES|Fangio levou o primeiro de seus cinco títulos e encerrou a era Alfa Romeo, com a Ferrari de Ascari ameaçando de perto.",
-"1952|Alberto Ascari|IT|Ferrari 500|IT||Zandvoort|NL|Com regras de Fórmula 2, Ascari foi quase imbatível: venceu seis das oito corridas do ano e deu à Ferrari seu primeiro título de pilotos.",
-"1953|Alberto Ascari|IT|Ferrari 500|IT||Bremgarten (Berna)|CH|Ascari repetiu o título com a mesma Ferrari 500 e fechou a conta na Suíça, depois de vencer cinco GPs na temporada.",
-"1954|Juan Manuel Fangio|AR|Mercedes-Benz W196|DE||Bremgarten (Berna)|CH|Fangio começou o ano na Maserati e passou para a Mercedes no meio da temporada, quando as Flechas de Prata estrearam com carenagem aerodinâmica.",
-"1955|Juan Manuel Fangio|AR|Mercedes-Benz W196|DE||Monza|IT|A Mercedes dominou com Fangio e Stirling Moss. Foi o último ano da marca nos GPs antes de uma retirada que durou quase 40 anos.",
-"1956|Juan Manuel Fangio|AR|Lancia-Ferrari D50|IT||Monza|IT|Na última prova, a Ferrari de Fangio quebrou e Peter Collins parou para lhe ceder o carro. Com isso Fangio superou o próprio Collins no campeonato.",
-"1957|Juan Manuel Fangio|AR|Maserati 250F|IT||Nürburgring|DE|O quinto título veio após a vitória que muitos consideram a maior de Fangio, recuperando quase um minuto de desvantagem no Nürburgring.",
-"1958|Mike Hawthorn|GB|Ferrari Dino 246|IT||Ain-Diab (Casablanca)|MA|Hawthorn foi campeão por apenas um ponto sobre Stirling Moss, que venceu mais corridas, mas perdeu o título depois de defender Hawthorn diante dos comissários em Portugal.",
-"1959|Jack Brabham|AU|Cooper T51|GB||Sebring|US|O Cooper de motor traseiro mudou a F1. Brabham ficou sem gasolina na última volta em Sebring e empurrou o carro até a linha de chegada.",
-"1960|Jack Brabham|AU|Cooper T53|GB||Portimão|PT|Brabham venceu cinco GPs seguidos no meio do ano e repetiu o título, confirmando de vez a revolução do motor traseiro.",
-"1961|Phil Hill|US|Ferrari 156 \"Sharknose\"|IT||Monza|IT|Hill foi o primeiro americano campeão, em um título marcado pela tragédia: o rival e companheiro Wolfgang von Trips morreu em Monza.",
-"1962|Graham Hill|GB|BRM P57|GB||East London|ZA|Hill ganhou o título na África do Sul, depois que a Lotus de Jim Clark perdeu óleo quando liderava e deu o campeonato ao inglês da BRM.",
-"1963|Jim Clark|GB|Lotus 25|GB||Monza|IT|Clark dominou com o monocoque Lotus 25: sete vitórias em dez corridas, recorde para uma temporada na época.",
-"1964|John Surtees|GB|Ferrari 158|IT||Hermanos Rodríguez (Cidade do México)|MX|Surtees é o único campeão mundial de duas e de quatro rodas. Levou o título por um ponto sobre Graham Hill na última corrida.",
-"1965|Jim Clark|GB|Lotus 33|GB||Nürburgring|DE|Clark venceu seis das dez provas e ainda ganhou as 500 Milhas de Indianápolis no mesmo ano.",
-"1966|Jack Brabham|AU|Brabham BT19|GB||Monza|IT|Brabham foi o único piloto a ser campeão em um carro com o próprio nome, com motor Repco, aos 40 anos.",
-"1967|Denny Hulme|NZ|Brabham BT24|GB||Hermanos Rodríguez (Cidade do México)|MX|Hulme levou o título com a regularidade do Brabham, vencendo apenas duas provas, e ficou à frente do chefe Jack Brabham.",
-"1968|Graham Hill|GB|Lotus 49B|GB||Hermanos Rodríguez (Cidade do México)|MX|Hill reergueu a Lotus depois da morte de Jim Clark, em abril, e fechou o segundo título no México.",
-"1969|Jackie Stewart|GB|Matra MS80|FR||Monza|IT|Stewart, pela equipe de Ken Tyrrell, venceu seis corridas e conquistou o primeiro de seus três títulos.",
-"1970|Jochen Rindt|AT|Lotus 72C|GB||Monza|IT|Rindt morreu nos treinos de Monza e ninguém passou seus pontos. É até hoje o único campeão póstumo da F1.",
-"1971|Jackie Stewart|GB|Tyrrell 003|GB||Österreichring (Zeltweg)|AT|Stewart levou o bicampeonato com o primeiro carro construído pela Tyrrell, vencendo seis corridas.",
-"1972|Emerson Fittipaldi|BR|Lotus 72D|GB||Monza|IT|Aos 25 anos, Fittipaldi foi o mais jovem campeão da história até então e deu ao Brasil o primeiro título, com a Lotus preta e dourada.",
-"1973|Jackie Stewart|GB|Tyrrell 006|GB|5|Monza|IT|Stewart foi tricampeão e anunciou a aposentadoria. Ele deixou as pistas depois da morte do companheiro François Cevert, nos treinos de Watkins Glen.",
-"1974|Emerson Fittipaldi|BR|McLaren M23|GB|5|Watkins Glen|US|Fittipaldi deu à McLaren o primeiro título de pilotos, em uma decisão apertada contra Regazzoni e Scheckter.",
-"1975|Niki Lauda|AT|Ferrari 312T|IT|12|Monza|IT|Lauda trouxe de volta à Ferrari o título de pilotos, que a equipe não ganhava havia 11 anos, com o câmbio transversal da 312T.",
-"1976|James Hunt|GB|McLaren M23|GB|11|Fuji|JP|Hunt venceu por um ponto sobre Lauda, que desistiu sob chuva no Japão. Lauda ainda se recuperava do acidente do Nürburgring.",
-"1977|Niki Lauda|AT|Ferrari 312T2|IT|11|Watkins Glen|US|Lauda voltou das queimaduras para ser bicampeão, garantindo o título com um quarto lugar nos Estados Unidos.",
-"1978|Mario Andretti|US|Lotus 79|GB|5|Monza|IT|O Lotus 79 e o efeito solo deram o título a Andretti. A festa foi apagada pela morte do companheiro Ronnie Peterson em Monza.",
-"1979|Jody Scheckter|ZA|Ferrari 312T4|IT|11|Monza|IT|Scheckter ganhou o título em Monza, com o companheiro Gilles Villeneuve respeitando a ordem de equipe e ficando em segundo.",
-"1980|Alan Jones|AU|Williams FW07B|GB|27|Montreal|CA|Jones deu à Williams o primeiro título de pilotos, ao vencer no Canadá o duelo com Nelson Piquet.",
-"1981|Nelson Piquet|BR|Brabham BT49C|GB|5|Las Vegas (Caesars Palace)|US|Piquet passou mal de calor e exaustão, mas terminou em quinto e garantiu o título por um ponto sobre Carlos Reutemann.",
-"1982|Keke Rosberg|FI|Williams FW08|GB|6|Las Vegas (Caesars Palace)|US|Rosberg foi campeão com apenas uma vitória, em um ano caótico com 11 vencedores diferentes.",
-"1983|Nelson Piquet|BR|Brabham BT52|GB|5|Kyalami|ZA|Piquet foi o primeiro campeão com motor turbo, o BMW, depois de recuperar pontos de Prost nas últimas provas.",
-"1984|Niki Lauda|AT|McLaren MP4/2|GB|8|Estoril|PT|Lauda superou o companheiro Prost por meio ponto, a menor margem da história da F1.",
-"1985|Alain Prost|FR|McLaren MP4/2B|GB|2|Brands Hatch|GB|Prost foi o primeiro campeão francês e deu o título à McLaren de motor TAG Porsche.",
-"1986|Alain Prost|FR|McLaren MP4/2C|GB|1|Adelaide|AU|Prost ganhou o bi na última corrida, depois que o pneu de Mansell estourou quando ele liderava e Prost assumiu a ponta e venceu.",
-"1987|Nelson Piquet|BR|Williams FW11B|GB|6|Suzuka|JP|Piquet foi tricampeão com a Williams-Honda quando Nigel Mansell se machucou em um acidente nos treinos em Suzuka.",
-"1988|Ayrton Senna|BR|McLaren MP4/4|GB|12|Suzuka|JP|O carro apagou na largada, Senna caiu para 14º, mas escalou sob chuva e venceu para ser campeão pela primeira vez.",
-"1989|Alain Prost|FR|McLaren MP4/5|GB|2|Suzuka|JP|Prost e Senna se tocaram na chicane de Suzuka. Senna voltou e venceu, mas foi desclassificado e o título ficou com Prost.",
-"1990|Ayrton Senna|BR|McLaren MP4/5B|GB|27|Suzuka|JP|Um ano depois, a decisão foi de novo em Suzuka e o toque na primeira curva dessa vez favoreceu Senna, que foi bicampeão.",
-"1991|Ayrton Senna|BR|McLaren MP4/6|GB|1|Suzuka|JP|Senna garantiu o terceiro título em Suzuka, depois que Mansell rodou, e entregou a vitória ao companheiro Gerhard Berger.",
-"1992|Nigel Mansell|GB|Williams FW14B|GB|5|Hungaroring|HU|Com suspensão ativa e controle de tração, o Williams FW14B foi imbatível. Mansell venceu nove corridas e fechou o título na Hungria.",
-"1993|Alain Prost|FR|Williams FW15C|GB|2|Estoril|PT|Prost fechou a carreira com o quarto título e anunciou a aposentadoria antes do fim da temporada.",
-"1994|Michael Schumacher|DE|Benetton B194|GB|5|Adelaide|AU|Schumacher levou o título por um ponto sobre Damon Hill, após toque na Austrália, em um ano marcado pela morte de Senna.",
-"1995|Michael Schumacher|DE|Benetton B195|GB|1|Aida|JP|O bicampeonato veio com o motor Renault e nove vitórias, com o título garantido no GP do Pacífico.",
-"1996|Damon Hill|GB|Williams FW18|GB|5|Suzuka|JP|Hill, filho do campeão Graham Hill, venceu em Suzuka e foi campeão, superando o companheiro Villeneuve.",
-"1997|Jacques Villeneuve|CA|Williams FW19|GB|3|Jerez|ES|Villeneuve ficou com o título depois de um toque com Schumacher na última curva, e o alemão foi excluído do campeonato.",
-"1998|Mika Häkkinen|FI|McLaren MP4/13|GB|8|Suzuka|JP|Häkkinen e a McLaren-Mercedes, com projeto de Adrian Newey, venceram oito corridas e deram ao finlandês o primeiro título.",
-"1999|Mika Häkkinen|FI|McLaren MP4/14|GB|1|Suzuka|JP|Com Schumacher afastado por lesão durante parte do ano, Häkkinen venceu a decisão em Suzuka e foi bicampeão.",
-"2000|Michael Schumacher|DE|Ferrari F1-2000|IT|3|Suzuka|JP|Schumacher deu à Ferrari o primeiro título de pilotos desde 1979, depois de 21 anos de espera.",
-"2001|Michael Schumacher|DE|Ferrari F2001|IT|1|Hungaroring|HU|Schumacher fechou o título na Hungria com quatro corridas de antecedência.",
-"2002|Michael Schumacher|DE|Ferrari F2002|IT|1|Magny-Cours|FR|Schumacher foi campeão em julho, com 11 vitórias e pódio em todas as 17 corridas do ano.",
-"2003|Michael Schumacher|DE|Ferrari F2003-GA|IT|1|Suzuka|JP|O sexto título superou o recorde de cinco de Fangio, em uma disputa apertada com Kimi Räikkönen.",
-"2004|Michael Schumacher|DE|Ferrari F2004|IT|1|Spa-Francorchamps|BE|O heptacampeonato veio com 13 vitórias em 18 corridas, o ano mais dominante da carreira dele.",
-"2005|Fernando Alonso|ES|Renault R25|FR|5|Interlagos|BR|Alonso, aos 24 anos, foi o mais jovem campeão até então e encerrou a sequência de Schumacher.",
-"2006|Fernando Alonso|ES|Renault R26|FR|1|Interlagos|BR|O bi veio em uma briga de final de ano com Schumacher, que se despedia da primeira aposentadoria.",
-"2007|Kimi Räikkönen|FI|Ferrari F2007|IT|6|Interlagos|BR|Räikkönen ganhou por apenas um ponto, em uma decisão em que Hamilton e Alonso, da McLaren, ainda tinham chance.",
-"2008|Lewis Hamilton|GB|McLaren MP4-23|GB|22|Interlagos|BR|Hamilton passou Timo Glock na última curva da última volta do GP do Brasil e tomou o título de Felipe Massa por um ponto.",
-"2009|Jenson Button|GB|Brawn BGP 001|GB|22|Interlagos|BR|A Brawn nasceu das cinzas da Honda e ganhou seis das primeiras sete corridas. Button segurou a vantagem até o fim.",
-"2010|Sebastian Vettel|DE|Red Bull RB6|AT|5|Yas Marina|AE|Vettel decidiu em Abu Dhabi contra três rivais e virou, aos 23 anos, o mais jovem campeão da F1.",
-"2011|Sebastian Vettel|DE|Red Bull RB7|AT|1|Suzuka|JP|Vettel foi bi com 15 poles e 11 vitórias, e garantiu o título com quatro corridas de sobra.",
-"2012|Sebastian Vettel|DE|Red Bull RB8|AT|1|Interlagos|BR|Depois de rodar na largada, Vettel recuperou posições sob chuva e se tornou o mais jovem tricampeão.",
-"2013|Sebastian Vettel|DE|Red Bull RB9|AT|1|Buddh (Greater Noida)|IN|Vettel fechou a conta com nove vitórias consecutivas no fim do ano, um recorde na época.",
-"2014|Lewis Hamilton|GB|Mercedes F1 W05 Hybrid|DE|44|Yas Marina|AE|Na estreia dos motores V6 turbo híbridos, Hamilton venceu a final de Abu Dhabi, que valia pontos em dobro, e fechou o segundo título.",
-"2015|Lewis Hamilton|GB|Mercedes F1 W06 Hybrid|DE|44|Circuito das Américas|US|Hamilton garantiu o tricampeonato sob chuva no Texas, com uma vitória sobre o companheiro Nico Rosberg.",
-"2016|Nico Rosberg|DE|Mercedes F1 W07 Hybrid|DE|6|Yas Marina|AE|Rosberg, filho do campeão Keke, venceu por cinco pontos sobre Hamilton e anunciou a aposentadoria poucos dias depois.",
-"2017|Lewis Hamilton|GB|Mercedes F1 W08 EQ Power+|DE|44|Hermanos Rodríguez (Cidade do México)|MX|Hamilton garantiu o tetra no México, mesmo com um nono lugar, depois de uma disputa com Vettel e a Ferrari.",
-"2018|Lewis Hamilton|GB|Mercedes F1 W09 EQ Power+|DE|44|Hermanos Rodríguez (Cidade do México)|MX|O pentacampeonato veio com um quarto lugar no México, depois de um ano de domínio sobre a Ferrari de Vettel.",
-"2019|Lewis Hamilton|GB|Mercedes F1 W10 EQ Power+|DE|44|Circuito das Américas|US|Hamilton foi hexacampeão no Texas, com a Mercedes ganhando o sexto título de construtores seguido.",
-"2020|Lewis Hamilton|GB|Mercedes F1 W11 EQ Performance|DE|44|Istanbul Park|TR|Sob chuva e asfalto escorregadio, Hamilton venceu em Istambul e igualou os sete títulos de Schumacher.",
-"2021|Max Verstappen|NL|Red Bull RB16B|AT|33|Yas Marina|AE|Em uma das decisões mais disputadas da história, Verstappen ultrapassou Hamilton na última volta, após um safety car, e ficou com o título.",
-"2022|Max Verstappen|NL|Red Bull RB18|AT|1|Suzuka|JP|Verstappen foi bi com 15 vitórias. O título saiu no Japão, em meio à confusão sobre a pontuação reduzida de uma prova com chuva.",
-"2023|Max Verstappen|NL|Red Bull RB19|AT|1|Lusail|QA|Verstappen foi tri com 19 vitórias em 22 corridas, um recorde, e garantiu o título na sprint do Catar.",
-"2024|Max Verstappen|NL|Red Bull RB20|AT|1|Las Vegas|US|Mesmo sem vencer desde junho, Verstappen segurou a vantagem e fechou o tetracampeonato em Las Vegas.",
-"2025|Lando Norris|GB|McLaren MCL39|GB|4|Yas Marina|AE|Norris conquistou o primeiro título na decisão de Abu Dhabi, em uma disputa apertada com Max Verstappen e o companheiro Oscar Piastri."
-  ];
+        function filtrarCards() {
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filtrados = dadosColecao.filter(item => 
+                item.ano.toString().includes(termo) ||
+                item.piloto.toLowerCase().includes(termo) ||
+                item.carro.toLowerCase().includes(termo) ||
+                item.circuito.toLowerCase().includes(termo)
+            );
+            renderGrid(filtrados);
+        }
 
-  // Números e pistas conferidos na Wikipedia (páginas de cada GP). 1950 sem confirmação.
-  var FIX = {
-    1951: { num: "22" },
-    1952: { num: "101", circuit: "Nürburgring", tn: "DE" },
-    1953: { num: "46" },
-    1954: { num: "4" },
-    1955: { num: "18" },
-    1956: { num: "26" },
-    1957: { num: "1" },
-    1958: { num: "6" },
-    1959: { num: "8" },
-    1960: { num: "2", circuit: "Boavista (Porto)", tn: "PT" },
-    1961: { num: "2" },
-    1962: { num: "3" },
-    1963: { num: "8" },
-    1964: { num: "7" },
-    1965: { num: "1" },
-    1966: { num: "10" },
-    1967: { num: "2" },
-    1968: { num: "10" },
-    1969: { num: "20" },
-    1970: { num: "22", circuit: "Watkins Glen", tn: "US" },
-    1971: { num: "11" },
-    1972: { num: "6" }
-  };
+        let itemSelecionado = null;
 
-  var LONG = {
-    1950: "A primeira temporada do Mundial, em 1950, teve sete corridas, e a Alfa Romeo 158, a “Alfetta”, venceu todas as provas europeias de que participou. A disputa ficou entre três pilotos da própria equipe: Farina, Fangio e Luigi Fagioli, conhecidos como os três “F”.¶Giuseppe “Nino” Farina, nascido em Turim, pilotava com os braços esticados e o corpo bem afastado do volante, um estilo que já parecia antiquado. Ele venceu na Inglaterra, em Silverstone, a primeira corrida da história do campeonato, e depois na Suíça e na Itália.¶Na decisão, em Monza, Fangio abandonou com problemas mecânicos e Farina venceu, ficando com o título por 30 pontos a 27. Era o começo de uma nova era para o automobilismo.",
-    1951: "Fangio tinha 40 anos quando conquistou o primeiro de seus cinco títulos, pilotando a Alfa Romeo 159, uma evolução do modelo que dominou o ano anterior. Nascido em Balcarce, na Argentina, ele era chamado de “El Maestro” e construiu a fama com uma combinação rara de velocidade e inteligência.¶Fangio venceu na Suíça, na França e na Espanha. A principal ameaça veio da Ferrari de Alberto Ascari, que ganhou na Alemanha e na Itália, e José Froilán González, que deu à Ferrari a primeira vitória da equipe no Mundial, em Silverstone.¶A decisão foi em Pedralbes, em Barcelona, e Fangio levou o título com ampla margem sobre Ascari. A Alfa Romeo saiu da F1 depois da temporada, por causa do custo de manter a equipe, e deixou o caminho livre para a Ferrari.",
-    1952: "Com a Alfa Romeo fora e a BRM sem ficar pronta a tempo, o campeonato de 1952 passou a seguir o regulamento da Fórmula 2, e a Ferrari 500 dominou. Alberto Ascari foi quase imbatível: venceu seis corridas seguidas na Europa, da Bélgica até a Itália.¶Ele era filho de Antonio Ascari, piloto morto num acidente em 1925. Alberto tinha fama de homem frio, supersticioso e discreto, e usava um capacete azul-claro. Para disputar as 500 Milhas de Indianápolis, ele chegou a pular o GP da Suíça, mas o carro quebrou cedo.¶O título saiu no GP da Alemanha, em Nürburgring, onde Ascari venceu e se tornou o primeiro campeão a conquistar o título com duas corridas de antecedência. Era o primeiro título de pilotos da Ferrari.",
-    1953: "O regulamento de Fórmula 2 continuou valendo, e Ascari e a Ferrari 500 seguiram como a combinação a bater. O italiano garantiu o bicampeonato na Suíça, em Bremgarten, quando uma vitória deu a ele vantagem grande demais para ser alcançada pelos rivais.¶Ascari foi o primeiro bicampeão consecutivo da história da F1. A temporada ainda teve um final dramático em Monza: na última curva, Ascari, Farina e Onofre Marimón se atrapalharam na disputa pela vitória, e Fangio, com a Maserati, passou pelos três para vencer.¶A vitória de Fangio em Monza mostrou que ele seguia como o grande rival de Ascari, e os dois voltariam a se enfrentar em uma das grandes disputas da época.",
-    1954: "Fangio começou 1954 com a Maserati 250F e venceu as duas primeiras provas, na Argentina e na Bélgica. Em seguida passou para a Mercedes, que voltava às corridas depois de quase 15 anos, com o revolucionário W196, de motor com injeção direta.¶O W196 estreou na França, em Reims, com uma dobradinha de Fangio e Karl Kling, e usou carenagem aerodinâmica fechada em pistas rápidas. O argentino venceu seis das nove corridas do ano, entre elas Alemanha, Suíça e Itália.¶O título veio em Bremgarten, na Suíça, e foi o segundo de Fangio. Em apenas uma temporada, ele ganhou com duas equipes diferentes, façanha que reforçou sua fama de o melhor piloto de sua geração.",
-    1955: "A Mercedes W196 foi o carro mais forte do campeonato, com a dupla Fangio e Stirling Moss. Fangio venceu na Argentina, na Bélgica, na Holanda e na Itália. Moss ganhou em casa, em Aintree, e foi o vice-campeão, com um papel de escudeiro que ele aceitava a contragosto.¶A temporada foi marcada pela tragédia das 24 Horas de Le Mans, em junho, quando um acidente matou mais de 80 espectadores. Em consequência, os GPs da França, da Alemanha, da Espanha e da Suíça foram cancelados.¶Fangio fechou o campeonato em Monza e ficou com o terceiro título. A Mercedes anunciou que deixaria as corridas ao fim do ano e só voltaria à F1 em 2010.",
-    1956: "Fangio trocou a Mercedes pela Ferrari, dessa vez com a Lancia-Ferrari D50, um carro que a equipe herdou da Lancia. O clima na equipe nunca foi fácil, já que o argentino desconfiava de Enzo Ferrari, mas venceu na Argentina, na Inglaterra e na Alemanha.¶A decisão foi em Monza, e o título ia para Peter Collins, seu companheiro de equipe, caso ele vencesse. Quando o carro de Fangio quebrou a direção, Collins parou nos boxes e entregou o próprio carro, com o número 26, a Fangio, abrindo mão de qualquer chance de ser campeão.¶Fangio terminou em segundo e garantiu o quarto título. Collins ficou famoso pelo gesto de esportividade, e a vitória do dia foi de Stirling Moss, com a Maserati.",
-    1957: "Na Maserati 250F, Fangio fez sua temporada mais memorável. Venceu na Argentina, em Mônaco, na França e na Alemanha, e consolidou a fama de piloto capaz de tirar o melhor de qualquer máquina.¶No Nürburgring, ele partiu com o tanque meio vazio para ganhar uma vantagem inicial, mas uma parada longa nos boxes o deixou quase um minuto atrás das Ferraris de Mike Hawthorn e Peter Collins. Fangio foi bem além do que o carro parecia aguentar, bateu recordes de volta e passou os dois para vencer.¶Foi o quinto título dele, um recorde que durou até 2003. Fangio se aposentou no ano seguinte, aos 47 anos, com uma das maiores proporções de vitórias da história da F1.",
-    1958: "O campeonato de 1958 foi uma disputa direta entre Mike Hawthorn, da Ferrari, e Stirling Moss, da Vanwall. Moss venceu quatro corridas e Hawthorn apenas uma, na França, mas a regularidade deu o título ao inglês da Ferrari, por 42 pontos a 41.¶Em Portugal, Hawthorn foi acusado de ter voltado à pista na contramão depois de um rodopio. Moss, que poderia se beneficiar, defendeu o rival diante dos comissários, e Hawthorn manteve os pontos que acabaram sendo decisivos. A Vanwall ficou com o primeiro título de construtores.¶A temporada foi trágica: Peter Collins morreu no Nürburgring e Luigi Musso, em Reims. Hawthorn anunciou a aposentadoria e morreu em janeiro de 1959, num acidente de carro na Inglaterra.",
-    1959: "O Cooper T51, com motor atrás do piloto, revolucionou a F1. Brabham venceu em Mônaco e na Inglaterra e chegou à final, nos Estados Unidos, brigando com Tony Brooks, da Ferrari, e Stirling Moss.¶Em Sebring, Brooks foi tocado logo no início e perdeu posições. Moss abandonou, e Brabham assumiu a liderança. Na última volta, o Cooper ficou sem gasolina. Brabham desceu do carro e o empurrou por várias centenas de metros até a linha de chegada, terminando em quarto e caindo exausto.¶A vantagem de pontos foi suficiente para o título. O australiano, que tinha começado a carreira em carros de terra, mudou o rumo do automobilismo: depois de 1959, todos os carros de F1 passaram a ter o motor atrás.",
-    1960: "Com o Cooper T53, uma versão mais baixa e aperfeiçoada do carro do ano anterior, Brabham dominou a temporada. Ele venceu cinco corridas consecutivas: Holanda, Bélgica, França, Inglaterra e Portugal.¶O título saiu em Portugal, no circuito de Boavista, no Porto, onde Brabham venceu e fechou a conta com duas corridas de sobra. A Cooper também ficou com o título de construtores pelo segundo ano seguido.¶Foi um ano duro em Spa, na Bélgica, com as mortes de Chris Bristow e Alan Stacey. Brabham, engenheiro de formação, ajudava a aperfeiçoar o próprio carro, e essa mistura de piloto e técnico o levaria, poucos anos depois, a criar a própria equipe.",
-    1961: "A F1 passou a usar motores de 1,5 litro, e a Ferrari 156, apelidada de “Sharknose” pelas duas entradas de ar no nariz, foi o carro mais forte. Phil Hill e o alemão Wolfgang von Trips lutaram pelo título dentro da própria equipe.¶Von Trips chegou a Monza na frente. Na segunda volta, ele tocou na Lotus de Jim Clark e o carro voou na direção dos espectadores, matando o piloto e 15 pessoas. A Ferrari seguiu na corrida e Hill venceu, ficando com o título sem comemorar.¶Hill foi o primeiro americano a ser campeão mundial. Stirling Moss, com uma Lotus de equipe privada, venceu duas corridas e mostrou que um bom piloto ainda fazia a diferença contra o carro mais forte.",
-    1962: "A BRM P57 foi o carro de Graham Hill em 1962, e ele disputou o título com Jim Clark, que pilotava o inovador Lotus 25 com chassi monobloco. Clark chegou à última corrida, na África do Sul, com chances de ser campeão.¶Em East London, Clark largou na frente e abriu vantagem. Na volta 62, uma pequena peça do motor soltou e o óleo vazou. Ele precisou abandonar quando faltavam cerca de 20 voltas, e Hill, que vinha em segundo, assumiu a ponta e venceu a corrida e o campeonato.¶Graham Hill, conhecido pelo bigode e pelo senso de humor, venceu a Holanda, a Alemanha, a Itália e a África do Sul. Seria o único piloto a conquistar a chamada Tríplice Coroa: Mônaco, 500 Milhas de Indianápolis e Le Mans.",
-    1963: "Jim Clark e o Lotus 25 formaram a combinação perfeita. O escocês venceu sete das dez corridas do ano, um recorde até então: Bélgica, Holanda, França, Inglaterra, Itália, México e África do Sul.¶Clark era fazendeiro em Duns, na Escócia, e ficou famoso pela suavidade ao volante e pela facilidade em acertar os carros. O Lotus 25 era um chassi monobloco, mais leve e rígido que os carros da concorrência, e a combinação com o motor Climax o deixava um passo à frente.¶O título saiu em Monza, e foi a primeira vez que alguém garantiu o campeonato com três corridas de sobra. Clark somou 54 pontos válidos, um recorde na época, e a Lotus ficou com o título de construtores.",
-    1964: "Em 1964, a Ferrari 158, com motor V8, levou John Surtees ao título numa das decisões mais apertadas da história. Surtees é o único piloto a ter sido campeão em duas e em quatro rodas, depois de sete títulos no motociclismo.¶Na última corrida, no México, três pilotos tinham chances: Graham Hill, da BRM, Jim Clark, da Lotus, e Surtees. Clark liderava, mas um problema de óleo o parou perto do fim. Hill foi tocado por Lorenzo Bandini, da Ferrari, e perdeu tempo.¶Bandini diminuiu o ritmo no fim para deixar Surtees passar, e o inglês ficou com o segundo lugar e o título, por 40 pontos a 39. Nas duas últimas corridas, a Ferrari correu com as cores azul e branco da equipe americana NART, por causa de uma disputa de homologação.",
-    1965: "O Lotus 33 era uma evolução do carro campeão, e Jim Clark estava no auge. Ele venceu seis das dez corridas da temporada: África do Sul, Bélgica, França, Inglaterra, Holanda e Alemanha, e deixou a concorrência para trás.¶Clark não correu em Mônaco porque estava nos Estados Unidos, disputando as 500 Milhas de Indianápolis. Venceu a prova com o Lotus 38 de motor traseiro, o primeiro triunfo de um carro desse tipo, e se tornou um dos poucos europeus a ganhar em Indianápolis.¶O título veio na Alemanha, no Nürburgring, com três corridas ainda por disputar. Era o segundo de Clark, que repetia o campeonato de 1963 com autoridade ainda maior.",
-    1966: "A F1 passou a usar motores de 3 litros, e muitas equipes sofreram para se adaptar. Jack Brabham, aos 40 anos, apostou num caminho incomum: o motor Repco, desenvolvido na Austrália a partir de um bloco americano da Oldsmobile.¶Brabham venceu quatro vezes: França, Inglaterra, Holanda e Alemanha. O título saiu em Monza, e foi o terceiro dele, mas a conquista teve um sabor diferente: Brabham é o único piloto a ser campeão com um carro que levava o próprio nome.¶Ele abandonou a corrida com vazamento de óleo, mas o rival John Surtees também parou, o que deu a ele o campeonato. Seu companheiro Denny Hulme viria a ser campeão no ano seguinte.",
-    1967: "Em 1967, o campeonato ficou dentro da Brabham. Denny Hulme, neozelandês que tinha sido mecânico da equipe, e Jack Brabham, o chefe e dono, dividiram o carro BT24 com motor Repco, e se enfrentaram até o fim.¶Hulme venceu apenas duas provas, Mônaco e Alemanha, mas a regularidade o fez chegar à decisão no México na frente. Jim Clark, da Lotus 49 com o novo motor Cosworth, ganhou quatro corridas, mas teve problemas mecânicos demais.¶No México, Hulme terminou em terceiro, e Brabham em segundo, e o neozelandês ficou com o título por apenas 5 pontos. “O Urso”, como era chamado, ficaria conhecido também pelos anos de sucesso na McLaren.",
-    1968: "O campeonato começou com um golpe duro: Jim Clark morreu em abril, numa corrida de Fórmula 2 em Hockenheim. A Lotus, abalada, foi buscar forças em Graham Hill, que assumiu a liderança da equipe e venceu na Espanha logo depois.¶A Lotus 49B apareceu com um visual inédito, as cores vermelho, branco e dourado do patrocinador Gold Leaf. Foi um dos primeiros carros de F1 pintados com as cores de um patrocinador comercial, uma mudança que alteraria o esporte para sempre.¶Hill venceu na Espanha, em Mônaco e no México, e a decisão foi na última prova, com Jackie Stewart e Denny Hulme ainda na briga. Hill ganhou a corrida e o segundo título, seis anos depois do primeiro.",
-    1969: "Jackie Stewart conquistou o primeiro título com a Matra MS80, de motor Ford Cosworth, pela equipe de Ken Tyrrell, uma pequena escuderia francesa e inglesa. O escocês venceu seis das onze corridas: África do Sul, Espanha, Holanda, França, Inglaterra e Itália.¶Stewart tinha uma abordagem metódica e foi um dos primeiros pilotos a defender a segurança, uma luta que o fez impopular entre alguns colegas. Ele pressionava por melhores barreiras, circuitos mais seguros e cintos de segurança obrigatórios, num momento em que muitos pilotos morriam todos os anos.¶O título saiu em Monza, depois de uma briga de quatro carros pela vitória, e com três corridas ainda por disputar. Foi o primeiro de três campeonatos.",
-    1970: "Jochen Rindt venceu cinco corridas em 1970 com o revolucionário Lotus 72: Mônaco, Holanda, França, Inglaterra e Alemanha. Em Mônaco, venceu na última volta, depois de um erro de Jack Brabham na última curva.¶Em Monza, durante os treinos, o Lotus de Rindt perdeu o freio dianteiro na curva Parabolica e bateu no guard-rail. Rindt, que corria com o número 22, morreu a caminho do hospital. Ele liderava o campeonato com larga vantagem, e Jacky Ickx, da Ferrari, ainda tinha chances matemáticas.¶Ickx não conseguiu vencer nas duas últimas corridas, e o título foi confirmado em Watkins Glen, nos Estados Unidos. Rindt é o único campeão póstumo da história. A viúva, Nina, recebeu o troféu.",
-    1971: "A Tyrrell 003 foi o primeiro carro construído pela equipe de Ken Tyrrell. Jackie Stewart, com a nova máquina, venceu seis corridas: Espanha, Mônaco, França, Inglaterra, Alemanha e Canadá, e fez uma temporada de domínio.¶Stewart já era um piloto experiente, que combinava velocidade e cuidado técnico. Ele conversava com os engenheiros durante horas e ajudava a definir cada detalhe do carro. A Tyrrell também ficou com o título de construtores.¶O campeonato foi decidido na Áustria, em Zeltweg, quando Jacky Ickx abandonou e deixou Stewart fora do alcance. Ele terminou o ano com seu companheiro François Cevert vencendo a corrida final, em Watkins Glen, a única vitória do francês.",
-    1972: "A Lotus 72D, pintada de preto e dourado com as cores do patrocinador John Player Special, levou Emerson Fittipaldi ao primeiro título do Brasil. Ele venceu cinco corridas: Espanha, Bélgica, Inglaterra, Áustria e Itália.¶Aos 25 anos, Fittipaldi foi o mais jovem campeão da história até então, um recorde que só seria superado décadas depois. Jackie Stewart, com a Tyrrell, tinha sido o grande favorito, mas passou parte do ano doente, com uma úlcera, e perdeu a Bélgica.¶O título saiu em Monza, onde Fittipaldi venceu e garantiu o campeonato com duas corridas de sobra. A conquista deu início ao boom do automobilismo brasileiro e abriu caminho para Nelson Piquet e Ayrton Senna.",
-    1973: "A Tyrrell 006 levou Stewart ao terceiro título, e ele venceu cinco corridas: África do Sul, Bélgica, Mônaco, Holanda e Alemanha. O campeonato foi fechado em Monza, com uma corrida de sobra.¶Stewart já tinha decidido que aquele seria seu último ano, mas não contou a ninguém. Ele planejava se aposentar no GP dos Estados Unidos, o 100º da carreira. Nos treinos, em Watkins Glen, François Cevert, seu companheiro e protegido, morreu num acidente.¶A Tyrrell retirou os carros da corrida e Stewart nunca mais correu. Ele terminou a carreira com 27 vitórias, um recorde que durou até Alain Prost. Depois, tornou-se um dos principais defensores da segurança na F1.",
-    1974: "Fittipaldi trocou a Lotus pela McLaren e levou a equipe ao primeiro título de pilotos, com o McLaren M23, um carro que seria usado por três temporadas. Ele venceu no Brasil, na Bélgica e no Canadá.¶A decisão foi em Watkins Glen, nos Estados Unidos. Fittipaldi e Clay Regazzoni, da Ferrari, chegaram à última corrida empatados em pontos, com Jody Scheckter, da Tyrrell, ainda na briga. Regazzoni teve problemas no carro e terminou em 11º.¶Fittipaldi foi o quarto, o suficiente para o título. Era o segundo dele aos 27 anos, e o carro era vermelho e branco, com o patrocínio da Marlboro. A McLaren também venceu o campeonato de construtores.",
-    1975: "A Ferrari 312T tinha uma novidade: o câmbio transversal, que dava nome ao modelo (a letra T vinha de “trasversale”). Niki Lauda, austríaco de família rica de Viena, venceu cinco corridas: Mônaco, Bélgica, Suécia, França e Estados Unidos.¶O título saiu em Monza, com um terceiro lugar, no GP da Itália. Foi o primeiro título de pilotos da Ferrari em 11 anos, desde John Surtees, em 1964. Lauda era conhecido pela abordagem fria e precisa, quase de engenheiro, e pelo olho clínico para acertar o carro.¶Os italianos, que não ganhavam nada havia mais de uma década, fizeram uma festa enorme. A Ferrari também levou o título de construtores e iniciou a era de mais sucesso da equipe nos anos 70.",
-    1976: "A temporada de 1976 foi uma das mais dramáticas. Niki Lauda, com a Ferrari, liderava o campeonato quando sofreu um acidente gravíssimo no Nürburgring, em agosto. O carro pegou fogo, e ele ficou preso por segundos. Um padre chegou a dar a extrema-unção.¶Seis semanas depois, ele voltou a correr em Monza, ainda com curativos. James Hunt, da McLaren, tinha ganhado terreno, e a decisão ficou para o Japão, sob forte chuva, no Fuji.¶Lauda abandonou, achando que as condições eram perigosas. Hunt, depois de uma troca de pneus, terminou em terceiro e ficou com o título por um ponto: 69 a 68. A história foi levada ao cinema no filme “Rush”.",
-    1977: "Lauda voltou a ser campeão em 1977, com a Ferrari 312T2, um ano depois do acidente que quase o matou. Ele venceu na África do Sul, na Alemanha e na Holanda, e foi o mais regular do campeonato.¶O título foi garantido em Watkins Glen, nos Estados Unidos, com um quarto lugar, ainda com duas corridas por disputar. Lauda tinha uma relação difícil com Enzo Ferrari, que preferia o companheiro Carlos Reutemann, e abandonou a equipe antes do fim da temporada.¶Ele deixou de disputar as duas últimas provas e depois assinou com a Brabham. Era o segundo título dele, e a Ferrari ficou com o de construtores, o terceiro seguido.",
-    1978: "O Lotus 79 foi o primeiro carro a explorar de verdade o efeito solo, e ficou conhecido como “wing car”. Mario Andretti, americano nascido na Itália, venceu seis corridas: Argentina, Bélgica, Espanha, França, Alemanha e Holanda.¶O companheiro de equipe, o sueco Ronnie Peterson, tinha contrato para ser segundo piloto, mas era muito rápido e amigo de Andretti. Em Monza, na largada, houve uma batida enorme e Peterson ficou ferido. Ele morreu no dia seguinte, no hospital.¶Andretti, que venceu a prova e recebeu uma punição de um minuto por queimar a largada, ficou com o título mesmo assim. Foi uma conquista de sabor amargo, e a Lotus ganhou também o título de construtores.",
-    1979: "Os carros com efeito solo tomaram conta da F1, mas a Ferrari 312T4 foi suficientemente forte para dar o título a Jody Scheckter. O sul-africano venceu na Bélgica, em Mônaco e na Itália, e foi o primeiro africano campeão mundial.¶Em Monza, o companheiro, Gilles Villeneuve, tinha chances matemáticas de ser campeão, mas respeitou a ordem da equipe e ficou em segundo, atrás de Scheckter. Villeneuve, considerado o mais rápido dos dois, aceitou a decisão e ficou com o segundo lugar.¶Foi o último título de pilotos da Ferrari por 21 anos. A equipe só voltaria a ganhar em 2000, com Michael Schumacher.",
-    1980: "O Williams FW07B, projetado por Patrick Head, foi o melhor carro de 1980, e Alan Jones o soube aproveitar. O australiano, filho do piloto Stan Jones, venceu na Argentina, na França, na Inglaterra e no Canadá.¶Jones disputou o título com Nelson Piquet, da Brabham. A decisão foi em Montreal, e Piquet sofreu um acidente forte, o que deixou Jones livre para vencer e fechar o campeonato, com uma corrida ainda por disputar.¶Foi o primeiro título de pilotos da Williams, equipe de Frank Williams, que quase tinha quebrado poucos anos antes. A Williams também ficou com o campeonato de construtores e se estabeleceu como uma das grandes da F1.",
-    1981: "O campeonato foi decidido em Las Vegas, num circuito montado num estacionamento do hotel Caesars Palace, e a briga estava entre Carlos Reutemann, da Williams, e Nelson Piquet, da Brabham BT49C, que usava suspensão hidropneumática.¶Reutemann largou na pole, mas teve problemas de câmbio e terminou em oitavo. Piquet passou mal de calor e exaustão durante a corrida, vomitou no cockpit e quase perdeu a consciência, mas terminou em quinto, o suficiente para o título.¶Ele superou Reutemann por um ponto, 50 a 49. Foi o primeiro título de Piquet, que vencera na Argentina, em San Marino e na Alemanha. Alan Jones, também da Williams, venceu a corrida.",
-    1982: "O campeonato de 1982 foi um dos mais estranhos da história: 11 pilotos diferentes venceram nas 16 corridas, e Keke Rosberg foi campeão com apenas uma vitória, na Suíça, em Dijon.¶A temporada teve tragédias. Gilles Villeneuve morreu em Zolder, na Bélgica, e Didier Pironi, que liderava o campeonato, sofreu um acidente em Hockenheim que encerrou a carreira dele.¶Rosberg, finlandês conhecido como “Flying Finn”, fez uma temporada regular com a Williams FW08 e garantiu o título em Las Vegas, com um quinto lugar. Terminou com 44 pontos, cinco a mais que Pironi e John Watson, e é até hoje o campeão com menos vitórias em uma temporada.",
-    1983: "A Brabham BT52, projetada por Gordon Murray, tinha um desenho pontudo e o motor turbo da BMW. Nelson Piquet venceu três corridas: Brasil, Itália e Europa, em Brands Hatch.¶Alain Prost, da Renault, liderava o campeonato por boa parte do ano, mas a Brabham foi ganhando força nas últimas corridas. O título foi decidido em Kyalami, na África do Sul, e Piquet, com um terceiro lugar, ficou com ele por dois pontos: 59 a 57.¶Piquet foi o primeiro campeão com um carro turbo, uma tecnologia que dominaria a F1 na década seguinte. Era o segundo título dele e o primeiro de um piloto com motor BMW.",
-    1984: "A McLaren MP4/2, com motor TAG Porsche, foi o melhor carro do ano com folga. A equipe ganhou 12 das 16 corridas, e o campeonato se tornou uma briga interna entre Niki Lauda e Alain Prost. Prost venceu sete provas, e Lauda, cinco.¶Em Mônaco, a corrida foi interrompida por causa da chuva e metade dos pontos foi distribuída. Isso se mostrou decisivo ao final do campeonato. Em Estoril, Lauda precisou terminar em segundo para ser campeão, e foi o que fez, atrás de Prost, depois de uma corrida de recuperação.¶O resultado foi 72 a 71,5, a menor diferença da história da F1. Era o terceiro título de Lauda, que tinha voltado a correr em 1982 depois de uma aposentadoria.",
-    1985: "Alain Prost tinha sido vice-campeão em 1983 e 1984, e em 1985 conseguiu finalmente o título. Com a McLaren MP4/2B, venceu cinco corridas: Brasil, Mônaco, Inglaterra, Áustria e Itália.¶O principal rival foi Michele Alboreto, da Ferrari, que liderou parte do campeonato, mas a Ferrari perdeu rendimento no segundo semestre. O título foi fechado em Brands Hatch, no GP da Europa, ainda com duas corridas por disputar.¶Prost foi o primeiro campeão mundial francês, e a conquista fez dele um herói nacional. Ele ficou conhecido como “O Professor” por sua abordagem calculista, e se tornaria o grande rival de Ayrton Senna.",
-    1986: "A temporada de 1986 teve uma decisão inesquecível, na Austrália, em Adelaide. Três pilotos chegaram com chance de título: Nigel Mansell e Nelson Piquet, da Williams, e Alain Prost, da McLaren. Mansell precisava de apenas um terceiro lugar.¶Com 19 voltas para o fim, o pneu traseiro esquerdo da Williams de Mansell estourou a mais de 280 km/h. Ele segurou o carro e escapou ileso. A Williams chamou Piquet para trocar os pneus, e Prost também parou, e voltou à pista em condições de vencer.¶Prost venceu a corrida e o campeonato, e foi o primeiro bicampeão consecutivo desde Jack Brabham, em 1959 e 1960. Foi uma conquista dramática, com o rival tendo o título nas mãos por boa parte do ano.",
-    1987: "A Williams-Honda era o melhor carro, mas os dois pilotos, Nelson Piquet e Nigel Mansell, disputaram o título entre si. Mansell venceu seis corridas e Piquet, três: Alemanha, Hungria e Itália. A relação entre os dois era péssima.¶Nos treinos do GP do Japão, em Suzuka, Mansell sofreu um acidente forte e machucou as costas. Ele ficou fora da corrida e das duas últimas provas, e Piquet, líder do campeonato, ficou com o título sem precisar vencer.¶Foi o terceiro título de Piquet, que se tornou o primeiro brasileiro tricampeão. A vitória foi menos comemorada do que as anteriores, por causa da tensão dentro da equipe, e ele deixaria a Williams no fim do ano.",
-    1988: "A McLaren MP4/4, com motor Honda, venceu 15 das 16 corridas do ano, e a disputa foi entre os companheiros Ayrton Senna e Alain Prost. Senna venceu oito provas, e Prost, sete, mas Prost somou mais pontos e só ficou atrás porque apenas os 11 melhores resultados contavam.¶A decisão foi em Suzuka. O carro de Senna apagou na largada, e ele caiu para 14º. Ele recuperou posições volta após volta, passou Prost sob chuva e venceu a corrida e o título.¶Senna chorou no pódio, e foi o primeiro de três títulos. Foi o terceiro piloto brasileiro campeão, depois de Emerson Fittipaldi e Nelson Piquet, e o resultado foi de 90 a 87 pontos.",
-    1989: "O campeonato de 1989 colocou Prost e Senna em lados opostos, na mesma equipe, com a mesma McLaren MP4/5. A relação entre os dois, tensa desde o ano anterior, azedou depois de um acordo desfeito em Ímola.¶A decisão foi em Suzuka. Na chicane, na volta 47, Senna tentou passar e os dois se tocaram. Prost abandonou, e Senna voltou à pista, trocou o bico do carro e venceu a corrida. Pouco depois, foi desclassificado por ter cortado a chicane, e o título ficou com o francês.¶Senna acusou o presidente da FIA, Jean-Marie Balestre, de favorecer Prost. Foi o terceiro título de Prost, e o episódio marcou uma das maiores rivalidades da história do esporte.",
-    1990: "Prost saiu da McLaren e foi para a Ferrari, e a rivalidade com Senna continuou. A decisão foi de novo em Suzuka, e a polêmica do ano anterior estava no ar. Senna, que tinha largado na pole, queria a pista de saída do lado limpo, e a FIA recusou.¶Na largada, na primeira curva, Senna não aliviou: o carro dele bateu na Ferrari de Prost, e os dois saíram da pista. Com isso, Senna fechou o título, que era o segundo dele, com duas corridas ainda por disputar.¶Um ano depois, Senna admitiu que tinha feito aquilo de propósito, como resposta ao que tinha acontecido em 1989. O episódio se tornou um dos mais controversos da história da F1.",
-    1991: "A McLaren MP4/6, com motor V12 da Honda, foi mais pesada que os rivais, mas Senna venceu as quatro primeiras corridas do ano e construiu uma vantagem grande. Ele ganhou sete provas no total.¶A Williams FW14, com Nigel Mansell, ficou mais rápida no segundo semestre, mas problemas de confiabilidade a atrapalharam. A decisão foi em Suzuka, mais uma vez, e Mansell saiu da pista na primeira curva, o que deu a Senna o título.¶Na prova, Senna liderava e cedeu a vitória ao companheiro Gerhard Berger na última curva, como agradecimento pelo apoio durante o ano. Foi o terceiro título dele, aos 31 anos.",
-    1992: "A Williams FW14B foi um dos carros mais avançados da história da F1, com suspensão ativa, controle de tração e uma aerodinâmica muito superior. Nigel Mansell venceu as cinco primeiras corridas do ano e nove no total.¶O inglês, que tinha perdido o título de 1986 e 1987 por azar, finalmente teve uma temporada dominante. Garantiu o campeonato na Hungria, em agosto, com cinco corridas de sobra, um recorde na época.¶Depois de ganhar o título, Mansell brigou com a Williams pelo contrato, e a equipe contratou Alain Prost. Ele saiu da F1 e foi correr nos Estados Unidos, onde ganhou o campeonato de 1993 da CART, a Indy, em sua primeira temporada.",
-    1993: "Alain Prost voltou à F1 depois de um ano sabático, em 1993, pela Williams FW15C. Ele tinha anunciado que se aposentaria no fim do ano, e a equipe tinha um carro muito superior. O companheiro era Damon Hill.¶Prost venceu sete corridas, e Ayrton Senna, da McLaren, cinco, em corridas brilhantes, como a de Donington, sob chuva. Mas o carro da McLaren, com motor Ford, era menos forte que o Williams.¶O título saiu em Portugal, em Estoril, no GP em que Michael Schumacher venceu pela Benetton. Foi o quarto título de Prost, que se despediu como campeão e como recordista de vitórias, com 51 ao todo.",
-    1994: "A temporada de 1994 foi marcada por tragédia. Em Ímola, Roland Ratzenberger morreu nos treinos de sábado, e Ayrton Senna morreu na corrida de domingo. As mortes levaram a mudanças profundas na segurança.¶Michael Schumacher, com a Benetton B194, venceu seis das sete primeiras corridas. Foi desclassificado na Inglaterra e suspenso por duas provas, e Damon Hill, da Williams, se aproximou nos pontos.¶Na última corrida, em Adelaide, Schumacher bateu no muro, e Hill tentou a ultrapassagem. Os dois se tocaram, e a Williams de Hill ficou com a suspensão quebrada. Schumacher venceu o campeonato por um ponto, 92 a 91, numa conclusão polêmica.",
-    1995: "Michael Schumacher e a Benetton B195, agora com motor Renault, foram superiores em 1995. Ele venceu nove corridas, e a disputa com Damon Hill, da Williams, ficou marcada por vários toques.¶Os dois colidiram em Silverstone e em Monza, e o campeonato ficou controverso. A Benetton tinha a vantagem de uma estratégia melhor, e Schumacher, aos 26 anos, mostrou que era o piloto mais completo do grid.¶O título saiu no GP do Pacífico, em Aida, no Japão, onde Schumacher venceu. Foi o segundo título dele, e depois de 1995 ele deixaria a Benetton para ir para a Ferrari, onde faria história.",
-    1996: "Damon Hill era filho do campeão Graham Hill, e foi o primeiro filho de campeão a ser campeão também. Em 1996, com a Williams FW18, ele venceu oito corridas e teve a seu lado o jovem canadense Jacques Villeneuve.¶Villeneuve venceu quatro provas e deu trabalho, mas Hill foi mais regular. O título foi decidido em Suzuka, na última corrida, e Hill venceu depois que a roda de Villeneuve se soltou.¶A temporada teve um final amargo. A Williams já tinha decidido substituir Hill por Heinz-Harald Frentzen, e ele foi para a Arrows depois de ser campeão. Foi um dos poucos pilotos a perder o lugar logo depois de ganhar o título.",
-    1997: "Jacques Villeneuve, filho do lendário Gilles Villeneuve, venceu sete corridas com a Williams FW19 e brigou com Michael Schumacher, da Ferrari, pelo título. A decisão foi em Jerez, na Espanha.¶Schumacher liderava, mas Villeneuve se aproximou. Na volta 48, o canadense tentou a ultrapassagem na curva, e Schumacher virou o carro na direção dele. O alemão acabou parando na brita, e Villeneuve seguiu em frente, chegou em terceiro e foi campeão.¶A FIA excluiu Schumacher do campeonato de pilotos, por ter feito uma manobra antidesportiva. Villeneuve, que tinha vencido a Indy 500 em 1995, conquistou assim o título mundial em apenas o segundo ano na F1.",
-    1998: "A McLaren MP4/13, com motor Mercedes e projeto de Adrian Newey, foi o carro mais rápido de 1998. Mika Häkkinen venceu oito corridas, e a equipe voltou a ganhar depois de anos de seca.¶O finlandês lutou com Michael Schumacher, da Ferrari, até o fim. A decisão foi em Suzuka, e Schumacher largou na pole, mas o carro apagou na largada, e ele precisou largar do fim do grid. Häkkinen venceu a corrida e fechou o título.¶Foi uma conquista especial: em 1995, Häkkinen quase tinha morrido num acidente em Adelaide, e passou por uma traqueotomia na própria pista. Ele voltou a correr e ganhou o primeiro título três anos depois.",
-    1999: "Häkkinen e a McLaren MP4/14 foram os favoritos de novo, mas o ano foi tumultuado. Michael Schumacher quebrou a perna em Silverstone e ficou de fora por seis corridas, o que deu esperança a Eddie Irvine, o companheiro da Ferrari.¶Häkkinen cometeu erros, como a rodada em Monza, quando ele saiu do carro e chorou na floresta ao lado da pista. Irvine ficou com a liderança do campeonato, e a decisão foi no Japão.¶Em Suzuka, Häkkinen largou na pole, venceu a corrida e fechou o título, por dois pontos de vantagem sobre Irvine. Foi o bicampeonato, e a Ferrari ficou com o título de construtores.",
-    2000: "A Ferrari esperava um título de pilotos desde 1979, e Michael Schumacher era o piloto certo. Com a F1-2000, ele venceu nove corridas, e a disputa com Mika Häkkinen, da McLaren, foi uma das mais emocionantes da década.¶Em Spa, Häkkinen passou Schumacher e um retardatário ao mesmo tempo, numa das ultrapassagens mais famosas da história. Mas Schumacher venceu em Monza e depois em Suzuka, no Japão, ainda com duas corridas por disputar.¶Ele chorou no rádio, depois de 21 anos de espera da Ferrari. Foi o primeiro título dele pela equipe e o terceiro da carreira, e a Ferrari iniciou uma era de domínio de cinco anos.",
-    2001: "Michael Schumacher e a Ferrari F2001 foram dominantes em 2001. Ele venceu nove corridas, e o rival mais próximo, David Coulthard, da McLaren, ficou muito atrás no campeonato.¶O título foi garantido na Hungria, em agosto, com quatro corridas ainda por disputar. Com a vitória, Schumacher chegou a 51 triunfos e igualou o recorde de Alain Prost.¶Foi o quarto título dele, o segundo seguido pela Ferrari. Schumacher ainda mostrou o espírito de equipe depois da corrida, dedicando a vitória ao time. A Ferrari conquistou também o título de construtores.",
-    2002: "A Ferrari F2002 foi um dos carros mais dominantes da história. Michael Schumacher venceu 11 das 17 corridas e subiu ao pódio em todas, um recorde que ficou de pé por muito tempo.¶O título foi garantido em julho, na França, em Magny-Cours, com seis corridas ainda por disputar, a vitória mais antecipada da história da F1. O companheiro, Rubens Barrichello, foi o segundo no campeonato.¶A temporada ficou marcada pela polêmica na Áustria, quando Barrichello cedeu a vitória a Schumacher na última curva por ordem da equipe. A FIA proibiu as ordens de equipe depois disso. Foi o quinto título de Schumacher, igualando o recorde de Fangio.",
-    2003: "O campeonato de 2003 foi mais disputado do que o anterior. A Ferrari F2003-GA, com o nome em homenagem a Gianni Agnelli, enfrentou a forte concorrência de Kimi Räikkönen, da McLaren, e Juan Pablo Montoya, da Williams.¶A decisão foi no Japão, em Suzuka. Schumacher precisava de um ponto, e terminou em oitavo, ao passo que Räikkönen foi segundo. O resultado foi 93 a 91 pontos, a menor diferença em anos.¶Foi o sexto título de Schumacher, que superou o recorde de cinco títulos de Fangio, e o quarto seguido pela Ferrari. O alemão se tornou o maior campeão da história até então.",
-    2004: "A Ferrari F2004 foi o carro mais dominante da história da F1, e Michael Schumacher venceu 13 das 18 corridas do ano, entre elas as cinco primeiras, um desempenho que ainda hoje impressiona.¶O título saiu em Spa-Francorchamps, na Bélgica, com quatro corridas de sobra, onde o alemão terminou em segundo, atrás de Kimi Räikkönen. Mesmo com a vitória de outro piloto, ele já tinha uma vantagem grande demais.¶Foi o sétimo título dele, e o quinto seguido pela Ferrari. Schumacher tinha 35 anos e parecia imbatível, mas o domínio da equipe vermelha já estava perto do fim, com a ascensão da Renault.",
-    2005: "Fernando Alonso e a Renault R25 foram a revelação de 2005. O espanhol venceu sete corridas e encerrou a série de cinco títulos de Michael Schumacher. A Ferrari sofreu com os pneus Bridgestone, menos competitivos que os Michelin.¶A temporada teve o fiasco do GP dos Estados Unidos, em Indianápolis: as equipes com pneus Michelin retiraram os carros por problemas de segurança, e apenas seis carros largaram.¶O título saiu em Interlagos, com um terceiro lugar. Alonso tinha 24 anos e foi o mais jovem campeão da história até então. Kimi Räikkönen, da McLaren, foi o vice, e a Renault ficou com o título de construtores.",
-    2006: "Fernando Alonso e a Renault R26 repetiram o título, mas a briga com Michael Schumacher e a Ferrari foi dura. Schumacher venceu sete corridas, como Alonso, e chegou a assumir a liderança do campeonato.¶A virada aconteceu no Japão, em Suzuka, quando o motor da Ferrari de Schumacher estourou quando ele liderava, e Alonso venceu. A vantagem ficou grande demais, e a decisão foi em Interlagos, onde Alonso ficou em segundo e foi campeão.¶A temporada foi a última de Schumacher, que anunciou a aposentadoria em Monza. No Brasil, ele furou o pneu na primeira volta, voltou em último e chegou em quarto, numa corrida de recuperação histórica.",
-    2007: "O campeonato de 2007 foi um dos mais disputados da história. A McLaren tinha Lewis Hamilton, estreante, e Fernando Alonso, bicampeão, e a rivalidade entre os dois dominou o ano. Kimi Räikkönen, da Ferrari, parecia fora da briga.¶Hamilton liderava com folga, mas perdeu pontos na China, quando ficou preso na brita do pit lane, e no Brasil, quando teve problemas no câmbio. Räikkönen venceu em Interlagos e, com isso, fechou o título.¶O finlandês terminou com 110 pontos, um a mais que Hamilton e Alonso, que empataram em 109. Foi o único título de Räikkönen e o último da Ferrari por muito tempo.",
-    2008: "Lewis Hamilton e Felipe Massa chegaram a Interlagos com o título em jogo. Massa, da Ferrari, venceu a corrida em casa, e a torcida brasileira acreditou que ele era campeão. Hamilton, da McLaren MP4-23, precisava de um quinto lugar.¶A chuva voltou nas últimas voltas. Hamilton, em quinto, foi ultrapassado por Sebastian Vettel, e ficou em sexto. Na última curva da última volta, ele passou Timo Glock, da Toyota, que estava de pneus de pista seca, e voltou à quinta posição.¶Hamilton venceu o título por um ponto, 98 a 97. Aos 23 anos, foi o mais jovem campeão da história até então e o primeiro piloto negro a ganhar o campeonato.",
-    2009: "A Brawn nasceu das cinzas da Honda, que abandonou a F1 no fim de 2008. Ross Brawn comprou a equipe por uma libra, em março, e montou o carro BGP 001 com motor Mercedes e o controverso difusor duplo.¶Jenson Button venceu seis das sete primeiras corridas e abriu uma vantagem enorme. A Red Bull, com Sebastian Vettel e Mark Webber, melhorou a partir da metade do ano, e a vantagem de Button caiu.¶O título foi garantido em Interlagos, com um quinto lugar. Button chorou no rádio, e a Brawn ficou também com o título de construtores. A equipe foi vendida à Mercedes no fim do ano, e a história virou uma das mais incríveis do esporte.",
-    2010: "Quatro pilotos chegaram a Abu Dhabi com chances de título: Fernando Alonso e Mark Webber, Sebastian Vettel e Lewis Hamilton. Alonso, da Ferrari, liderava o campeonato, mas a estratégia da equipe deu errado.¶A Ferrari chamou Alonso aos boxes para acompanhar Webber, e ele voltou preso atrás de Vitaly Petrov, da Renault, sem conseguir ultrapassar. Terminou em sétimo. Vettel, da Red Bull RB6, liderou do início ao fim e venceu.¶Aos 23 anos, Vettel foi o mais jovem campeão da história, e o campeonato foi decidido por apenas quatro pontos sobre Alonso. Foi o primeiro de quatro títulos seguidos, e a Red Bull se firmou como a nova potência da F1.",
-    2011: "A Red Bull RB7 foi o carro mais forte do ano, e Sebastian Vettel fez uma das temporadas mais dominantes da história. Ele venceu 11 corridas e fez 15 poles, ambos recordes na época.¶O título saiu em Suzuka, no Japão, com um terceiro lugar, quatro corridas antes do fim da temporada. Jenson Button, da McLaren, venceu a prova. Vettel somou 392 pontos, muito mais que o vice, Fernando Alonso.¶Foi o segundo título dele, aos 24 anos. Vettel era o mais jovem bicampeão, e ficou ainda mais conhecido pelo dedo indicador levantado nas comemorações, que virou sua marca registrada.",
-    2012: "A temporada de 2012 foi uma das mais equilibradas da história, com sete vencedores diferentes nas sete primeiras corridas. Fernando Alonso, com a Ferrari, tentou compensar um carro inferior à Red Bull com uma regularidade impressionante.¶A decisão foi em Interlagos, sob chuva. Na primeira volta, Vettel foi tocado por Bruno Senna e rodou, caindo para a última posição, com o carro danificado. Ele recuperou posições, se beneficiou de uma corrida caótica e terminou em sexto.¶Vettel venceu o campeonato por apenas três pontos sobre Alonso, 281 a 278. Foi o tricampeonato, e o mais jovem da história. A corrida marcou também a despedida de Michael Schumacher da F1, pela segunda vez.",
-    2013: "A Red Bull RB9 e Sebastian Vettel dominaram o ano de 2013, principalmente na segunda metade. Depois de uma briga equilibrada no começo, Vettel venceu as nove últimas corridas da temporada, uma sequência recorde.¶O título saiu na Índia, no circuito de Buddh, com três corridas ainda por disputar. Vettel venceu a prova e se tornou, aos 26 anos, o mais jovem tetracampeão. Fernando Alonso, da Ferrari, foi o vice, mas sem chances.¶Foi o último título da Red Bull, que perderia terreno com a chegada dos motores híbridos no ano seguinte. A Ferrari e a Mercedes se preparavam para um novo ciclo, e a equipe austríaca não conseguiu acompanhar.",
-    2014: "A F1 mudou de regulamento em 2014, com os novos motores V6 turbo híbridos, e a Mercedes F1 W05 Hybrid foi muito superior. A equipe venceu 16 das 19 corridas, e a briga pelo título ficou entre Lewis Hamilton e Nico Rosberg.¶Hamilton venceu 11 corridas, e Rosberg, cinco, e a relação entre os dois se deteriorou. A final, em Abu Dhabi, valia pontos em dobro, uma regra polêmica daquele ano, e Rosberg chegou com chances matemáticas.¶Ele teve problemas no sistema híbrido e perdeu posições, ao passo que Hamilton venceu e ficou com o título, o segundo dele, por 67 pontos de vantagem. A Mercedes inaugurava uma era de domínio que duraria sete anos.",
-    2015: "A Mercedes F1 W06 Hybrid foi mais uma vez o carro dominante, e Lewis Hamilton venceu 10 corridas, contra seis de Nico Rosberg. A briga entre os dois seguiu intensa, e a Ferrari, com Sebastian Vettel, foi a única que conseguiu tirar vitórias deles.¶O título saiu nos Estados Unidos, em Austin, sob chuva e com bandeira vermelha. Hamilton venceu a corrida depois de um duelo com Rosberg, que errou numa ultrapassagem e acabou em segundo.¶Foi o tricampeonato de Hamilton, ainda com três corridas por disputar. Ele igualou os três títulos de Ayrton Senna, ídolo dele, e foi um dos pilotos mais completos da era híbrida.",
-    2016: "A Mercedes F1 W07 Hybrid dominou de novo, e Nico Rosberg venceu nove das 21 corridas. Ele começou o ano com sete vitórias nas oito primeiras provas, mas Lewis Hamilton reagiu no segundo semestre.¶A decisão foi em Abu Dhabi. Rosberg precisava de um terceiro lugar, e Hamilton, que liderava, diminuiu o ritmo de propósito para tentar encaixotar o rival nos adversários. A equipe mandou Hamilton acelerar, mas ele ignorou, e Rosberg ficou em segundo.¶Rosberg ganhou o campeonato por cinco pontos. Filho de Keke, campeão de 1982, ele anunciou a aposentadoria cinco dias depois, e os Rosberg viraram a segunda dupla de pai e filho campeões, depois dos Hill.",
-    2017: "Lewis Hamilton, com a Mercedes F1 W08, venceu nove corridas em 2017 e chegou ao quarto título. O principal rival foi Sebastian Vettel, da Ferrari, que brigou até o meio do ano, mas cometeu erros e teve problemas de confiabilidade.¶Em Singapura, Vettel largou na pole e se envolveu num acidente na primeira curva, junto com Kimi Räikkönen e Max Verstappen. Hamilton venceu, e a vantagem aumentou.¶O título foi decidido no México, onde Hamilton terminou em nono, depois de uma batida na primeira volta, e mesmo assim foi campeão com duas corridas ainda por disputar. Verstappen venceu, e Hamilton igualou os quatro títulos de Vettel e Prost.",
-    2018: "A Mercedes F1 W09 e a Ferrari de Sebastian Vettel disputaram um dos campeonatos mais tensos da era híbrida. Lewis Hamilton venceu 11 corridas, e Vettel, cinco, mas erros do alemão, como o de Hockenheim, em que ele bateu liderando na chuva, custaram caro.¶Hamilton venceu em Monza, depois de uma batalha com Kimi Räikkönen, e em Singapura, onde fez uma volta de qualificação lendária. A vantagem de pontos ficou grande demais para a Ferrari.¶O título saiu no México, com um quarto lugar, suficiente para o campeonato. Foi o quinto de Hamilton, que igualou Juan Manuel Fangio, e a Mercedes ganhou também o título de construtores, o quinto seguido.",
-    2019: "Em 2019, a Mercedes F1 W10 foi superior de novo, mas a briga foi interna, entre Lewis Hamilton e Valtteri Bottas. Hamilton venceu 11 corridas, e Bottas, quatro, e o inglês construiu uma vantagem grande já no começo da temporada.¶Foi um ano de duelos importantes contra Max Verstappen, que já tinha a Red Bull com motor Honda, e Charles Leclerc, que venceu em Spa e Monza pela Ferrari, mas sem chances de título.¶O campeonato foi decidido nos Estados Unidos, em Austin. Bottas venceu a prova, e Hamilton foi segundo, o suficiente para o título, com duas corridas ainda por disputar. Foi o sexto título dele, seis anos depois do primeiro pela Mercedes.",
-    2020: "O ano de 2020 começou tarde, em julho, por causa da pandemia de covid-19. A temporada foi encurtada para 17 corridas, a maioria sem público. Lewis Hamilton, com a Mercedes F1 W11, venceu 11 provas e dominou o campeonato.¶A decisão foi em Istambul, na Turquia, numa pista recém-asfaltada e muito escorregadia por causa da chuva. Hamilton largou em sexto, e Lance Stroll fez a pole. Ele foi se aproximando da liderança, passou rivais e venceu num ritmo de sobrevivência com pneus gastos.¶Foi o sétimo título dele, igualando o recorde de Michael Schumacher, com duas corridas de sobra. Hamilton se emocionou no rádio, e a vitória confirmou sua posição entre os maiores da história.",
-    2021: "A temporada de 2021 foi uma das mais emocionantes da história da F1. Max Verstappen, da Red Bull RB16B, e Lewis Hamilton, da Mercedes, chegaram à última corrida, em Abu Dhabi, empatados em pontos.¶Hamilton dominou a corrida e liderava com folga. Com cinco voltas para o fim, um acidente de Nicholas Latifi levou o safety car à pista. Verstappen, que tinha parado para trocar pneus, tinha pneus novos, e a direção de prova liberou apenas os carros que estavam entre os dois para se desdobrar.¶Na última volta, Verstappen ultrapassou Hamilton e venceu o título. Foi o primeiro piloto holandês campeão, e a decisão gerou uma polêmica enorme, com investigações da FIA nos meses seguintes.",
-    2022: "A Red Bull RB18 e Max Verstappen dominaram 2022, depois de um início difícil com problemas de confiabilidade. Ele venceu 15 corridas, um recorde na época, e a Ferrari de Charles Leclerc, favorita no começo, perdeu o ritmo no segundo semestre.¶O título saiu em Suzuka, no Japão, sob chuva forte, depois de uma corrida curta e confusa. Por causa da interrupção, os pontos foram distribuídos pela regra de corrida reduzida, e houve confusão sobre o que isso significava: Verstappen só soube depois da corrida que já era campeão.¶Verstappen foi bicampeão com quatro corridas ainda por disputar. Foi uma temporada de domínio total, e a Red Bull também venceu o título de construtores.",
-    2023: "A Red Bull RB19 foi o carro mais dominante da história da F1, e Max Verstappen aproveitou. Ele venceu 19 das 22 corridas do ano, um recorde absoluto, incluindo dez vitórias consecutivas entre Miami e Monza.¶O companheiro, Sergio Pérez, venceu duas provas, e Carlos Sainz, da Ferrari, ganhou uma. Fora isso, a temporada foi um passeio, e o holandês somou 575 pontos, outro recorde.¶O título saiu no Catar, ainda no sábado, na corrida sprint, com seis corridas de sobra. Foi o terceiro dele, aos 26 anos, e a Red Bull ganhou também o campeonato de construtores, com folga enorme sobre as rivais.",
-    2024: "A Red Bull RB20 começou o ano dominante, e Max Verstappen venceu sete das dez primeiras corridas. Mas o carro perdeu desempenho no meio da temporada, e a McLaren, com Lando Norris e Oscar Piastri, e a Ferrari passaram a ameaçá-lo.¶Verstappen ficou sem vencer entre junho e novembro, e Norris chegou a reduzir a vantagem. Mas o holandês foi mais regular e fez corridas decisivas, como a do Brasil, em Interlagos, sob chuva, onde largou em 17º e venceu.¶O título foi garantido em Las Vegas, com um quinto lugar. Foi o tetracampeonato, aos 27 anos, um feito de poucos pilotos. A McLaren, por sua vez, ficou com o título de construtores.",
-    2025: "A McLaren MCL39 foi o carro mais forte de 2025, e a briga pelo título ficou entre os pilotos da própria equipe, Lando Norris e Oscar Piastri, com Max Verstappen, da Red Bull, correndo por fora e se aproximando no segundo semestre.¶Piastri liderou o campeonato por boa parte do ano, mas Norris reagiu e chegou à última corrida, em Abu Dhabi, com chances. Verstappen venceu a prova, mas Norris terminou em terceiro e foi campeão por dois pontos de diferença.¶Foi o primeiro título dele, aos 26 anos, e o primeiro de um inglês desde Lewis Hamilton, em 2020. A McLaren também ficou com o campeonato de construtores, pelo segundo ano seguido."
-  };
+        function openModal(item) {
+            itemSelecionado = item;
+            document.getElementById('modal-title').innerText = "Temporada " + item.ano;
+            document.getElementById('modal-pilot').innerText = item.piloto;
+            document.getElementById('modal-car').innerText = item.carro;
+            document.getElementById('modal-number').innerText = "#" + item.numero;
+            document.getElementById('modal-track').innerText = item.circuito;
+            document.getElementById('modal-history').innerText = item.historia;
+            
+            // Sistema de Imagens Inteligentes via Unsplash Source para evitar links quebrados
+            document.getElementById('img-car').src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏎️</text></svg>";
+            document.getElementById('img-track').src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏁</text></svg>";
 
-  // Curiosidades: [piloto, equipe, circuito]
-  var CUR = {
-    1950: ["Farina era sobrinho de Battista “Pinin” Farina, fundador da Pininfarina, a casa de design que desenhou muitos Ferrari.", "A Alfa Romeo 158 foi projetada em 1937 e ainda dominava em 1950, 13 anos depois.", "Monza foi inaugurada em 1922, dentro do parque da Villa Reale, e fica até hoje no calendário do GP da Itália."],
-    1951: ["Fangio aprendeu a correr em provas de estrada de milhares de quilômetros pela América do Sul, antes de viajar à Europa em 1948.", "A Alfa Romeo saiu da F1 depois de 1951 e só voltou como equipe em 1979.", "O circuito de Pedralbes usava ruas largas de Barcelona e recebeu o GP da Espanha do Mundial apenas em 1951 e 1954."],
-    1952: ["Ascari era supersticioso e corria sempre com o mesmo capacete azul-claro e a mesma camisa azul.", "A Ferrari 500, de quatro cilindros, foi desenhada por Aurelio Lampredi e deu à marca o primeiro título de pilotos.", "A Nordschleife, do Nürburgring, tem mais de 170 curvas e ganhou de Jackie Stewart o apelido de “Inferno Verde”."],
-    1953: ["Ascari é o único piloto italiano bicampeão mundial de F1.", "A Ferrari usou o mesmo carro de quatro cilindros nos dois títulos de Ascari e só trocou de modelo em 1954.", "Bremgarten corria no meio de uma floresta ao lado de Berna, com árvores a poucos metros da pista, e era um dos circuitos mais perigosos da época."],
-    1954: ["Em 1958, Fangio foi sequestrado em Cuba por rebeldes, antes do GP de Havana, e libertado depois da corrida.", "Segundo a lenda, a Mercedes raspou a tinta branca dos carros nos anos 30 para baixar o peso, e daí vieram as “Flechas de Prata”.", "A Suíça proibiu corridas em circuito depois do desastre de Le Mans, em 1955, e a regra durou décadas."],
-    1955: ["Fangio ganhou o apelido de “El Chueco” por causa das pernas arqueadas, herança do futebol da juventude.", "O motor do W196 tinha válvulas desmodrômicas, comandadas mecanicamente nos dois sentidos.", "Em 1955 o GP da Itália usou o anel de alta velocidade de Monza, com curvas inclinadas."],
-    1956: ["Peter Collins tinha 24 anos quando entregou o carro a Fangio e abriu mão do próprio título. É considerado um dos maiores gestos de esportividade da F1.", "O D50 era um projeto da Lancia que Gianni Lancia, em crise financeira, passou à Ferrari em 1955, junto com carros e engenheiros.", "Monza fica dentro de um parque de cerca de 700 hectares, um dos maiores parques cercados da Europa."],
-    1957: ["Depois do Nürburgring, Fangio teria dito que aquela foi a corrida em que mais forçou o limite e que não queria repetir.", "A Maserati 250F correu de 1954 a 1960 e é um dos carros de motor dianteiro mais bem-sucedidos da F1.", "A volta mais rápida de Fangio no Nürburgring foi de cerca de 9min17s, numa pista de mais de 22 km."],
-    1958: ["Hawthorn corria de gravata-borboleta, o visual que o tornou inconfundível.", "O nome Dino homenageia Alfredo “Dino” Ferrari, filho de Enzo, morto em 1956 aos 24 anos.", "Ain-Diab, junto à costa de Casablanca, recebeu um único GP do Mundial, o de 1958. Nele morreu Stuart Lewis-Evans."],
-    1959: ["Brabham foi nomeado cavaleiro em 1979 e passou a ser Sir Jack Brabham.", "Os Cooper nasceram em uma oficina de Surbiton, na Inglaterra, criada pelos Cooper, pai e filho.", "Sebring era um antigo campo de aviação da Segunda Guerra, e a pista aproveitava as pistas de concreto do aeroporto."],
-    1960: ["Brabham serviu como mecânico na força aérea australiana antes de começar a correr.", "O motor Coventry Climax, de quatro cilindros, equipou Cooper e Lotus e ajudou os pequenos construtores ingleses a dominar a F1.", "Boavista é um circuito de rua do Porto, com paralelepípedos e trilhos de bonde, e recebeu o GP de Portugal em 1958 e 1960."],
-    1961: ["Phil Hill é o único campeão de F1 nascido nos Estados Unidos.", "A 156 foi o primeiro Ferrari campeão com motor traseiro.", "Em 1961 Monza usou o anel inclinado pela última vez na F1."],
-    1962: ["Graham Hill só começou a correr aos 24 anos, depois de pagar por algumas voltas num carro de F3 em Brands Hatch.", "O título de 1962 é o único de pilotos da BRM.", "Prince George, em East London, recebeu a final do campeonato em dezembro, em pleno verão do hemisfério sul."],
-    1963: ["Clark nasceu numa fazenda escocesa e passou a vida dividido entre a F1 e o campo.", "Atribui-se a Colin Chapman, fundador da Lotus, a ideia de que o carro perfeito seria o que quebrasse logo depois da linha de chegada.", "Em Monza a velocidade média era a mais alta do calendário, e o circuito é conhecido como o “Templo da Velocidade”."],
-    1964: ["Surtees foi sete vezes campeão mundial de motovelocidade antes de ganhar o título de F1.", "Nas duas últimas provas de 1964, a Ferrari correu com o azul e branco da equipe americana NART, em protesto contra a FIA.", "O autódromo da Cidade do México fica a cerca de 2.240 metros de altitude, e o ar rarefeito tira potência dos motores."],
-    1965: ["Clark é o único piloto a vencer a Indy 500 e o Mundial de F1 no mesmo ano.", "A Lotus levou Clark a Indianápolis em 1965, e a vitória do carro de motor traseiro ajudou a mudar as corridas americanas.", "O Karussell, no Nürburgring, é uma curva com paredes inclinadas de concreto, uma das marcas da pista."],
-    1966: ["Brabham teve três filhos pilotos: Geoff, Gary e David.", "O motor Repco V8 nasceu de um bloco de alumínio da Oldsmobile, adaptado na Austrália.", "O anel inclinado de Monza foi usado no GP em 1955, 1956, 1960 e 1961 e depois ficou abandonado."],
-    1967: ["Hulme era chamado de “O Urso” pelo jeito rabugento e já tinha sido mecânico na Brabham.", "A Brabham ganhou o título de construtores em 1966 e em 1967.", "O autódromo mexicano hoje leva o nome dos irmãos Pedro e Ricardo Rodríguez, pilotos mortos em corridas."],
-    1968: ["Hill é o único piloto com a Tríplice Coroa: vencedor em Mônaco, na Indy 500 e em Le Mans.", "A Lotus de 1968 foi uma das primeiras equipes de F1 com carros pintados nas cores de um patrocinador, a Gold Leaf.", "A Peraltada, uma curva inclinada e rápida antes da reta dos boxes, era a marca do circuito mexicano."],
-    1969: ["Stewart é disléxico e foi atirador esportivo de nível olímpico antes de se dedicar às corridas.", "A Matra era uma fabricante francesa de armamentos e aeronáutica, e o MS80 foi o primeiro chassi francês campeão de F1.", "O GP da Itália de 1969 teve os quatro primeiros separados por menos de 0,2 segundo."],
-    1970: ["Rindt nasceu na Alemanha e ficou órfão quando os pais morreram num bombardeio, na Segunda Guerra. Foi criado pelos avós, em Graz.", "O Lotus 72 tinha radiadores laterais e suspensão com barras de torção, e correu por seis temporadas.", "Watkins Glen, no interior do estado de Nova York, recebeu o GP dos Estados Unidos de 1961 a 1980."],
-    1971: ["Stewart usava um detalhe de tartan escocês no capacete.", "A Tyrrell tinha sede num antigo depósito de madeira de Ken Tyrrell, em Surrey.", "O Österreichring, na Estíria, é hoje o Red Bull Ring, um dos circuitos mais rápidos do calendário."],
-    1972: ["O pai de Emerson, Wilson Fittipaldi, era jornalista e narrador de corridas.", "A Lotus 72D foi o primeiro carro de F1 pintado de preto e dourado, nas cores da John Player Special.", "A Parabolica, curva final de Monza, passou a se chamar Curva Alboreto em 2013, em homenagem a Michele Alboreto."],
-    1973: ["Depois de se aposentar, Stewart criou com o filho Paul a Stewart Grand Prix, que correu de 1997 a 1999.", "Os três títulos de pilotos da Tyrrell vieram com Stewart, em 1969 (pela Matra), 1971 e 1973.", "Monza esteve no calendário em todas as temporadas do Mundial, exceto 1980."],
-    1974: ["Em 1975 Emerson fundou com o irmão Wilson a equipe Copersucar-Fittipaldi.", "A McLaren foi criada pelo neozelandês Bruce McLaren, morto em 1970 testando um carro. O título de 1974 foi o primeiro da equipe.", "Watkins Glen fica perto do lago Seneca, na região de vinícolas de Finger Lakes."],
-    1975: ["Lauda pagou a vaga numa equipe com um empréstimo bancário garantido pela própria apólice de seguro de vida.", "A 312T foi projetada por Mauro Forghieri, o engenheiro que fez da Ferrari a equipe mais forte dos anos 70.", "Em Monza, os tifosi invadem a pista no fim da corrida e ficam sob o pódio."],
-    1976: ["Hunt vomitava de nervoso antes das corridas e tinha fama de levar uma vida boêmia.", "O M23 correu de 1973 a 1978 e deu à McLaren dois títulos de pilotos, em 1974 e em 1976.", "O Fuji Speedway fica aos pés do Monte Fuji, e em 1976 a corrida quase foi cancelada por causa de chuva e neblina."],
-    1977: ["Lauda fundou a companhia aérea Lauda Air em 1979.", "A Ferrari ganhou três títulos de construtores seguidos, em 1975, 1976 e 1977.", "Watkins Glen era a corrida de outono do calendário, com torcedores acampados em volta da pista."],
-    1978: ["Andretti nasceu em Montona, na Istria, e emigrou para os Estados Unidos em 1955. Venceu as Daytona 500, a Indy 500 e a F1.", "O Lotus 79 foi chamado de “Black Beauty”, pela pintura preta e pelo uso pioneiro do efeito solo.", "A Variante Ascari, em Monza, homenageia Alberto Ascari."],
-    1979: ["Depois da F1, Scheckter criou uma empresa de simuladores de tiro e uma fazenda orgânica na Inglaterra.", "O motor da 312T4 era um doze cilindros horizontais, o chamado flat-12.", "Monza foi construída em 1922 em apenas 110 dias."],
-    1980: ["O pai de Alan, Stan Jones, venceu o GP da Austrália de 1959.", "A Williams foi fundada em 1977 por Frank Williams e Patrick Head, e a primeira vitória veio em 1979, em Silverstone, com Clay Regazzoni.", "A pista de Montreal fica na Île Notre-Dame, ilha artificial criada para a Expo 67, e hoje leva o nome de Gilles Villeneuve."],
-    1981: ["Piquet adotou o sobrenome da mãe porque o pai, que era ministro, não queria o nome ligado ao automobilismo. O nome de nascença era Nelson Souto Maior.", "O BT49C tinha suspensão hidropneumática que o abaixava na pista, contornando a altura mínima. A Brabham era de Bernie Ecclestone.", "O circuito de Las Vegas ficava no estacionamento do hotel Caesars Palace e tinha cerca de 3,6 km."],
-    1982: ["Keke Rosberg era conhecido por fumar até pouco antes de largar.", "Em 1982 a Williams levou o título de pilotos, mas a Ferrari ficou com o de construtores.", "O GP do Caesars Palace foi disputado só em 1981 e 1982."],
-    1983: ["Piquet foi tenista na juventude e trocou as quadras pelas pistas.", "O motor turbo da BMW, derivado de um bloco de série, passava de 800 cv.", "Kyalami fica a cerca de 1.500 metros de altitude, perto de Joanesburgo."],
-    1984: ["Lauda usava um boné vermelho para cobrir as cicatrizes das queimaduras, e o boné virou espaço de patrocínio.", "Em 1984 a McLaren venceu 12 das 16 corridas, recorde de aproveitamento até 1988.", "O Estoril recebeu a F1 de 1984 a 1996."],
-    1985: ["Prost venceu 51 corridas, recorde que durou até Schumacher.", "O motor TAG-Porsche foi desenhado pela Porsche e pago pela TAG, de Mansour Ojjeh, e equipou a McLaren de 1983 a 1987.", "Brands Hatch fica em Kent e tem a Paddock Hill Bend, uma descida em curva que é das mais famosas da Inglaterra."],
-    1986: ["Prost foi campeão com 72 pontos, à frente de Mansell e de Piquet.", "A Williams venceu nove corridas em 1986, mas dividiu os pontos entre os dois pilotos. A McLaren, com quatro vitórias, levou o título.", "O circuito de Adelaide ficava num parque da cidade e recebeu o GP da Austrália de 1985 a 1995."],
-    1987: ["Piquet nasceu no Rio de Janeiro e cresceu em Brasília.", "A Williams venceu nove das 16 corridas de 1987 e levou o título de construtores.", "Suzuka estreou na F1 em 1987. Foi construída pela Honda como pista de testes."],
-    1988: ["Senna começou no kart aos quatro anos, num carrinho feito pelo pai.", "A McLaren-Honda venceu 15 das 16 corridas de 1988.", "Suzuka é um dos poucos circuitos do mundo em formato de oito, com um viaduto onde a pista cruza com ela mesma."],
-    1989: ["Prost anunciou a saída da McLaren antes do fim de 1989 e foi para a Ferrari em 1990.", "Em 1989 a F1 proibiu os turbos, e a McLaren estreou o V10 da Honda.", "A chicane de Suzuka onde Senna e Prost se tocaram é conhecida como Casio Triangle."],
-    1990: ["Senna era profundamente religioso e falava de Deus com frequência.", "A McLaren-Honda ganhou quatro títulos de construtores seguidos, de 1988 a 1991.", "Senna reclamou que a pole ficava no lado sujo da pista. Pediu a troca de lado, e a FIA recusou."],
-    1991: ["Senna venceu seis vezes em Mônaco, o maior número da história.", "Em 1991 a McLaren trocou o V10 pelo V12 da Honda, mais pesado e mais sedento.", "A 130R, famosa curva de Suzuka, tem esse nome pelo raio de 130 metros."],
-    1992: ["Mansell foi campeão da F1 em 1992 e da Indy em 1993, ambos em seguida.", "O FW14B, desenhado por Adrian Newey, tinha suspensão ativa, controle de tração e câmbio semiautomático.", "O Hungaroring foi o primeiro GP atrás da Cortina de Ferro, em 1986."],
-    1993: ["Prost se aposentou com 51 vitórias e depois criou a Prost Grand Prix, que correu de 1997 a 2001.", "O FW15C usava suspensão ativa, controle de tração e ABS, ajudas que foram banidas em 1994.", "O Estoril fica perto de Lisboa e tem uma longa reta de largada."],
-    1994: ["Michael Schumacher foi o primeiro alemão campeão mundial de F1.", "A Benetton, marca de roupas italiana, tinha Flavio Briatore como chefe e Ross Brawn como diretor técnico.", "Adelaide corria pelas ruas de um parque da cidade, e a corrida lotava as ruas em volta."],
-    1995: ["Schumacher ficou conhecido pela preparação física rigorosa, algo novo na época.", "A Benetton B195 usou o motor Renault V10, o mesmo que levou a Williams ao título nos anos anteriores.", "O circuito de Aida, em Okayama, recebeu a F1 só em 1994 e 1995, com o GP do Pacífico."],
-    1996: ["Damon Hill estreou na F1 em 1992, aos 31 anos.", "A Williams venceu 12 dos 16 GPs de 1996 e foi campeã de construtores.", "Suzuka tem um parque de diversões ao lado, com uma roda-gigante visível da pista."],
-    1997: ["Jacques recebeu o nome do tio, Jacques Villeneuve, e foi o primeiro campeão canadense.", "Foi o nono título de construtores da Williams.", "O circuito de Jerez foi inaugurado em 1985 e fica no sul da Espanha, perto de Cádiz."],
-    1998: ["Häkkinen, finlandês de Vantaa, ficou conhecido como o “Finlandês Voador”.", "A McLaren pintou o carro de prata, cor que lembra as Flechas de Prata da Mercedes, sua parceira de motor.", "A curva Degner, de Suzuka, leva o nome do piloto de motos alemão Ernst Degner."],
-    1999: ["Häkkinen foi bicampeão seguido e anunciou uma pausa na carreira em 2001, de onde nunca voltou.", "Em 1999 a Ferrari ficou com o título de construtores, o primeiro desde 1983.", "Suzuka tem cerca de 5,8 km e 18 curvas."],
-    2000: ["Schumacher passou a viver na Suíça, em Vufflens-le-Château.", "A F1-2000 foi projetada por Rory Byrne, com Ross Brawn como diretor técnico e Jean Todt como chefe da equipe.", "A curva Spoon, em Suzuka, tem forma de colher, com duas partes de ângulos diferentes."],
-    2001: ["Em 2001 Schumacher passou Alain Prost como maior vencedor da história, chegando à 52ª vitória em Spa.", "Foi o terceiro título de construtores seguido da Ferrari.", "O Hungaroring é apelidado de “Mônaco sem paredes”, pela dificuldade de ultrapassar."],
-    2002: ["Na Áustria, Schumacher empurrou Barrichello para o degrau mais alto do pódio, gesto que não acalmou a polêmica.", "A F2002 estreou só na terceira corrida do ano, no Brasil.", "Magny-Cours recebeu o GP da França de 1991 a 2008."],
-    2003: ["O sexto título tornou Schumacher o único acima dos cinco de Fangio, recorde que durava 46 anos.", "As letras GA, na F2003-GA, homenageiam Gianni Agnelli, que morreu em janeiro de 2003.", "As Esses de Suzuka, no começo da pista, são um dos trechos mais técnicos do calendário."],
-    2004: ["Schumacher venceu 13 das 18 corridas de 2004, recorde de vitórias numa temporada até então.", "Em Monza, em 2004, Barrichello fez a volta mais rápida da história da F1 até então, com média de cerca de 260 km/h.", "Spa-Francorchamps tem 7 km, é o circuito mais longo do calendário e pode ter chuva num trecho e sol em outro."],
-    2005: ["Alonso foi o primeiro campeão da Espanha e começou no kart ainda criança.", "A equipe Renault tinha base em Enstone, a mesma fábrica da Benetton de Schumacher.", "O autódromo de Interlagos leva o nome de José Carlos Pace, piloto brasileiro morto em 1977 num acidente de avião."],
-    2006: ["Alonso fechou 2006 com 134 pontos, 13 a mais que Schumacher.", "A FIA proibiu, no meio de 2006, o amortecedor de massa usado pela Renault.", "O trecho inicial de Interlagos, o S do Senna, foi batizado em homenagem a Ayrton Senna."],
-    2007: ["Räikkönen era apelidado de “Iceman” pela calma.", "A McLaren foi excluída do campeonato de construtores de 2007 por espionagem, e a Ferrari levou o título.", "Interlagos é um dos poucos circuitos com sentido anti-horário."],
-    2008: ["Aos dez anos, Hamilton disse a Ron Dennis que um dia correria para ele. Dennis lhe deu o telefone.", "Em 2008 a Ferrari ficou com o título de construtores, e a McLaren só com o de pilotos.", "Interlagos tem curvas com nomes próprios, como Laranjinha e Bico de Pato."],
-    2009: ["Button aceitou cortar o salário para ajudar a Brawn a sobreviver.", "A Brawn venceu o título de pilotos e o de construtores logo na estreia, um feito raro.", "Button largou em 14º no GP do Brasil em que garantiu o título e terminou em quinto."],
-    2010: ["Vettel dá nome aos carros, como “Kinky Kylie” e “Luscious Liz”.", "A Red Bull nasceu da compra da equipe Jaguar, em 2004, por Dietrich Mateschitz, dono da marca de energéticos.", "Yas Marina fica numa ilha artificial, e um hotel atravessa a pista."],
-    2011: ["Vettel foi o mais jovem pole-man e vencedor da história, em Monza, em 2008, pela Toro Rosso.", "O RB7, de Adrian Newey, usava o escape soprado, que dava pressão aerodinâmica até sem acelerar.", "Em 2011, após o terremoto e o tsunami no Japão, o GP de Suzuka teve forte clima de solidariedade."],
-    2012: ["Vettel foi o mais jovem tricampeão, aos 25 anos.", "A Red Bull levou também o título de construtores, o terceiro seguido.", "Interlagos fica a cerca de 800 metros de altitude, e o ar mais rarefeito afeta o rendimento dos motores."],
-    2013: ["Em 2013 Vettel passou a fazer “donuts” de pneus na volta de desaceleração e foi multado por isso na Índia.", "A Red Bull venceu 13 das 19 corridas de 2013, todas com Vettel.", "O circuito de Buddh, em Greater Noida, perto de Nova Délhi, recebeu o GP da Índia de 2011 a 2013."],
-    2014: ["O pai de Hamilton, Anthony, teve vários empregos ao mesmo tempo para financiar a carreira do filho.", "A Mercedes voltou à F1 em 2010 comprando a Brawn GP, campeã de 2009.", "A final de Yas Marina em 2014 valeu pontos em dobro, regra usada só naquele ano."],
-    2015: ["O bulldog Roscoe, de Hamilton, ficou famoso nos boxes e nas redes.", "A Mercedes venceu 16 das 19 corridas de 2015.", "A Curva 1 do Circuit of the Americas sobe cerca de 41 metros, uma das subidas mais íngremes da F1."],
-    2016: ["Rosberg nasceu em Wiesbaden, na Alemanha, e cresceu em Mônaco.", "Foi o terceiro título de construtores seguido da Mercedes.", "A corrida de Yas Marina começa com luz do dia e termina à noite, sob os refletores."],
-    2017: ["Em Monza, em 2017, Hamilton passou o recorde de poles de Schumacher, que era de 68.", "Foi o quarto título de construtores seguido da Mercedes.", "O Hermanos Rodríguez voltou ao calendário em 2015, e parte da pista passa por dentro do estádio Foro Sol."],
-    2018: ["Hamilton fez 408 pontos em 2018, a maior pontuação da carreira dele.", "Foi o quinto título de construtores seguido da Mercedes.", "A Peraltada deixou de fazer parte do traçado moderno, e o carro passa por dentro do Foro Sol."],
-    2019: ["Hamilton foi hexacampeão aos 34 anos.", "A Mercedes igualou a Ferrari, que tinha ganho seis títulos de construtores seguidos, de 1999 a 2004.", "O Circuit of the Americas inspirou trechos em outras pistas: as Esses lembram Suzuka e a Curva 12 lembra Hockenheim."],
-    2020: ["Hamilton foi nomeado cavaleiro no fim de 2020.", "Em 2020 a Mercedes pintou o carro de preto em apoio à luta contra o racismo.", "A Curva 8 do Istanbul Park, com quatro pontos de contorno, é uma das mais famosas do calendário."],
-    2021: ["Max é filho de Jos Verstappen, ex-piloto de F1, e de Sophie Kumpen, que foi kartista na Bélgica.", "Em 2021 a Mercedes ganhou o título de construtores, e a Red Bull, o de pilotos.", "Para 2021, Yas Marina foi remodelada, com a retirada de uma chicane para facilitar ultrapassagens."],
-    2022: ["Em 2022 Verstappen venceu 15 corridas, recorde de vitórias numa temporada até então.", "Em 2022 entrou em vigor o teto orçamentário, e depois a FIA multou a Red Bull por exceder o limite de 2021.", "A corrida de Suzuka em 2022 acabou com 28 das 53 voltas, pelo limite de três horas."],
-    2023: ["Verstappen nasceu em Hasselt, na Bélgica, e tem passaporte holandês.", "O RB19 venceu 21 das 22 corridas de 2023.", "Lusail foi projetada para o MotoGP, e a corrida acontece à noite, sob iluminação."],
-    2024: ["Verstappen é fã de corridas virtuais e compete online pela equipe Team Redline.", "Em 2024 a Red Bull perdeu o título de construtores para a McLaren.", "A reta de Las Vegas, pela Strip, tem cerca de 1,9 km, e a corrida acontece à noite."],
-    2025: ["Norris é conhecido por transmitir jogos online e criou a Quadrant, marca de esports e entretenimento.", "A McLaren ganhou o título de construtores em 2024 e em 2025.", "Yas Marina recebeu a final de 2025 pela 17ª vez desde 2009."]
-  };
+            const isOwned = localStorage.getItem('f1_143_' + item.ano) === 'true';
+            const btn = document.getElementById('btn-own');
+            if(isOwned) {
+                btn.innerText = "✓ Na Minha Estante";
+                btn.classList.add('owned');
+            } else {
+                btn.innerText = "Marcar como Adquirido";
+                btn.classList.remove('owned');
+            }
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
 
-  var DATA = RAW.map(function (r) {
-    var p = r.split("|");
-    var d = { year: +p[0], driver: p[1], dn: p[2], car: p[3], cn: p[4], num: p[5], circuit: p[6], tn: p[7], story: p[8] };
-    var f = FIX[d.year]; if (f) { for (var k in f) d[k] = f[k]; }
-    if (LONG[d.year]) d.story = LONG[d.year];
-    return d;
-  });
-  var byYear = {};
-  DATA.forEach(function (d) { byYear[d.year] = d; });
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+        }
 
-  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+        function toggleOwnership() {
+            if(!itemSelecionado) return;
+            const key = 'f1_143_' + itemSelecionado.ano;
+            const current = localStorage.getItem(key) === 'true';
+            localStorage.setItem(key, !current);
+            openModal(itemSelecionado);
+            filtrarCards();
+        }
 
-  /* ---------- estado ---------- */
-  var owned = {};
-  try { owned = JSON.parse(localStorage.getItem("f1-estante") || "{}") || {}; } catch (e) { owned = {}; }
-  function saveOwned() { try { localStorage.setItem("f1-estante", JSON.stringify(owned)); } catch (e) {} }
-
-  var photos = {}; // "1988-driver" -> dataURL
-  var db = null;
-  function openDB() {
-    return new Promise(function (resolve) {
-      try {
-        var req = indexedDB.open("f1-fotos", 1);
-        req.onupgradeneeded = function () { req.result.createObjectStore("img"); };
-        req.onsuccess = function () { resolve(req.result); };
-        req.onerror = function () { resolve(null); };
-      } catch (e) { resolve(null); }
-    });
-  }
-  function dbLoadAll() {
-    return new Promise(function (resolve) {
-      if (!db) return resolve();
-      try {
-        var tx = db.transaction("img", "readonly"), st = tx.objectStore("img");
-        var cur = st.openCursor();
-        cur.onsuccess = function () {
-          var c = cur.result;
-          if (c) { photos[c.key] = c.value; c.continue(); } else resolve();
+        window.onload = () => {
+            renderGrid();
         };
-        cur.onerror = function () { resolve(); };
-      } catch (e) { resolve(); }
-    });
-  }
-  function dbPut(key, val) {
-    if (!db) return;
-    try { db.transaction("img", "readwrite").objectStore("img").put(val, key); } catch (e) {}
-  }
-  function dbDel(key) {
-    if (!db) return;
-    try { db.transaction("img", "readwrite").objectStore("img").delete(key); } catch (e) {}
-  }
-
-  var filter = "all", query = "", current = null, pickTarget = null;
-
-  /* ---------- fotos automáticas (Wikipédia / Wikimedia Commons) ---------- */
-  // Cada foto vem de uma página exata da Wikipédia (sem busca por texto, que errava a pessoa).
-  var DRIVER_T = { "Alan Jones": "Alan Jones (racing driver)" };
-  var CAR_T = {
-    1950: ["Alfa Romeo 158/159 Alfetta"], 1951: ["Alfa Romeo 158/159 Alfetta"],
-    1952: ["Ferrari 500"], 1953: ["Ferrari 500"],
-    1954: ["Mercedes-Benz W196"], 1955: ["Mercedes-Benz W196"],
-    1956: ["Lancia D50"], 1957: ["Maserati 250F"],
-    1958: ["Ferrari 246 F1", "Ferrari Dino 246 F1"], 1959: ["Cooper T51"], 1960: ["Cooper T53"],
-    1961: ["Ferrari 156 F1", "Ferrari 156"], 1962: ["BRM P57"], 1963: ["Lotus 25"], 1964: ["Ferrari 158"],
-    1965: ["Lotus 33"], 1966: ["Brabham BT19"], 1967: ["Brabham BT24"], 1968: ["Lotus 49"],
-    1969: ["Matra MS80"], 1970: ["Lotus 72"], 1971: ["Tyrrell 003"], 1972: ["Lotus 72"], 1973: ["Tyrrell 006"],
-    1974: ["McLaren M23"], 1975: ["Ferrari 312T"], 1976: ["McLaren M23"], 1977: ["Ferrari 312T"],
-    1978: ["Lotus 79"], 1979: ["Ferrari 312T"], 1980: ["Williams FW07"], 1981: ["Brabham BT49"],
-    1982: ["Williams FW08"], 1983: ["Brabham BT52"], 1984: ["McLaren MP4/2"], 1985: ["McLaren MP4/2"],
-    1986: ["McLaren MP4/2"], 1987: ["Williams FW11"], 1988: ["McLaren MP4/4"], 1989: ["McLaren MP4/5"],
-    1990: ["McLaren MP4/5"], 1991: ["McLaren MP4/6"], 1992: ["Williams FW14B"], 1993: ["Williams FW15C"],
-    1994: ["Benetton B194"], 1995: ["Benetton B195"], 1996: ["Williams FW18"], 1997: ["Williams FW19"],
-    1998: ["McLaren MP4/13", "McLaren MP4-13"], 1999: ["McLaren MP4/14"], 2000: ["Ferrari F1-2000"],
-    2001: ["Ferrari F2001"], 2002: ["Ferrari F2002"], 2003: ["Ferrari F2003-GA"], 2004: ["Ferrari F2004"],
-    2005: ["Renault R25"], 2006: ["Renault R26"], 2007: ["Ferrari F2007"], 2008: ["McLaren MP4-23"],
-    2009: ["Brawn BGP 001"], 2010: ["Red Bull RB6"], 2011: ["Red Bull RB7"], 2012: ["Red Bull RB8"],
-    2013: ["Red Bull RB9"], 2014: ["Mercedes F1 W05 Hybrid", "Mercedes-AMG F1 W05 Hybrid"],
-    2015: ["Mercedes F1 W06 Hybrid", "Mercedes-AMG F1 W06 Hybrid"],
-    2016: ["Mercedes F1 W07 Hybrid", "Mercedes-AMG F1 W07 Hybrid"],
-    2017: ["Mercedes F1 W08 EQ Power+", "Mercedes-AMG F1 W08 EQ Power+"],
-    2018: ["Mercedes-AMG F1 W09 EQ Power+", "Mercedes F1 W09 EQ Power+"],
-    2019: ["Mercedes-AMG F1 W10 EQ Power+", "Mercedes F1 W10 EQ Power+"],
-    2020: ["Mercedes-AMG F1 W11 EQ Performance", "Mercedes F1 W11 EQ Performance"],
-    2021: ["Red Bull RB16B"], 2022: ["Red Bull RB18"], 2023: ["Red Bull RB19"], 2024: ["Red Bull RB20"],
-    2025: ["McLaren MCL39"]
-  };
-  var CIRC_T = {
-    "Monza": ["Monza Circuit", "Autodromo Nazionale Monza"],
-    "Pedralbes (Barcelona)": ["Pedralbes Circuit"],
-    "Zandvoort": ["Circuit Zandvoort", "Circuit Park Zandvoort"],
-    "Bremgarten (Berna)": ["Circuit Bremgarten", "Bremgarten Circuit"],
-    "Ain-Diab (Casablanca)": ["Ain-Diab Circuit"],
-    "Sebring": ["Sebring International Raceway"],
-    "Boavista (Porto)": ["Circuito da Boavista"],
-    "East London": ["Prince George Circuit"],
-    "Hermanos Rodríguez (Cidade do México)": ["Autódromo Hermanos Rodríguez"],
-    "Nürburgring": ["Nürburgring"],
-    "Österreichring (Zeltweg)": ["Red Bull Ring"],
-    "Watkins Glen": ["Watkins Glen International"],
-    "Fuji": ["Fuji Speedway"],
-    "Montreal": ["Circuit Gilles Villeneuve"],
-    "Las Vegas (Caesars Palace)": ["Caesars Palace Grand Prix"],
-    "Kyalami": ["Kyalami"],
-    "Estoril": ["Autódromo do Estoril"],
-    "Brands Hatch": ["Brands Hatch"],
-    "Adelaide": ["Adelaide Street Circuit"],
-    "Suzuka": ["Suzuka International Racing Course", "Suzuka Circuit"],
-    "Hungaroring": ["Hungaroring"],
-    "Aida": ["Okayama International Circuit"],
-    "Jerez": ["Circuito de Jerez"],
-    "Magny-Cours": ["Circuit de Nevers Magny-Cours"],
-    "Spa-Francorchamps": ["Circuit de Spa-Francorchamps"],
-    "Interlagos": ["Autódromo José Carlos Pace"],
-    "Yas Marina": ["Yas Marina Circuit"],
-    "Buddh (Greater Noida)": ["Buddh International Circuit"],
-    "Circuito das Américas": ["Circuit of the Americas"],
-    "Istanbul Park": ["Istanbul Park"],
-    "Lusail": ["Lusail International Circuit"],
-    "Las Vegas": ["Las Vegas Strip Circuit", "Las Vegas Grand Prix"]
-  };
-  // A chave é a lista de títulos da página, separados por "|" (o primeiro que existir e tiver imagem vale).
-  function photoQuery(d, slot) {
-    if (slot === "driver") return DRIVER_T[d.driver] || d.driver;
-    if (slot === "car") return (CAR_T[d.year] || [d.car]).join("|");
-    return (CIRC_T[d.circuit] || [d.circuit]).join("|");
-  }
-  function initials(name) {
-    var p = name.split(" ");
-    return (p[0].charAt(0) + p[p.length - 1].charAt(0)).toUpperCase();
-  }
-  var WIKI_KEY = "f1-wiki-v2";
-  try { localStorage.removeItem("f1-wiki-v1"); } catch (e) {} // apaga as fotos erradas da versão anterior
-  var wikiCache = {};
-  try { wikiCache = JSON.parse(localStorage.getItem(WIKI_KEY) || "{}") || {}; } catch (e) { wikiCache = {}; }
-  function saveWiki() { try { localStorage.setItem(WIKI_KEY, JSON.stringify(wikiCache)); } catch (e) {} }
-  var wikiMiss = {}, wikiErr = {}, wikiBad = {}, inflight = {}, queue = [], active = 0, MAXREQ = 3;
-
-  function fetchJson(u) {
-    return fetch(u).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); });
-  }
-  function wikiUrl(q) {
-    return "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1&titles=" + encodeURIComponent(q) +
-      "&prop=pageimages%7Cpageprops%7Cinfo&piprop=thumbnail&pithumbsize=720&ppprop=wikibase_item&inprop=url";
-  }
-  // Acha a página devolvida para um título pedido, seguindo normalização e redirecionamento.
-  function pageFor(j, title) {
-    var q = (j && j.query) || {}, t = title, k;
-    (q.normalized || []).forEach(function (n) { if (n.from === t) t = n.to; });
-    (q.redirects || []).forEach(function (r) { if (r.from === t) t = r.to; });
-    var pages = q.pages || {};
-    for (k in pages) { if (pages[k].title === t) return pages[k]; }
-    return null;
-  }
-  function pickPage(j, q) {
-    var titles = q.split("|"), item = null, i, p;
-    for (i = 0; i < titles.length; i++) {
-      p = pageFor(j, titles[i]);
-      if (!p || p.missing !== undefined) continue;
-      if (p.thumbnail && p.thumbnail.source) {
-        return { hit: { src: p.thumbnail.source, page: p.fullurl || ("https://en.wikipedia.org/?curid=" + p.pageid), title: p.title }, item: null };
-      }
-      if (!item && p.pageprops && p.pageprops.wikibase_item) item = p.pageprops.wikibase_item;
-    }
-    return { hit: null, item: item };
-  }
-  // Se a página não tem foto livre, usa a imagem principal do item no Wikidata (sempre do Commons).
-  function wikidataImage(item) {
-    return fetchJson("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P18&entity=" + encodeURIComponent(item))
-      .then(function (j) {
-        var c = j && j.claims && j.claims.P18 && j.claims.P18[0];
-        var f = c && c.mainsnak && c.mainsnak.datavalue && c.mainsnak.datavalue.value;
-        if (!f) return null;
-        return {
-          src: "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f) + "?width=720",
-          page: "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(f.replace(/ /g, "_")),
-          title: f, commons: true
-        };
-      });
-  }
-  function lookup(q) {
-    var fails = 0;
-    return fetchJson(wikiUrl(q)).then(function (j) { return pickPage(j, q); }, function () { fails++; return { hit: null, item: null }; })
-      .then(function (r) {
-        if (r.hit || !r.item) return r.hit;
-        return wikidataImage(r.item).catch(function () { fails++; return null; });
-      })
-      .then(function (hit) { return { hit: hit, fails: fails }; });
-  }
-  function pump() {
-    while (active < MAXREQ && queue.length) {
-      (function (job) {
-        active++;
-        lookup(job.q)
-          .then(function (res) {
-            if (res.hit) { wikiCache[job.q] = res.hit; delete wikiErr[job.q]; saveWiki(); }
-            else if (res.fails >= 1) { wikiErr[job.q] = 1; }
-            else { wikiMiss[job.q] = 1; }
-            job.resolve(res.hit);
-          })
-          .catch(function () { wikiErr[job.q] = 1; job.resolve(null); })
-          .then(function () { active--; delete inflight[job.q]; pump(); });
-      })(queue.shift());
-    }
-  }
-  function wikiGet(q) {
-    if (wikiCache[q]) return Promise.resolve(wikiCache[q]);
-    if (wikiMiss[q]) return Promise.resolve(null);
-    delete wikiErr[q];
-    if (inflight[q]) return inflight[q];
-    inflight[q] = new Promise(function (resolve) { queue.push({ q: q, resolve: resolve }); pump(); });
-    return inflight[q];
-  }
-  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); loadAva(e.target); } });
-  }, { rootMargin: "200px" }) : null;
-  function loadAva(el) {
-    wikiGet(el.dataset.q).then(function (hit) { if (hit && el.isConnected) setAva(el, hit.src); });
-  }
-  function setAva(el, src) {
-    var im = new Image();
-    im.alt = ""; im.referrerPolicy = "no-referrer";
-    im.onload = function () { el.textContent = ""; el.appendChild(im); };
-    im.src = src;
-  }
-  window.f1ImgFailed = function (el) {
-    wikiBad[el.getAttribute("src")] = 1;
-    updatePhotos();
-  };
-
-  /* ---------- grade ---------- */
-  var grid = document.getElementById("grid");
-  function renderGrid() {
-    var q = norm(query.trim());
-    var list = DATA.filter(function (d) {
-      if (filter === "have" && !owned[d.year]) return false;
-      if (filter === "miss" && owned[d.year]) return false;
-      if (!q) return true;
-      return norm(d.year + " " + d.driver + " " + d.car + " " + d.circuit).indexOf(q) !== -1;
-    });
-    if (!list.length) { grid.innerHTML = '<p class="empty">Nenhuma temporada encontrada.</p>'; }
-    else {
-      grid.innerHTML = list.map(function (d) {
-        var have = !!owned[d.year];
-        return '<button class="card' + (have ? " have" : "") + '" data-year="' + d.year + '">' +
-          (have ? '<span class="tick" aria-hidden="true">✓</span>' : "") +
-          '<span class="top"><span class="yr">' + d.year + '</span>' +
-          '<span class="ava" data-q="' + esc(photoQuery(d, "driver")) + '">' + esc(initials(d.driver)) + '</span></span>' +
-          '<span class="who">' + esc(d.driver) + " " + flag(d.dn) + '</span>' +
-          '<span class="car">' + esc(d.car) + '</span></button>';
-      }).join("");
-      grid.querySelectorAll(".ava").forEach(function (el) {
-        var hit = wikiCache[el.dataset.q];
-        if (hit) setAva(el, hit.src);
-        else if (io) io.observe(el);
-        else loadAva(el);
-      });
-    }
-    var n = DATA.filter(function (d) { return owned[d.year]; }).length;
-    document.getElementById("count").textContent = n;
-    document.getElementById("total").textContent = DATA.length;
-    var pct = Math.round(n / DATA.length * 100);
-    document.getElementById("pct").textContent = pct + "%";
-    document.getElementById("barfill").style.width = pct + "%";
-  }
-
-  /* ---------- ilustrações de reserva ---------- */
-  function liveryColor(car) {
-    var c = car.toLowerCase();
-    if (/alfa|ferrari|maserati/.test(c)) return "#c8281e";
-    if (/mercedes/.test(c)) return "#b9bfc6";
-    if (/cooper|brm|lotus 25|lotus 33|brabham bt19|brabham bt24/.test(c)) return "#1f6b47";
-    if (/lotus 49|lotus 72/.test(c)) return "#c9a227";
-    if (/lotus 79/.test(c)) return "#1d1d1d";
-    if (/brabham/.test(c)) return "#e8e8e8";
-    if (/matra|tyrrell|benetton/.test(c)) return "#2457a6";
-    if (/mclaren/.test(c)) return "#f08a1c";
-    if (/williams/.test(c)) return "#1b4fa0";
-    if (/renault/.test(c)) return "#f2c500";
-    if (/brawn/.test(c)) return "#e9e46a";
-    if (/red bull/.test(c)) return "#1b2a5c";
-    return "#888";
-  }
-  function rng(seed) { var a = seed >>> 0; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  function svgDriver() {
-    return '<svg viewBox="0 0 90 120" aria-hidden="true"><path d="M8 120c2-26 16-38 37-38s35 12 37 38z" fill="currentColor" opacity=".45"/><circle cx="45" cy="48" r="22" fill="currentColor" opacity=".7"/><path d="M25 48h40v8c0 4-3 7-7 7H32c-4 0-7-3-7-7z" fill="var(--surface-2)"/></svg>';
-  }
-  function svgCar(car) {
-    var col = liveryColor(car);
-    return '<svg viewBox="0 0 90 120" aria-hidden="true"><g transform="translate(45 60) rotate(-90) translate(-60 -30)">' +
-      '<rect x="4" y="14" width="8" height="32" rx="1.5" fill="#333"/>' +
-      '<path d="M10 24h58l22 6-22 6H10z" fill="' + col + '"/>' +
-      '<rect x="44" y="26" width="14" height="8" rx="3" fill="#222"/>' +
-      '<rect x="100" y="12" width="6" height="36" rx="1.5" fill="#333"/>' +
-      '<g fill="#111"><rect x="20" y="8" width="20" height="9" rx="3"/><rect x="20" y="43" width="20" height="9" rx="3"/><rect x="78" y="10" width="14" height="8" rx="3"/><rect x="78" y="42" width="14" height="8" rx="3"/></g></g></svg>';
-  }
-  function svgTrack(year) {
-    var r = rng(year * 7919), n = 9, pts = [], i;
-    for (i = 0; i < n; i++) {
-      var a = Math.PI * 2 * i / n, rad = 26 + r() * 20;
-      pts.push([45 + Math.cos(a) * rad * 0.9, 60 + Math.sin(a) * rad * 1.15]);
-    }
-    var d = "M" + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1);
-    for (i = 0; i < n; i++) {
-      var p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
-      d += "C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + "," +
-        (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + "," +
-        p2[0].toFixed(1) + " " + p2[1].toFixed(1);
-    }
-    return '<svg viewBox="0 0 90 120" aria-hidden="true"><path d="' + d + 'Z" fill="none" stroke="currentColor" stroke-width="5" opacity=".55" stroke-linejoin="round"/><path d="' + d + 'Z" fill="none" stroke="var(--surface-2)" stroke-width="1.2" stroke-dasharray="3 3"/></svg>';
-  }
-
-  /* ---------- folha da temporada ---------- */
-  var sheet = document.getElementById("sheet");
-  var panel = document.getElementById("panel");
-  var SLOTS = [
-    { id: "driver", label: "Piloto" },
-    { id: "car", label: "Carro" },
-    { id: "circuit", label: "Circuito" }
-  ];
-  function searchUrl(d, slot) {
-    var q = slot === "driver" ? d.driver + " " + d.year + " campeão F1"
-          : slot === "car" ? d.car + " " + d.year + " F1"
-          : d.circuit + " circuito " + d.year + " F1";
-    return "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(q);
-  }
-  function numHint(d) {
-    if (!d.num) return "Não consegui confirmar o número deste carro. Confira o da sua miniatura.";
-    if (d.year === 1970) return "Número de Rindt em Monza, a última corrida dele. O título foi confirmado em Watkins Glen.";
-    if (d.year < 1973) return "Antes de 1973 o número mudava de corrida para corrida. Este é o do carro na corrida do título.";
-    return "";
-  }
-  function slotsHTML(d) {
-    var ph = { driver: svgDriver(), car: svgCar(d.car), circuit: svgTrack(d.year) };
-    return SLOTS.map(function (s) {
-      var mine = photos[d.year + "-" + s.id];
-      var q = photoQuery(d, s.id);
-      var hit = wikiCache[q];
-      if (hit && wikiBad[hit.src]) hit = null;
-      var failed = !mine && !hit && !!wikiErr[q];
-      var loading = !mine && !hit && !failed && !wikiMiss[q] && !wikiBad[(wikiCache[q] || {}).src];
-      var shot, actions;
-      if (mine) {
-        shot = '<div class="shot filled"><img src="' + mine + '" alt="' + s.label + " " + d.year + '"></div>';
-        actions = '<button data-pick="' + s.id + '">Trocar foto</button><button data-clear="' + s.id + '" class="danger">Voltar à automática</button>';
-      } else if (hit) {
-        shot = '<div class="shot filled"><img src="' + esc(hit.src) + '" alt="' + s.label + " " + d.year + '" referrerpolicy="no-referrer" onerror="f1ImgFailed(this)"></div>';
-        actions = '<a href="' + esc(hit.page) + '" target="_blank" rel="noopener">Fonte: ' + (hit.commons ? "Wikimedia Commons" : "Wikipédia") + '</a><button data-pick="' + s.id + '">Usar minha foto</button>';
-      } else {
-        shot = '<button class="shot' + (loading ? " loading" : "") + '" data-pick="' + s.id + '" aria-label="Adicionar foto: ' + s.label + '">' + ph[s.id] +
-          '<span class="add">' + (loading ? "Buscando foto…" : failed ? "Sem conexão com a Wikipédia" : "Sem foto automática") + '</span></button>';
-        actions = (loading ? "" : '<button data-retry="1">Tentar de novo</button>') +
-          '<button data-pick="' + s.id + '">Adicionar minha foto</button><a href="' + searchUrl(d, s.id) + '" target="_blank" rel="noopener">Buscar no Google</a>';
-      }
-      return '<div class="slot"><span class="slot-label">' + s.label + '</span>' + shot + '<div class="slot-actions">' + actions + '</div></div>';
-    }).join("");
-  }
-  function updatePhotos() {
-    if (sheet.hidden || !current) return;
-    var box = document.getElementById("photos");
-    if (box) box.innerHTML = slotsHTML(byYear[current]);
-  }
-  function ensureAuto(d) {
-    SLOTS.forEach(function (s) {
-      if (photos[d.year + "-" + s.id]) return;
-      wikiGet(photoQuery(d, s.id)).then(function () { if (current === d.year) updatePhotos(); });
-    });
-  }
-  function curHTML(d) {
-    var c = CUR[d.year];
-    if (!c) return "";
-    var tags = ["Piloto", "Equipe", "Circuito"];
-    return '<div class="storybox"><span class="slot-label">Curiosidades</span><div class="cur">' +
-      c.map(function (t, i) { return '<div class="cur-item"><span class="cur-tag">' + tags[i] + '</span><p>' + esc(t) + '</p></div>'; }).join("") +
-      '</div></div>';
-  }
-  function renderSheet() {
-    var d = byYear[current];
-    var have = !!owned[d.year];
-    var idx = DATA.indexOf(d);
-    panel.innerHTML =
-      '<div class="panel-head"><h2 id="sheetTitle">Temporada ' + d.year + '</h2>' +
-      '<div class="nav"><button class="icon-btn" data-step="-1" aria-label="Temporada anterior"' + (idx === 0 ? " disabled" : "") + '>‹</button>' +
-      '<button class="icon-btn" data-step="1" aria-label="Próxima temporada"' + (idx === DATA.length - 1 ? " disabled" : "") + '>›</button>' +
-      '<button class="icon-btn" data-close aria-label="Fechar">✕</button></div></div>' +
-      '<div class="photos" id="photos">' + slotsHTML(d) + '</div>' +
-      '<dl>' +
-      '<div class="row"><dt>Piloto</dt><dd>' + esc(d.driver) + " " + flag(d.dn) + '</dd></div>' +
-      '<div class="row"><dt>Carro</dt><dd>' + esc(d.car) + " " + flag(d.cn) + '</dd></div>' +
-      '<div class="row"><dt>Número na miniatura</dt><dd>' + (d.num ? "#" + d.num : "Sem confirmação") +
-        '<span class="hint">' + numHint(d) + '</span></dd></div>' +
-      '<div class="row"><dt>Pista do título</dt><dd>' + esc(d.circuit) + " " + flag(d.tn) + '</dd></div>' +
-      '</dl>' +
-      '<div class="storybox"><span class="slot-label">A história do título</span>' +
-        d.story.split("¶").map(function (t) { return '<p class="story">' + esc(t) + '</p>'; }).join("") + '</div>' +
-      curHTML(d) +
-      '<button class="own" data-own aria-pressed="' + have + '">' + (have ? "✓ Na minha estante" : "Adicionar à minha estante") + '</button>' +
-      '<p class="note">Fotos da Wikipédia aparecem sozinhas quando o aparelho está online. Fotos que você adiciona ficam salvas neste aparelho.</p>';
-    ensureAuto(d);
-  }
-  function openSheet(year) {
-    current = year; renderSheet();
-    sheet.hidden = false; document.body.classList.add("locked");
-    panel.scrollTop = 0;
-    var c = panel.querySelector("[data-close]"); if (c) c.focus();
-  }
-  function closeSheet() {
-    sheet.hidden = true; document.body.classList.remove("locked");
-    var card = grid.querySelector('[data-year="' + current + '"]'); if (card) card.focus();
-    renderGrid();
-  }
-  function toast(msg) {
-    var t = document.getElementById("toast");
-    t.textContent = msg; t.hidden = false;
-    clearTimeout(toast.h); toast.h = setTimeout(function () { t.hidden = true; }, 2600);
-  }
-
-  /* ---------- fotos ---------- */
-  var picker = document.getElementById("picker");
-  picker.addEventListener("change", function () {
-    var f = picker.files && picker.files[0];
-    picker.value = "";
-    if (!f || !pickTarget) return;
-    var key = pickTarget;
-    var reader = new FileReader();
-    reader.onload = function () {
-      var img = new Image();
-      img.onload = function () {
-        var max = 900, s = Math.min(1, max / Math.max(img.width, img.height));
-        var cv = document.createElement("canvas");
-        cv.width = Math.round(img.width * s); cv.height = Math.round(img.height * s);
-        cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
-        var url = cv.toDataURL("image/jpeg", 0.82);
-        photos[key] = url; dbPut(key, url);
-        if (!sheet.hidden) updatePhotos();
-        toast("Foto salva");
-      };
-      img.onerror = function () { toast("Não consegui abrir essa imagem."); };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(f);
-  });
-
-  /* ---------- eventos ---------- */
-  grid.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-year]"); if (b) openSheet(+b.dataset.year);
-  });
-  panel.addEventListener("click", function (e) {
-    var t = e.target;
-    var step = t.closest("[data-step]");
-    if (step) { var i = DATA.indexOf(byYear[current]) + +step.dataset.step; if (DATA[i]) { current = DATA[i].year; renderSheet(); panel.scrollTop = 0; } return; }
-    if (t.closest("[data-close]")) return closeSheet();
-    if (t.closest("[data-retry]")) {
-      var dd = byYear[current];
-      SLOTS.forEach(function (s) { var qq = photoQuery(dd, s.id); delete wikiErr[qq]; delete wikiMiss[qq]; });
-      updatePhotos(); ensureAuto(dd); return;
-    }
-    var pick = t.closest("[data-pick]");
-    if (pick) { pickTarget = current + "-" + pick.dataset.pick; picker.click(); return; }
-    var clr = t.closest("[data-clear]");
-    if (clr) { var k = current + "-" + clr.dataset.clear; delete photos[k]; dbDel(k); updatePhotos(); ensureAuto(byYear[current]); return; }
-    if (t.closest("[data-own]")) {
-      if (owned[current]) delete owned[current]; else owned[current] = 1;
-      saveOwned(); renderSheet(); renderGrid();
-      toast(owned[current] ? "Adicionada à sua estante" : "Removida da estante");
-    }
-  });
-  sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
-  document.getElementById("q").addEventListener("input", function (e) { query = e.target.value; renderGrid(); });
-  document.querySelectorAll(".chip").forEach(function (c) {
-    c.addEventListener("click", function () {
-      filter = c.dataset.f;
-      document.querySelectorAll(".chip").forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
-      renderGrid();
-    });
-  });
-
-  renderGrid();
-  openDB().then(function (d) { db = d; return dbLoadAll(); }).then(function () { if (!sheet.hidden) updatePhotos(); });
-})();
-</script>
+    </script>
 </body>
 </html>
